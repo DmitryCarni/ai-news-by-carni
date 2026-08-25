@@ -25,8 +25,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          if [[ -z "${BOT_TOKEN}" || -z "${ADMIN_CHAT_ID}" ]]; then
-            echo "Telegram inbox is not configured yet; skipping."
+          if [[ -z "${BOT_TOKEN}" ]]; then
+            echo "TELEGRAM_BOT_TOKEN is not configured; skipping."
             exit 0
           fi
 
@@ -37,7 +37,7 @@ jobs:
           import urllib.request
 
           token = os.environ["BOT_TOKEN"]
-          admin_chat_id = str(os.environ["ADMIN_CHAT_ID"])
+          admin_chat_id = str(os.environ.get("ADMIN_CHAT_ID", "")).strip()
           base = f"https://api.telegram.org/bot{token}/"
 
           def api(method, params=None):
@@ -68,9 +68,29 @@ jobs:
               if update_id is None or source_chat_id is None or message_id is None:
                   continue
 
-              # Only private messages are contact requests.
               if chat.get("type") != "private":
                   api("getUpdates", {"offset": update_id + 1, "timeout": 0})
+                  continue
+
+              text = (message.get("text") or "").strip()
+
+              if not admin_chat_id:
+                  if text.startswith("/start"):
+                      api("sendMessage", {
+                          "chat_id": source_chat_id,
+                          "text": (
+                              "Связь с Carni почти настроена.\n\n"
+                              f"Твой Telegram chat ID: {source_chat_id}\n\n"
+                              "Его нужно один раз сохранить в GitHub как секрет TELEGRAM_ADMIN_CHAT_ID."
+                          ),
+                      })
+                  else:
+                      api("sendMessage", {
+                          "chat_id": source_chat_id,
+                          "text": "Связь с Carni пока настраивается. Попробуй чуть позже.",
+                      })
+                  api("getUpdates", {"offset": update_id + 1, "timeout": 0})
+                  handled += 1
                   continue
 
               # Do not bounce Carni's own messages back to himself.
@@ -78,7 +98,6 @@ jobs:
                   api("getUpdates", {"offset": update_id + 1, "timeout": 0})
                   continue
 
-              text = (message.get("text") or "").strip()
               if text.startswith("/start"):
                   api("sendMessage", {
                       "chat_id": source_chat_id,
@@ -105,7 +124,6 @@ jobs:
                       "text": "Сообщение передано Carni.",
                   })
 
-              # Confirm only after successful handling so failed messages retry later.
               api("getUpdates", {"offset": update_id + 1, "timeout": 0})
               handled += 1
 
