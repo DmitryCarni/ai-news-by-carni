@@ -14,12 +14,12 @@ layout: default
 
 {% if page.report_type == "daily" %}
   {% assign archive_path = '/daily/' %}
-  {% assign archive_label = 'Архив ежедневных отчётов' %}
+  {% assign archive_label = 'Все новости' %}
   {% assign prev_label = '← Предыдущий день' %}
   {% assign next_label = 'Следующий день →' %}
 {% else %}
   {% assign archive_path = '/weekly/' %}
-  {% assign archive_label = 'Архив недельных отчётов' %}
+  {% assign archive_label = 'Главное за неделю' %}
   {% assign prev_label = '← Предыдущая неделя' %}
   {% assign next_label = 'Следующая неделя →' %}
 {% endif %}
