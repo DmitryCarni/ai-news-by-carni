@@ -4,6 +4,14 @@ layout: default
 
 {{ content }}
 
+<div class="telegram-cta">
+  <div>
+    <strong>Получать выжимку в Telegram</strong>
+    <p>Коротко о главном в AI — без новостного шума.</p>
+  </div>
+  <a class="telegram-button" href="https://t.me/ai_news_by_carni" target="_blank" rel="noopener noreferrer">Подписаться</a>
+</div>
+
 {% assign reports = site.pages | where: "report_type", page.report_type | sort: "report_date" %}
 {% assign current_index = nil %}
 {% for item in reports %}
