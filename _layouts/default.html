@@ -25,14 +25,10 @@
       </a>
       <div class="header-actions">
         <div class="header-telegram">Мы — в <a href="https://t.me/ai_news_by_carni" target="_blank" rel="noopener noreferrer">Telegram</a></div>
-        <div class="theme-control" title="Переключить тему">
-          <span class="theme-icon" aria-hidden="true">☾</span>
-          <label class="theme-switch">
-            <input id="theme-toggle" type="checkbox" role="switch" aria-label="Светлая тема">
-            <span class="theme-slider"></span>
-          </label>
-          <span class="theme-icon" aria-hidden="true">☀</span>
-        </div>
+        <button id="theme-toggle" class="theme-button" type="button">
+          <span class="theme-button-icon" aria-hidden="true">☀</span>
+          <span class="theme-button-label">Светлая тема</span>
+        </button>
       </div>
       <nav>
         <a href="{{ '/daily/' | relative_url }}">Новости</a>
@@ -47,20 +43,27 @@
   </footer>
   <script>
     (() => {
-      const toggle = document.getElementById('theme-toggle');
-      if (!toggle) return;
+      const button = document.getElementById('theme-toggle');
+      if (!button) return;
+      const icon = button.querySelector('.theme-button-icon');
+      const label = button.querySelector('.theme-button-label');
 
       const applyTheme = (theme, remember) => {
-        document.documentElement.dataset.theme = theme;
-        toggle.checked = theme === 'light';
-        toggle.setAttribute('aria-checked', toggle.checked ? 'true' : 'false');
+        const isLight = theme === 'light';
+        document.documentElement.dataset.theme = isLight ? 'light' : 'dark';
+        icon.textContent = isLight ? '☾' : '☀';
+        label.textContent = isLight ? 'Тёмная тема' : 'Светлая тема';
+        button.setAttribute('aria-label', isLight ? 'Включить тёмную тему' : 'Включить светлую тему');
         if (remember) {
-          try { localStorage.setItem('ai-news-theme', theme); } catch (_) {}
+          try { localStorage.setItem('ai-news-theme', isLight ? 'light' : 'dark'); } catch (_) {}
         }
       };
 
       applyTheme(document.documentElement.dataset.theme === 'light' ? 'light' : 'dark', false);
-      toggle.addEventListener('change', () => applyTheme(toggle.checked ? 'light' : 'dark', true));
+      button.addEventListener('click', () => {
+        const nextTheme = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+        applyTheme(nextTheme, true);
+      });
     })();
   </script>
 </body>
