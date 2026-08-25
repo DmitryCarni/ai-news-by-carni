@@ -5,3 +5,6 @@ baseurl: "/ai-news-by-carni"
 lang: "ru"
 markdown: kramdown
 permalink: pretty
+exclude:
+  - _telegram
+  - docs
