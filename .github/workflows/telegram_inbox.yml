@@ -75,20 +75,10 @@ jobs:
               text = (message.get("text") or "").strip()
 
               if not admin_chat_id:
-                  if text.startswith("/start"):
-                      api("sendMessage", {
-                          "chat_id": source_chat_id,
-                          "text": (
-                              "Связь с Carni почти настроена.\n\n"
-                              f"Твой Telegram chat ID: {source_chat_id}\n\n"
-                              "Его нужно один раз сохранить в GitHub как секрет TELEGRAM_ADMIN_CHAT_ID."
-                          ),
-                      })
-                  else:
-                      api("sendMessage", {
-                          "chat_id": source_chat_id,
-                          "text": "Связь с Carni пока настраивается. Попробуй чуть позже.",
-                      })
+                  api("sendMessage", {
+                      "chat_id": source_chat_id,
+                      "text": "Связь с Carni временно недоступна. Попробуй чуть позже.",
+                  })
                   api("getUpdates", {"offset": update_id + 1, "timeout": 0})
                   handled += 1
                   continue
