@@ -1,14 +1,14 @@
 ---
 layout: default
-title: Ежедневные отчёты
+title: Новости
 permalink: /daily/
 ---
 
 {% assign reports = site.pages | where: "report_type", "daily" | sort: "report_date" | reverse %}
 
-# Ежедневные отчёты
+# Новости
 
-Полный AI-радар за каждый завершённый календарный день.
+Все опубликованные выпуски по датам.
 
 {% if reports.size > 0 %}
 <div class="grid">
@@ -21,5 +21,5 @@ permalink: /daily/
 {% endfor %}
 </div>
 {% else %}
-**Опубликованных ежедневных отчётов пока нет.**
+**Новостей пока нет.**
 {% endif %}
