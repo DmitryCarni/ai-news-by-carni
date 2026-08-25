@@ -9,7 +9,7 @@ title: Главная
 {% assign latest_weekly = weekly_reports | first %}
 
 <section class="hero">
-<span class="eyebrow">AI-радар рынка</span>
+<span class="eyebrow">AI-радар технологий</span>
 <h1>AI News by Carni</h1>
 <p class="lead">Не поток AI-новостей, а радар изменений: куда движется отрасль, где появляется экономический сигнал, какие технологии уже можно применять и что происходит отдельно в 1С и финансах.</p>
 
