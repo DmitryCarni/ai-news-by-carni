@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{{ page.description | default: site.description }}">
   <title>{% if page.title %}{{ page.title }} · {% endif %}{{ site.title }}</title>
+  <script>
+    (() => {
+      let theme = 'dark';
+      try {
+        if (localStorage.getItem('ai-news-theme') === 'light') theme = 'light';
+      } catch (_) {}
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 </head>
 <body>
@@ -14,7 +23,17 @@
         <span class="brand-mark">AI</span>
         <span><strong>AI News by Carni</strong><small>Тренды · Инструменты · Монетизация</small></span>
       </a>
-      <div class="header-telegram">Мы — в <a href="https://t.me/ai_news_by_carni" target="_blank" rel="noopener noreferrer">Telegram</a></div>
+      <div class="header-actions">
+        <div class="header-telegram">Мы — в <a href="https://t.me/ai_news_by_carni" target="_blank" rel="noopener noreferrer">Telegram</a></div>
+        <div class="theme-control" title="Переключить тему">
+          <span class="theme-icon" aria-hidden="true">☾</span>
+          <label class="theme-switch">
+            <input id="theme-toggle" type="checkbox" role="switch" aria-label="Светлая тема">
+            <span class="theme-slider"></span>
+          </label>
+          <span class="theme-icon" aria-hidden="true">☀</span>
+        </div>
+      </div>
       <nav>
         <a href="{{ '/daily/' | relative_url }}">Новости</a>
         <a href="{{ '/weekly/' | relative_url }}">Главное за неделю</a>
@@ -26,5 +45,23 @@
   <footer class="wrap footer">
     <span>AI News by Carni</span>
   </footer>
+  <script>
+    (() => {
+      const toggle = document.getElementById('theme-toggle');
+      if (!toggle) return;
+
+      const applyTheme = (theme, remember) => {
+        document.documentElement.dataset.theme = theme;
+        toggle.checked = theme === 'light';
+        toggle.setAttribute('aria-checked', toggle.checked ? 'true' : 'false');
+        if (remember) {
+          try { localStorage.setItem('ai-news-theme', theme); } catch (_) {}
+        }
+      };
+
+      applyTheme(document.documentElement.dataset.theme === 'light' ? 'light' : 'dark', false);
+      toggle.addEventListener('change', () => applyTheme(toggle.checked ? 'light' : 'dark', true));
+    })();
+  </script>
 </body>
 </html>
