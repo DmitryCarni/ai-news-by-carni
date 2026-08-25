@@ -1,0 +1,47 @@
+---
+layout: default
+---
+
+{{ content }}
+
+{% assign reports = site.pages | where: "report_type", page.report_type | sort: "report_date" %}
+{% assign current_index = nil %}
+{% for item in reports %}
+  {% if item.url == page.url %}
+    {% assign current_index = forloop.index0 %}
+  {% endif %}
+{% endfor %}
+
+{% if page.report_type == "daily" %}
+  {% assign archive_path = '/daily/' %}
+  {% assign archive_label = 'Архив ежедневных отчётов' %}
+  {% assign prev_label = '← Предыдущий день' %}
+  {% assign next_label = 'Следующий день →' %}
+{% else %}
+  {% assign archive_path = '/weekly/' %}
+  {% assign archive_label = 'Архив недельных отчётов' %}
+  {% assign prev_label = '← Предыдущая неделя' %}
+  {% assign next_label = 'Следующая неделя →' %}
+{% endif %}
+
+<div class="day-nav">
+{% if current_index != nil %}
+  {% assign prev_index = current_index | minus: 1 %}
+  {% assign next_index = current_index | plus: 1 %}
+  {% if prev_index >= 0 %}
+    {% assign prev_report = reports[prev_index] %}
+    <a href="{{ prev_report.url | relative_url }}">{{ prev_label }}</a>
+  {% else %}
+    <span class="disabled">{{ prev_label }}</span>
+  {% endif %}
+  <a class="archive" href="{{ archive_path | relative_url }}">{{ archive_label }}</a>
+  {% if next_index < reports.size %}
+    {% assign next_report = reports[next_index] %}
+    <a href="{{ next_report.url | relative_url }}">{{ next_label }}</a>
+  {% else %}
+    <span class="disabled">{{ next_label }}</span>
+  {% endif %}
+{% else %}
+  <span></span><a class="archive" href="{{ archive_path | relative_url }}">{{ archive_label }}</a><span></span>
+{% endif %}
+</div>
