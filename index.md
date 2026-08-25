@@ -5,9 +5,7 @@ title: Главная
 
 <section class="hero">
 <span class="eyebrow">Market-first AI radar</span>
-
-# AI News by Carni
-
+<h1>AI News by Carni</h1>
 <p class="lead">Не поток AI-новостей, а радар изменений: куда движется отрасль, где появляется экономический сигнал, какие инструменты уже можно применять и что происходит отдельно в 1С и финансах.</p>
 
 <div class="grid">
