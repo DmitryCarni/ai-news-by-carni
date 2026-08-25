@@ -8,4 +8,4 @@ permalink: /about/
 
 **AI News by Carni — фильтр от AI-шума.**
 
-**Главное — до того, как оно стало очевидным.**
+Есть предложения? Напиши боту — [Написать Carni](https://t.me/ai_news_by_carni_bot?start=site)
