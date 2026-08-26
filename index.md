@@ -11,7 +11,7 @@ title: Главная
 <section class="hero">
 <span class="eyebrow">AI-радар технологий</span>
 <h1>AI News by Carni</h1>
-<p class="lead"><strong>Не следим за AI-новостями — следим за изменением правил игры.</strong><br>Показываем только то, что действительно двигает рынок.</p>
+<p class="lead"><strong>Информационный шум умирает здесь.</strong><br>В фокусе только то, что действительно меняет рынок.</p>
 
 <div class="grid">
 {% if latest_daily %}
