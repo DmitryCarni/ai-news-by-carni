@@ -47,18 +47,23 @@
     }
     .brand-mark.brand-circuit{
       display:block;
-      width:72px;
-      height:38px;
-      flex:0 0 72px;
+      width:120px;
+      height:42px;
+      flex:0 0 120px;
       border:0;
       border-radius:0;
       background:none;
       color:#18d7ff;
-      filter:drop-shadow(0 0 2px rgba(24,215,255,.30));
+      filter:drop-shadow(0 0 1.5px rgba(24,215,255,.24));
     }
     .brand-circuit svg{display:block;width:100%;height:100%;overflow:visible}
-    .brand-circuit path{fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+    .brand-circuit path{fill:none;stroke:currentColor;stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round}
+    .brand-circuit .trace-main{opacity:.9}
+    .brand-circuit .trace-mid{opacity:.68}
+    .brand-circuit .trace-muted{opacity:.38}
     .brand-circuit circle{fill:currentColor}
+    .brand-circuit .node-small{opacity:.66}
+    .brand-circuit .node-main{opacity:.96}
     html[data-theme="light"] .site-header::after{
       background:linear-gradient(90deg,rgba(36,94,219,.10) 0%,rgba(36,94,219,.24) 28%,rgba(36,94,219,.58) 72%,rgba(36,94,219,.72) 94%,rgba(36,94,219,.16) 100%);
       box-shadow:none;
@@ -72,7 +77,7 @@
       filter:none;
     }
     @media(max-width:700px){
-      .brand-mark.brand-circuit{width:58px;height:32px;flex-basis:58px}
+      .brand-mark.brand-circuit{width:78px;height:34px;flex-basis:78px}
       .site-header::before{right:8%}
     }
   </style>
@@ -82,13 +87,17 @@
     <div class="wrap header-inner">
       <a class="brand" href="{{ '/' | relative_url }}">
         <span class="brand-mark brand-circuit" aria-hidden="true">
-          <svg viewBox="0 0 82 38" role="img" focusable="false">
-            <path d="M1 8h33l8-6h27" />
-            <path d="M1 18h25l8-6h35" />
-            <path d="M1 29h31l8-8h29" />
-            <circle cx="69" cy="2" r="2.1" />
-            <circle cx="69" cy="12" r="2.1" />
-            <circle cx="69" cy="21" r="2.1" />
+          <svg viewBox="0 0 132 44" role="img" focusable="false">
+            <path class="trace-muted" d="M0 8H42L53 2H93" />
+            <path class="trace-mid" d="M0 15H34L45 9H73L81 14H113" />
+            <path class="trace-main" d="M0 24H51L60 17H103" />
+            <path class="trace-mid" d="M0 33H39L50 26H74L86 38H119" />
+            <path class="trace-muted" d="M0 39H26L36 32H56" />
+            <circle class="node-small" cx="93" cy="2" r="1.55" />
+            <circle class="node-small" cx="113" cy="14" r="1.65" />
+            <circle class="node-main" cx="103" cy="17" r="2.5" />
+            <circle class="node-main" cx="119" cy="38" r="2.25" />
+            <circle class="node-small" cx="56" cy="32" r="1.45" />
           </svg>
         </span>
         <span><strong>AI News by Carni</strong><small>Тренды · Инструменты · Монетизация</small></span>
