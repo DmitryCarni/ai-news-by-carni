@@ -2,7 +2,9 @@
 layout: default
 ---
 
+<article class="report">
 {{ content }}
+</article>
 
 {% assign reports = site.pages | where: "report_type", page.report_type | sort: "report_date" %}
 {% assign current_index = nil %}
