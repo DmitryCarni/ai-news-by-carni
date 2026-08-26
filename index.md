@@ -9,7 +9,6 @@ title: Главная
 {% assign latest_weekly = weekly_reports | first %}
 
 <section class="hero">
-<span class="eyebrow">AI-радар технологий</span>
 <h1>AI News by Carni</h1>
 <p class="lead"><strong>Информационный шум умирает здесь.</strong><br>В фокусе только то, что действительно меняет рынок.</p>
 
