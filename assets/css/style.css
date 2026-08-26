@@ -8,6 +8,7 @@
   --accent:#9cecff;
   --accent2:#b9ffca;
   --section-accent:#2f6feb;
+  --source-link:#d9f0f4;
   --radius:18px;
   --header-bg:rgba(11,13,16,.88);
   --brand-border:#3f4a59;
@@ -32,6 +33,7 @@ html[data-theme="light"]{
   --accent:#087f9c;
   --accent2:#18794e;
   --section-accent:#245edb;
+  --source-link:#4f7883;
   --header-bg:#ffffff;
   --brand-border:#c8d1dc;
   --brand-from:#ffffff;
@@ -110,6 +112,7 @@ li{margin:6px 0}
 code{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:2px 5px}
 .report-nav{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 8px}
 .report-nav a{color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-size:13px}
+.report p a[href^="http"]{color:var(--source-link)}
 
 h2#fundamental,
 h2#applied,
