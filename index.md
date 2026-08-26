@@ -8,7 +8,7 @@ title: Главная
 {% assign latest_daily = daily_reports | first %}
 {% assign latest_weekly = weekly_reports | first %}
 
-<section class="hero">
+<section class="hero" style="padding-top:20px">
 <h1>AI News by Carni</h1>
 <p class="lead"><strong>Информационный шум умирает здесь.</strong><br>В фокусе только то, что действительно меняет рынок.</p>
 
