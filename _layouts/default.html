@@ -21,6 +21,12 @@
       overflow:hidden;
       border-bottom:0;
     }
+    .site-header .header-inner{
+      min-height:88px;
+    }
+    .site-header .brand{
+      gap:20px;
+    }
     .site-header::after{
       content:"";
       position:absolute;
@@ -47,23 +53,30 @@
     }
     .brand-mark.brand-circuit{
       display:block;
-      width:108px;
-      height:30px;
-      flex:0 0 108px;
+      width:116px;
+      height:32px;
+      flex:0 0 116px;
       border:0;
       border-radius:0;
       background:none;
-      color:#18d7ff;
-      filter:drop-shadow(0 0 1.5px rgba(24,215,255,.24));
+      color:#2f6feb;
+      filter:drop-shadow(0 0 1.5px rgba(47,111,235,.28));
     }
-    .brand-circuit svg{display:block;width:100%;height:100%;overflow:visible}
+    .brand-circuit svg{
+      display:block;
+      width:100%;
+      height:100%;
+      overflow:visible;
+      -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.12) 12%,rgba(0,0,0,.55) 28%,#000 46%,#000 100%);
+      mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.12) 12%,rgba(0,0,0,.55) 28%,#000 46%,#000 100%);
+    }
     .brand-circuit path{fill:none;stroke:currentColor;stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round}
-    .brand-circuit .trace-main{opacity:.92}
-    .brand-circuit .trace-mid{opacity:.66}
-    .brand-circuit .trace-muted{opacity:.34}
+    .brand-circuit .trace-main{opacity:.96}
+    .brand-circuit .trace-mid{opacity:.78}
+    .brand-circuit .trace-muted{opacity:.52}
     .brand-circuit circle{fill:currentColor}
-    .brand-circuit .node-main{opacity:.96}
-    .brand-circuit .node-small{opacity:.72}
+    .brand-circuit .node-main{opacity:.98}
+    .brand-circuit .node-small{opacity:.82}
     html[data-theme="light"] .site-header::after{
       background:linear-gradient(90deg,rgba(36,94,219,.10) 0%,rgba(36,94,219,.24) 28%,rgba(36,94,219,.58) 72%,rgba(36,94,219,.72) 94%,rgba(36,94,219,.16) 100%);
       box-shadow:none;
@@ -73,11 +86,13 @@
       box-shadow:0 0 5px rgba(36,94,219,.40);
     }
     html[data-theme="light"] .brand-mark.brand-circuit{
-      color:#245edb;
+      color:#2f6feb;
       filter:none;
     }
     @media(max-width:700px){
-      .brand-mark.brand-circuit{width:76px;height:24px;flex-basis:76px}
+      .site-header .header-inner{min-height:76px}
+      .site-header .brand{gap:14px}
+      .brand-mark.brand-circuit{width:80px;height:24px;flex-basis:80px}
       .site-header::before{right:8%}
     }
   </style>
