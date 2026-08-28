@@ -14,10 +14,12 @@ title: Главная
 
 <div class="grid">
 {% if latest_daily %}
+{% assign daily_key = latest_daily.report_date | date: "%Y-%m-%d" %}
+{% assign daily_teaser = site.data.daily_teasers[daily_key] | default: latest_daily.card_title | default: latest_daily.summary | default: latest_daily.description %}
 <a class="card" href="{{ latest_daily.url | relative_url }}">
   <span class="kicker">ГОРЯЧЕЕ В ИИ</span>
   <strong>{{ latest_daily.title | replace: "ИИ новости:", "Главные новости" }}</strong>
-  <p>{{ latest_daily.card_title | replace: "Агенты выходят в физический мир и регулируемые финансы", "Агенты получают руки: техника, деньги и реальные действия." | default: latest_daily.summary | default: latest_daily.description }}</p>
+  <p>{{ daily_teaser }}</p>
 </a>
 {% else %}
 <a class="card" href="{{ '/daily/' | relative_url }}">
