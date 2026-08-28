@@ -29,13 +29,13 @@ title: Главная
 
 {% if latest_weekly %}
 <a class="card" href="{{ latest_weekly.url | relative_url }}">
-  <span class="kicker">Главное за неделю</span>
+  <span class="kicker">ПОСЛЕ ШУМА</span>
   <strong>{{ latest_weekly.title }}</strong>
   <p>{{ latest_weekly.summary | default: latest_weekly.description }}</p>
 </a>
 {% else %}
 <a class="card" href="{{ '/weekly/' | relative_url }}">
-  <span class="kicker">Главное за неделю</span>
+  <span class="kicker">ПОСЛЕ ШУМА</span>
   <strong>Главное за неделю</strong>
   <p>Что изменило неделю в ИИ — и почему это важно.</p>
 </a>
