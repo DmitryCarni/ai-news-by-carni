@@ -35,6 +35,8 @@ permalink: /search/
 .search-result-meta{margin-bottom:5px;color:var(--muted);font-size:12px;letter-spacing:.07em;text-transform:uppercase}
 .search-result-title{display:block;font-size:20px;font-weight:750;line-height:1.3}
 .search-result-snippet{margin:8px 0 0;color:var(--muted);font-size:15px;line-height:1.55}
+.search-result mark{padding:.04em .16em;border-radius:4px;background:rgba(47,111,235,.28);box-shadow:inset 0 0 0 1px rgba(47,111,235,.38);color:var(--text);font-weight:650}
+html[data-theme="light"] .search-result mark{background:rgba(47,111,235,.15);box-shadow:inset 0 0 0 1px rgba(47,111,235,.24)}
 .search-empty{padding:22px;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);color:var(--muted)}
 @media(max-width:700px){
   .search-page-field{align-items:stretch;flex-direction:column}
@@ -61,10 +63,51 @@ permalink: /search/
 
   const normalize = (value) => String(value || '').toLocaleLowerCase('ru-RU').replace(/ё/g, 'е');
   const normalizedQuery = normalize(query);
+  const rawTerms = query.split(/\s+/).filter(Boolean);
   const terms = normalizedQuery.split(/\s+/).filter(Boolean);
 
+  const cleanSearchText = (value) => String(value || '')
+    .replace(/Стадия:\s*(?:шум|перспективно|уже внедряется|меняет рынок)/giu, ' ')
+    .replace(/(?:Монетизация|Коммерческий потенциал|Доступность|1С\/финансы|Релевантность(?: 1С\/финансам)?)\s*:\s*\d+\s*\/\s*10/giu, ' ')
+    .replace(/(?:Источник|Источники|Ссылки):?/giu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const highlightParts = rawTerms
+    .map((term) => escapeRegExp(term).replace(/[её]/giu, '[её]'))
+    .sort((a, b) => b.length - a.length);
+  const highlightPattern = highlightParts.length ? new RegExp(`(${highlightParts.join('|')})`, 'giu') : null;
+
+  const appendHighlightedText = (element, text) => {
+    const value = String(text || '');
+    if (!highlightPattern) {
+      element.textContent = value;
+      return;
+    }
+
+    highlightPattern.lastIndex = 0;
+    let lastIndex = 0;
+    let match;
+    while ((match = highlightPattern.exec(value)) !== null) {
+      if (match.index > lastIndex) {
+        element.appendChild(document.createTextNode(value.slice(lastIndex, match.index)));
+      }
+      const mark = document.createElement('mark');
+      mark.textContent = match[0];
+      element.appendChild(mark);
+      lastIndex = match.index + match[0].length;
+      if (!match[0].length) break;
+    }
+    if (lastIndex < value.length) {
+      element.appendChild(document.createTextNode(value.slice(lastIndex)));
+    }
+  };
+
   const makeSnippet = (item) => {
-    const source = String(item.content || item.teaser || '');
+    const content = cleanSearchText(item.content || '');
+    const teaser = cleanSearchText(item.teaser || '');
+    const source = `${teaser}${teaser && content ? ' — ' : ''}${content}`;
     const normalized = normalize(source);
     let index = normalized.indexOf(normalizedQuery);
     if (index < 0) {
@@ -102,11 +145,11 @@ permalink: /search/
 
       const title = document.createElement('span');
       title.className = 'search-result-title';
-      title.textContent = item.title || item.teaser || 'Материал';
+      appendHighlightedText(title, item.title || item.teaser || 'Материал');
 
       const snippet = document.createElement('p');
       snippet.className = 'search-result-snippet';
-      snippet.textContent = makeSnippet(item);
+      appendHighlightedText(snippet, makeSnippet(item));
 
       link.append(meta, title, snippet);
       results.appendChild(link);
