@@ -10,7 +10,7 @@ title: Главная
 
 <section class="hero" style="padding-top:20px">
 <h1>AI News by Carni</h1>
-<p class="lead"><strong>Информационный шум умирает здесь.</strong><br>В фокусе только то, что действительно меняет рынок.</p>
+<p class="lead"><strong>Информационный шум умирает здесь.</strong><br>Самое важное в ИИ — за день и за неделю.</p>
 
 <div class="grid">
 {% if latest_daily %}
