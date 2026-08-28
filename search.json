@@ -1,0 +1,19 @@
+---
+layout: null
+permalink: /search.json
+---
+{% assign daily_reports = site.pages | where: "report_type", "daily" %}
+{% assign weekly_reports = site.pages | where: "report_type", "weekly" %}
+{% assign reports = daily_reports | concat: weekly_reports | sort: "report_date" | reverse %}
+[
+{% for report in reports %}
+  {
+    "title": {{ report.title | default: "" | jsonify }},
+    "date": {{ report.report_date_display | default: report.report_date | default: "" | jsonify }},
+    "type": {{ report.report_type | default: "" | jsonify }},
+    "url": {{ report.url | relative_url | jsonify }},
+    "teaser": {{ report.card_title | default: report.summary | default: report.description | default: "" | jsonify }},
+    "content": {{ report.content | markdownify | strip_html | strip_newlines | jsonify }}
+  }{% unless forloop.last %},{% endunless %}
+{% endfor %}
+]
