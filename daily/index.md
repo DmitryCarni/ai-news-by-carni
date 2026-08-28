@@ -15,7 +15,7 @@ permalink: /daily/
 {% for report in reports %}
 <a class="card archive-card" href="{{ report.url | relative_url }}">
   <strong class="archive-date">{{ report.report_date_display | default: report.title }}</strong>
-  <p class="archive-summary">{{ report.summary | default: report.description }}</p>
+  <p class="archive-summary">{{ report.card_title | default: report.summary | default: report.description }}</p>
 </a>
 {% endfor %}
 </div>
