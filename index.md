@@ -15,14 +15,14 @@ title: Главная
 <div class="grid">
 {% if latest_daily %}
 <a class="card" href="{{ latest_daily.url | relative_url }}">
-  <span class="kicker">Новости</span>
-  <strong>{{ latest_daily.title }}</strong>
+  <span class="kicker">ГОРЯЧЕЕ В ИИ</span>
+  <strong>{{ latest_daily.title | replace: "ИИ новости:", "Главные новости" }}</strong>
   <p>{{ latest_daily.summary | default: latest_daily.description }}</p>
 </a>
 {% else %}
 <a class="card" href="{{ '/daily/' | relative_url }}">
-  <span class="kicker">Новости</span>
-  <strong>Новости в AI</strong>
+  <span class="kicker">ГОРЯЧЕЕ В ИИ</span>
+  <strong>Главные новости</strong>
   <p>Главное за каждый завершённый календарный день.</p>
 </a>
 {% endif %}
