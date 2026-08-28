@@ -31,7 +31,7 @@ title: Главная
 <a class="card" href="{{ latest_weekly.url | relative_url }}">
   <span class="kicker">ПОСЛЕ ШУМА</span>
   <strong>Главное за неделю</strong>
-  <p>{{ latest_weekly.summary | default: latest_weekly.description }}</p>
+  <p>Что изменило неделю в ИИ — и какие сдвиги действительно останутся после шума.</p>
 </a>
 {% else %}
 <a class="card" href="{{ '/weekly/' | relative_url }}">
