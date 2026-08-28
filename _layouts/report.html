@@ -8,10 +8,13 @@ layout: default
 {% assign report_content = report_content | replace: '<h2 id="stack">Технологический стек AI</h2>', '<h2 id="stack">Архитектура и технологии внедрения</h2>' %}
 {% assign report_content = report_content | replace: '<h2 id="finance">1С, Финансы</h2>', '<h2 id="finance">Финансы</h2>' %}
 {% assign report_content = report_content | replace: '<h2 id="finance-tools">AI-инструменты для 1С и финансов</h2>', '<h2 id="finance-tools">Инструменты и интеграции</h2>' %}
+{% assign report_content = report_content | replace: '<h2 id="monetization">Где есть потенциал для монетизации</h2>', '<h2 id="monetization">Возможности для бизнеса</h2>' %}
 {% assign report_content = report_content | replace: '<a href="#applied">Прикладные направления</a>', '<a href="#applied">Продукты</a>' %}
 {% assign report_content = report_content | replace: '<a href="#stack">Технологический стек</a>', '<a href="#stack">Архитектура и технологии внедрения</a>' %}
 {% assign report_content = report_content | replace: '<a href="#finance">1С, Финансы</a>', '<a href="#finance">Финансы</a>' %}
 {% assign report_content = report_content | replace: '<a href="#finance-tools">AI-инструменты</a>', '<a href="#finance-tools">Инструменты и интеграции</a>' %}
+{% assign report_content = report_content | replace: '<a href="#monetization">Монетизация</a>', '<a href="#monetization">Возможности для бизнеса</a>' %}
+{% assign report_content = report_content | replace: '<a href="#monetization">Где есть потенциал для монетизации</a>', '<a href="#monetization">Возможности для бизнеса</a>' %}
 
 {% assign report_content = report_content | replace: '<span class="pill">Монетизация:', '<span class="pill">Коммерческий потенциал:' %}
 {% assign report_content = report_content | replace: '<span class="pill">Потенциал монетизации:', '<span class="pill">Коммерческий потенциал:' %}
