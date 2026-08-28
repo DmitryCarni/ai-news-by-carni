@@ -17,7 +17,7 @@ title: Главная
 <a class="card" href="{{ latest_daily.url | relative_url }}">
   <span class="kicker">ГОРЯЧЕЕ В ИИ</span>
   <strong>{{ latest_daily.title | replace: "ИИ новости:", "Главные новости" }}</strong>
-  <p>{{ latest_daily.card_title | default: latest_daily.summary | default: latest_daily.description }}</p>
+  <p>{{ latest_daily.card_title | replace: "Агенты выходят в физический мир и регулируемые финансы", "Агенты получают руки: техника, деньги и реальные действия." | default: latest_daily.summary | default: latest_daily.description }}</p>
 </a>
 {% else %}
 <a class="card" href="{{ '/daily/' | relative_url }}">
@@ -31,13 +31,13 @@ title: Главная
 <a class="card" href="{{ latest_weekly.url | relative_url }}">
   <span class="kicker">ПОСЛЕ ШУМА</span>
   <strong>Главное за неделю</strong>
-  <p>Что изменило неделю в ИИ — и какие сдвиги действительно останутся после шума.</p>
+  <p>Что изменило неделю в ИИ — и почему это важно.</p>
 </a>
 {% else %}
 <a class="card" href="{{ '/weekly/' | relative_url }}">
   <span class="kicker">ПОСЛЕ ШУМА</span>
   <strong>Главное за неделю</strong>
-  <p>Что изменило неделю в ИИ — и какие сдвиги действительно останутся после шума.</p>
+  <p>Что изменило неделю в ИИ — и почему это важно.</p>
 </a>
 {% endif %}
 </div>
