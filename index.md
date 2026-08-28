@@ -17,27 +17,27 @@ title: Главная
 <a class="card" href="{{ latest_daily.url | relative_url }}">
   <span class="kicker">ГОРЯЧЕЕ В ИИ</span>
   <strong>{{ latest_daily.title | replace: "ИИ новости:", "Главные новости" }}</strong>
-  <p>{{ latest_daily.summary | default: latest_daily.description }}</p>
+  <p>{{ latest_daily.card_title | default: latest_daily.summary | default: latest_daily.description }}</p>
 </a>
 {% else %}
 <a class="card" href="{{ '/daily/' | relative_url }}">
   <span class="kicker">ГОРЯЧЕЕ В ИИ</span>
   <strong>Главные новости</strong>
-  <p>Главное за каждый завершённый календарный день.</p>
+  <p>Что действительно важно сегодня — без новостей ради новостей.</p>
 </a>
 {% endif %}
 
 {% if latest_weekly %}
 <a class="card" href="{{ latest_weekly.url | relative_url }}">
   <span class="kicker">ПОСЛЕ ШУМА</span>
-  <strong>{{ latest_weekly.title }}</strong>
+  <strong>Главное за неделю</strong>
   <p>{{ latest_weekly.summary | default: latest_weekly.description }}</p>
 </a>
 {% else %}
 <a class="card" href="{{ '/weekly/' | relative_url }}">
   <span class="kicker">ПОСЛЕ ШУМА</span>
   <strong>Главное за неделю</strong>
-  <p>Что изменило неделю в ИИ — и почему это важно.</p>
+  <p>Что изменило неделю в ИИ — и какие сдвиги действительно останутся после шума.</p>
 </a>
 {% endif %}
 </div>
