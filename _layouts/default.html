@@ -86,6 +86,14 @@
     .brand-circuit circle{fill:currentColor}
     .brand-circuit .node-main{opacity:.98}
     .brand-circuit .node-small{opacity:.82}
+    .header-nav-stack{display:flex;flex-direction:column;align-items:stretch;gap:7px;min-width:270px}
+    .header-nav-stack nav{justify-content:flex-end}
+    .header-search{position:relative;display:flex;align-items:center;margin:0}
+    .header-search svg{position:absolute;left:10px;width:14px;height:14px;color:var(--muted);pointer-events:none}
+    .header-search input{width:100%;height:28px;border:1px solid var(--line);border-radius:999px;background:var(--panel2);color:var(--text);font:inherit;font-size:12px;line-height:1;padding:0 12px 0 31px;outline:0;transition:border-color .2s ease,background-color .2s ease,box-shadow .2s ease}
+    .header-search input::placeholder{color:var(--muted)}
+    .header-search input:hover{border-color:var(--card-hover-border)}
+    .header-search input:focus{border-color:#2f6feb;box-shadow:0 0 0 2px rgba(47,111,235,.12);background:var(--panel)}
     html[data-theme="light"] .site-header::after{
       background:linear-gradient(90deg,rgba(47,111,235,.10) 0%,rgba(47,111,235,.24) 28%,rgba(47,111,235,.58) 72%,rgba(47,111,235,.72) 94%,rgba(47,111,235,.16) 100%);
       box-shadow:none;
@@ -103,6 +111,9 @@
       .site-header .brand{gap:14px}
       .brand-mark.brand-circuit{width:80px;height:24px;flex-basis:80px}
       .site-header::before{right:8%}
+      .header-nav-stack{width:100%;min-width:0;gap:9px}
+      .header-nav-stack nav{justify-content:space-between}
+      .header-search input{height:34px;font-size:13px}
     }
   </style>
 </head>
@@ -130,11 +141,17 @@
           <span class="theme-button-label">Светлая тема</span>
         </button>
       </div>
-      <nav>
-        <a href="{{ '/daily/' | relative_url }}">Новости</a>
-        <a href="{{ '/weekly/' | relative_url }}">Главное за неделю</a>
-        <a href="{{ '/about/' | relative_url }}">О проекте</a>
-      </nav>
+      <div class="header-nav-stack">
+        <nav>
+          <a href="{{ '/daily/' | relative_url }}">Новости</a>
+          <a href="{{ '/weekly/' | relative_url }}">Главное за неделю</a>
+          <a href="{{ '/about/' | relative_url }}">О проекте</a>
+        </nav>
+        <form class="header-search" action="{{ '/search/' | relative_url }}" method="get" role="search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input type="search" name="q" placeholder="Поиск" aria-label="Поиск по статьям" autocomplete="off">
+        </form>
+      </div>
     </div>
   </header>
   <main class="wrap content">{{ content }}</main>
