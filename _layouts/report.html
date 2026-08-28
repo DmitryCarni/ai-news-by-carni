@@ -13,6 +13,15 @@ layout: default
 {% assign report_content = report_content | replace: '<a href="#finance">1С, Финансы</a>', '<a href="#finance">Финансы</a>' %}
 {% assign report_content = report_content | replace: '<a href="#finance-tools">AI-инструменты</a>', '<a href="#finance-tools">Инструменты и интеграции</a>' %}
 
+{% assign report_content = report_content | replace: '<span class="pill">Монетизация:', '<span class="pill">Коммерческий потенциал:' %}
+{% assign report_content = report_content | replace: '<span class="pill">Потенциал монетизации:', '<span class="pill">Коммерческий потенциал:' %}
+{% for score in (0..10) %}
+  {% capture old_profile_short %}<span class="pill">1С/финансы: {{ score }}/10</span>{% endcapture %}
+  {% capture old_profile_long %}<span class="pill">Релевантность 1С/финансам: {{ score }}/10</span>{% endcapture %}
+  {% assign report_content = report_content | replace: old_profile_short, '' %}
+  {% assign report_content = report_content | replace: old_profile_long, '' %}
+{% endfor %}
+
 <article class="report">
 {{ report_content }}
 </article>
