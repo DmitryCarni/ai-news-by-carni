@@ -13,9 +13,11 @@ permalink: /daily/
 {% if reports.size > 0 %}
 <div class="grid archive-grid">
 {% for report in reports %}
+{% assign daily_key = report.report_date | date: "%Y-%m-%d" %}
+{% assign daily_teaser = site.data.daily_teasers[daily_key] | default: report.card_title | default: report.summary | default: report.description %}
 <a class="card archive-card" href="{{ report.url | relative_url }}">
   <strong class="archive-date">{{ report.report_date_display | default: report.title }}</strong>
-  <p class="archive-summary">{{ report.card_title | default: report.summary | default: report.description }}</p>
+  <p class="archive-summary">{{ daily_teaser }}</p>
 </a>
 {% endfor %}
 </div>
