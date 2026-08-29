@@ -14,8 +14,10 @@
 
 ## GitHub Pages
 
-Сайт рассчитан на публикацию из ветки `main`, корень `/(root)`.
+Сайт публикуется из ветки `main`, корень `/(root)`.
 
-Ожидаемый адрес после включения Pages:
+Основной адрес:
 
-`https://dmitrycarni.github.io/ai-news-by-carni/`
+`https://news.carni.ltd/`
+
+GitHub Pages обслуживает сайт через custom domain, заданный файлом `CNAME`.
