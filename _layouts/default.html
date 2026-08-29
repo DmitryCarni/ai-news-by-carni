@@ -5,9 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{{ page.description | default: site.description }}">
   <title>{% if page.url == '/' %}{{ site.title }}{% elsif page.title %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
-  <link rel="icon" href="{{ '/favicon.ico' | relative_url }}?v=ai-20260829-5" type="image/x-icon" sizes="32x32">
-  <link rel="shortcut icon" href="{{ '/favicon.ico' | relative_url }}?v=ai-20260829-5" type="image/x-icon">
-  <link rel="apple-touch-icon" href="{{ '/assets/favicon-ai-64.png' | relative_url }}?v=ai-20260829-5">
+  {% assign favicon_page_key = page.url | default: '/' | replace: '/', '-' | replace: '.', '-' %}
+  <link rel="icon" href="{{ '/assets/favicon-ai-v2.png' | relative_url }}?v=ai-20260829-6{{ favicon_page_key }}" type="image/png" sizes="64x64">
+  <link rel="shortcut icon" href="{{ '/assets/favicon-ai-v2.png' | relative_url }}?v=ai-20260829-6{{ favicon_page_key }}" type="image/png">
+  <link rel="apple-touch-icon" href="{{ '/assets/favicon-ai-v2.png' | relative_url }}?v=ai-20260829-6{{ favicon_page_key }}">
+  <script>
+    (() => {
+      const href = "{{ '/assets/favicon-ai-v2.png' | relative_url }}?v=ai-20260829-6{{ favicon_page_key }}";
+      const applyFavicon = () => {
+        document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]').forEach(link => { link.href = href; });
+      };
+      applyFavicon();
+      window.addEventListener('pageshow', applyFavicon);
+    })();
+  </script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-D2SGE0T08Y"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
