@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{{ page.description | default: site.description }}">
   <title>{% if page.url == '/' %}{{ site.title }}{% elsif page.title %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
-  {% assign favicon_version = site.time | date: '%s' %}
-  <link id="site-favicon" rel="icon" href="{{ '/assets/favicon-ai-64.png' | relative_url }}?v={{ favicon_version }}" type="image/png" sizes="64x64">
-  <link rel="shortcut icon" href="{{ '/assets/favicon-ai-64.png' | relative_url }}?v={{ favicon_version }}" type="image/png">
+  <link rel="icon" href="{{ '/favicon.ico' | relative_url }}?v=ai-20260829-4" type="image/x-icon" sizes="any">
+  <link rel="shortcut icon" href="{{ '/favicon.ico' | relative_url }}?v=ai-20260829-4" type="image/x-icon">
+  <link rel="apple-touch-icon" href="{{ '/assets/favicon-ai-64.png' | relative_url }}?v=ai-20260829-4">
   <script>
     (() => {
-      const href = "{{ '/assets/favicon-ai-64.png' | relative_url }}?v={{ favicon_version }}";
+      const href = "{{ '/favicon.ico' | relative_url }}?v=ai-20260829-4";
       const refreshFavicon = () => {
-        document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]').forEach(link => { link.href = href; });
-        const forced = document.createElement('link');
-        forced.rel = 'icon';
-        forced.type = 'image/png';
-        forced.sizes = '64x64';
-        forced.href = href;
-        document.head.appendChild(forced);
+        document.querySelectorAll('link[rel~="icon"]').forEach(link => link.remove());
+        const icon = document.createElement('link');
+        icon.rel = 'icon';
+        icon.type = 'image/x-icon';
+        icon.href = href;
+        document.head.appendChild(icon);
       };
-      refreshFavicon();
       window.addEventListener('pageshow', refreshFavicon);
+      window.addEventListener('load', refreshFavicon);
+      setTimeout(refreshFavicon, 250);
     })();
   </script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-D2SGE0T08Y"></script>
