@@ -1,25 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="AI News">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 726 726" role="img" aria-label="AI">
   <defs>
-    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+    <linearGradient id="core" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4ffff"/>
+      <stop offset="1" stop-color="#c9f8ff"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="11" result="b1"/>
+      <feGaussianBlur stdDeviation="4" result="b2"/>
       <feMerge>
-        <feMergeNode in="blur"/>
+        <feMergeNode in="b1"/>
+        <feMergeNode in="b2"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
-    <linearGradient id="cyan" x1="0" x2="1">
-      <stop offset="0" stop-color="#2f6feb"/>
-      <stop offset="1" stop-color="#79f6ff"/>
-    </linearGradient>
   </defs>
-  <rect width="64" height="64" rx="13" fill="#05070b"/>
-  <g filter="url(#glow)">
-    <path fill="#eefcff" fill-rule="evenodd" d="M8 36 18.5 10h11L40 36h-8.2l-2.2-6H18.3l-2.2 6H8Zm13-13h6.1l-3-8.6L21 23Z"/>
-    <rect x="43" y="10" width="9" height="26" rx="1" fill="#eefcff"/>
-    <text x="30.5" y="47" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8.2" font-weight="700" letter-spacing="2.1" fill="#dffbff">NEWS</text>
-    <path d="M8 53h21l3-3h15l2-2h7" fill="none" stroke="url(#cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M8 58h22l3 2 3-3h17" fill="none" stroke="url(#cyan)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="57" cy="48" r="2.3" fill="#05070b" stroke="#79f6ff" stroke-width="1.8"/>
-    <circle cx="54" cy="57" r="2.1" fill="#05070b" stroke="#4b7cff" stroke-width="1.8"/>
+  <rect width="726" height="726" fill="#000"/>
+  <g transform="translate(0 87.5)" filter="url(#glow)">
+    <path fill="#1168ff" opacity=".75" fill-rule="evenodd" d="M212 36 17 516 143 516 180 425 370 425 405 516 528 516 348 36ZM278 170 339 336 213 337Z"/>
+    <path fill="#1168ff" opacity=".75" d="M549 36 548 515 671 516 672 36Z"/>
+  </g>
+  <g transform="translate(0 87.5)">
+    <path fill="url(#core)" stroke="#eefeff" stroke-width="3" fill-rule="evenodd" d="M212 36 17 516 143 516 180 425 370 425 405 516 528 516 348 36ZM278 170 339 336 213 337Z"/>
+    <path fill="url(#core)" stroke="#eefeff" stroke-width="3" d="M549 36 548 515 671 516 672 36Z"/>
   </g>
 </svg>
