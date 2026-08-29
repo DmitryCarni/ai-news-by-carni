@@ -1,0 +1,153 @@
+name: Publish Odnoklassniki teaser
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '_telegram/**/*.txt'
+  workflow_dispatch:
+    inputs:
+      teaser_file:
+        description: 'Optional teaser file, e.g. _telegram/daily/2026-08-28.txt'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  OK_GROUP_ID: '70000056299198'
+  OK_APPLICATION_KEY: ${{ secrets.OK_APPLICATION_KEY }}
+  OK_ACCESS_TOKEN: ${{ secrets.OK_ACCESS_TOKEN }}
+  OK_SESSION_SECRET_KEY: ${{ secrets.OK_SESSION_SECRET_KEY }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Find teaser and publish to Odnoklassniki
+        shell: bash
+        env:
+          INPUT_TEASER_FILE: ${{ inputs.teaser_file }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${OK_APPLICATION_KEY}" || -z "${OK_ACCESS_TOKEN}" || -z "${OK_SESSION_SECRET_KEY}" ]]; then
+            echo "Odnoklassniki secrets are not configured yet; skipping publication."
+            exit 0
+          fi
+
+          FILE="${INPUT_TEASER_FILE:-}"
+          if [[ -z "${FILE}" ]]; then
+            if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+              FILE="$(git diff-tree --no-commit-id --name-only -r "${GITHUB_SHA}" | grep '^_telegram/.*\.txt$' | head -n 1 || true)"
+            else
+              FILE="$(find _telegram -type f -name '*.txt' | sort | tail -n 1 || true)"
+            fi
+          fi
+
+          if [[ -z "${FILE}" || ! -f "${FILE}" ]]; then
+            echo "No teaser file found: ${FILE:-<empty>}"
+            exit 1
+          fi
+
+          python - "${FILE}" <<'PY'
+          import hashlib
+          import json
+          import os
+          import re
+          import sys
+          import urllib.parse
+          import urllib.request
+
+          file_path = sys.argv[1]
+          group_id = os.environ['OK_GROUP_ID']
+          app_key = os.environ['OK_APPLICATION_KEY']
+          access_token = os.environ['OK_ACCESS_TOKEN']
+          session_secret = os.environ['OK_SESSION_SECRET_KEY']
+
+          with open(file_path, 'r', encoding='utf-8') as f:
+              text = f.read().strip()
+
+          # Normalize historical GitHub Pages links to the canonical domain.
+          text = text.replace(
+              'https://dmitrycarni.github.io/ai-news-by-carni/',
+              'https://news.carni.ltd/',
+          )
+
+          # Use the final Carni URL as a native link attachment so OK can build a preview.
+          urls = re.findall(r'https://news\.carni\.ltd/\S*', text)
+          link = urls[-1].rstrip('.,);]') if urls else 'https://news.carni.ltd/'
+
+          # Avoid duplicating the URL inside the text when it is already attached as a link card.
+          text = re.sub(
+              r'\n*Полный разбор:\s*\nhttps://news\.carni\.ltd/\S*\s*$',
+              '',
+              text,
+              flags=re.S,
+          ).strip()
+
+          media = [{'type': 'text', 'text': text}, {'type': 'link', 'url': link}]
+          attachment = json.dumps(
+              {
+                  'media': media,
+                  'onBehalfOfGroup': 'true',
+                  'disableComments': 'false',
+              },
+              ensure_ascii=False,
+              separators=(',', ':'),
+          )
+
+          params = {
+              'application_key': app_key,
+              'attachment': attachment,
+              'format': 'json',
+              'gid': group_id,
+              'method': 'mediatopic.post',
+              'type': 'GROUP_THEME',
+          }
+
+          # OK REST signature: exclude access_token, sort params by key,
+          # concatenate key=value pairs, append session_secret_key, MD5 lowercase.
+          signature_base = ''.join(f'{k}={params[k]}' for k in sorted(params)) + session_secret
+          sig = hashlib.md5(signature_base.encode('utf-8')).hexdigest().lower()
+
+          payload = dict(params)
+          payload['access_token'] = access_token
+          payload['sig'] = sig
+
+          request = urllib.request.Request(
+              'https://api.ok.ru/fb.do',
+              data=urllib.parse.urlencode(payload).encode('utf-8'),
+              method='POST',
+          )
+
+          try:
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  body = response.read().decode('utf-8', errors='replace')
+                  status = response.status
+          except Exception as exc:
+              print(f'Odnoklassniki request failed: {exc}', file=sys.stderr)
+              raise
+
+          print(f'Odnoklassniki HTTP {status}')
+          print(body)
+
+          try:
+              result = json.loads(body)
+          except json.JSONDecodeError:
+              result = body
+
+          if isinstance(result, dict) and result.get('error_code'):
+              raise SystemExit(
+                  f"Odnoklassniki API error {result.get('error_code')}: {result.get('error_msg')}"
+              )
+
+          print(f'Published teaser: {file_path}')
+          print(f'Linked page: {link}')
+          PY
