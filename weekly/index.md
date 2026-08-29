@@ -6,7 +6,7 @@ permalink: /weekly/
 
 {% assign reports = site.pages | where: "report_type", "weekly" | sort: "report_date" | reverse %}
 
-# Главное в AI за неделю
+# Главное за неделю
 
 Не семь склеенных выпусков, а изменения, которые действительно подтвердились, усилились или потеряли значение.
 
