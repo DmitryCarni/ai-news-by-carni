@@ -1,7 +1,7 @@
 title: "AI News by Carni"
 description: "Тренды, инструменты, монетизация"
-url: "https://dmitrycarni.github.io"
-baseurl: "/ai-news-by-carni"
+url: "https://news.carni.ltd"
+baseurl: ""
 lang: "ru"
 markdown: kramdown
 permalink: pretty
