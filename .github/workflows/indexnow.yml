@@ -1,0 +1,113 @@
+name: Notify Yandex IndexNow
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'daily/**/*.md'
+      - 'weekly/**/*.md'
+      - 'index.md'
+      - 'daily/index.md'
+      - 'weekly/index.md'
+      - 'about.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SITE_HOST: news.carni.ltd
+  INDEXNOW_KEY: doPNmNp1Ax7HLXMY7liNgmYAEWS4RCVvUGYPwE-s
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Notify Yandex about changed pages
+        shell: bash
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+
+          python - <<'PY'
+          import json
+          import os
+          import re
+          import subprocess
+          import urllib.error
+          import urllib.request
+
+          host = os.environ['SITE_HOST']
+          key = os.environ['INDEXNOW_KEY']
+          sha = os.environ['GITHUB_SHA']
+          before = os.environ.get('BEFORE_SHA', '')
+
+          if before and before != '0' * 40:
+              cmd = ['git', 'diff', '--name-only', before, sha]
+          else:
+              cmd = ['git', 'show', '--pretty=', '--name-only', sha]
+
+          changed = subprocess.check_output(cmd, text=True).splitlines()
+          urls = []
+
+          for path in changed:
+              m = re.fullmatch(r'daily/(\d{4}-\d{2}-\d{2})\.md', path)
+              if m:
+                  urls.append(f'https://{host}/daily/{m.group(1)}/')
+                  continue
+
+              m = re.fullmatch(r'weekly/(\d{4}-W\d{2})\.md', path)
+              if m:
+                  urls.append(f'https://{host}/weekly/{m.group(1)}/')
+                  continue
+
+              static_map = {
+                  'index.md': '/',
+                  'daily/index.md': '/daily/',
+                  'weekly/index.md': '/weekly/',
+                  'about.md': '/about/',
+              }
+              if path in static_map:
+                  urls.append(f'https://{host}{static_map[path]}')
+
+          urls = list(dict.fromkeys(urls))
+          if not urls:
+              print('No indexable page changes found; skipping IndexNow.')
+              raise SystemExit(0)
+
+          payload = {
+              'host': host,
+              'key': key,
+              'keyLocation': f'https://{host}/{key}.txt',
+              'urlList': urls,
+          }
+
+          request = urllib.request.Request(
+              'https://yandex.com/indexnow',
+              data=json.dumps(payload).encode('utf-8'),
+              headers={'Content-Type': 'application/json; charset=utf-8'},
+              method='POST',
+          )
+
+          try:
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  status = response.status
+          except urllib.error.HTTPError as exc:
+              status = exc.code
+              body = exc.read().decode('utf-8', errors='replace')
+              print(f'IndexNow HTTP {status}: {body}')
+              if status not in (200, 202):
+                  raise
+          else:
+              print(f'IndexNow HTTP {status}')
+
+          print('Submitted URLs:')
+          for url in urls:
+              print(url)
+          PY
