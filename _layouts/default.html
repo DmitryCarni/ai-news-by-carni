@@ -5,8 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{{ page.description | default: site.description }}">
   <title>{% if page.url == '/' %}{{ site.title }}{% elsif page.title %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
-  <link rel="icon" href="{{ '/assets/favicon-ai-64.png' | relative_url }}" type="image/png" sizes="64x64">
-  <link rel="shortcut icon" href="{{ '/assets/favicon-ai-64.png' | relative_url }}" type="image/png">
+  {% assign favicon_version = site.time | date: '%s' %}
+  <link id="site-favicon" rel="icon" href="{{ '/assets/favicon-ai-64.png' | relative_url }}?v={{ favicon_version }}" type="image/png" sizes="64x64">
+  <link rel="shortcut icon" href="{{ '/assets/favicon-ai-64.png' | relative_url }}?v={{ favicon_version }}" type="image/png">
+  <script>
+    (() => {
+      const href = "{{ '/assets/favicon-ai-64.png' | relative_url }}?v={{ favicon_version }}";
+      const refreshFavicon = () => {
+        document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]').forEach(link => { link.href = href; });
+        const forced = document.createElement('link');
+        forced.rel = 'icon';
+        forced.type = 'image/png';
+        forced.sizes = '64x64';
+        forced.href = href;
+        document.head.appendChild(forced);
+      };
+      refreshFavicon();
+      window.addEventListener('pageshow', refreshFavicon);
+    })();
+  </script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-D2SGE0T08Y"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
