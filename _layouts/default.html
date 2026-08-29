@@ -3,12 +3,30 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="{{ page.description | default: site.description }}">
+  {% assign meta_title = page.title | default: site.title %}
+  {% assign meta_description = page.description | default: page.summary | default: site.description %}
+  {% assign canonical_url = page.url | default: '/' | absolute_url %}
+  <meta name="description" content="{{ meta_description | escape }}">
   <title>{% if page.url == '/' %}{{ site.title }}{% elsif page.title %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
-  <link rel="canonical" href="{{ page.url | default: '/' | absolute_url }}">
+  <link rel="canonical" href="{{ canonical_url }}">
+
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:site_name" content="AI News by Carni">
+  <meta property="og:title" content="{{ meta_title | escape }}">
+  <meta property="og:description" content="{{ meta_description | escape }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:type" content="{% if page.report_type %}article{% else %}website{% endif %}">
+  {% if page.report_type %}
+  <meta property="article:section" content="{% if page.report_type == 'daily' %}Новости ИИ{% else %}Главное за неделю{% endif %}">
+  {% endif %}
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ meta_title | escape }}">
+  <meta name="twitter:description" content="{{ meta_description | escape }}">
+
   {% assign favicon_page_key = page.url | default: '/' | replace: '/', '-' | replace: '.', '-' %}
   <link rel="icon" href="{{ '/favicon.ico' | relative_url }}?v=ai-20260829-7{{ favicon_page_key }}" type="image/x-icon" sizes="32x32">
   <link rel="shortcut icon" href="{{ '/favicon.ico' | relative_url }}?v=ai-20260829-7{{ favicon_page_key }}" type="image/x-icon">
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -32,10 +50,43 @@
         "publisher": {
           "@id": "https://news.carni.ltd/#organization"
         }
-      }
+      },
+      {
+        "@type": "WebPage",
+        "@id": {{ canonical_url | append: '#webpage' | jsonify }},
+        "url": {{ canonical_url | jsonify }},
+        "name": {{ meta_title | jsonify }},
+        "description": {{ meta_description | jsonify }},
+        "inLanguage": "ru",
+        "isPartOf": {
+          "@id": "https://news.carni.ltd/#website"
+        }
+      }{% if page.report_type %},
+      {
+        "@type": "{% if page.report_type == 'daily' %}NewsArticle{% else %}Article{% endif %}",
+        "@id": {{ canonical_url | append: '#article' | jsonify }},
+        "url": {{ canonical_url | jsonify }},
+        "headline": {{ meta_title | jsonify }},
+        "description": {{ meta_description | jsonify }},
+        "inLanguage": "ru",
+        "mainEntityOfPage": {
+          "@id": {{ canonical_url | append: '#webpage' | jsonify }}
+        },
+        "isPartOf": {
+          "@id": "https://news.carni.ltd/#website"
+        },
+        "author": {
+          "@id": "https://news.carni.ltd/#organization"
+        },
+        "publisher": {
+          "@id": "https://news.carni.ltd/#organization"
+        },
+        "articleSection": "{% if page.report_type == 'daily' %}Новости ИИ{% else %}Главное за неделю{% endif %}"
+      }{% endif %}
     ]
   }
   </script>
+
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-D2SGE0T08Y"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
