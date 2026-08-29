@@ -5,9 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{{ page.description | default: site.description }}">
   <title>{% if page.url == '/' %}{{ site.title }}{% elsif page.title %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+  <link rel="canonical" href="{{ page.url | default: '/' | absolute_url }}">
   {% assign favicon_page_key = page.url | default: '/' | replace: '/', '-' | replace: '.', '-' %}
   <link rel="icon" href="{{ '/favicon.ico' | relative_url }}?v=ai-20260829-7{{ favicon_page_key }}" type="image/x-icon" sizes="32x32">
   <link rel="shortcut icon" href="{{ '/favicon.ico' | relative_url }}?v=ai-20260829-7{{ favicon_page_key }}" type="image/x-icon">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://news.carni.ltd/#organization",
+        "name": "Carni",
+        "url": "https://news.carni.ltd/",
+        "sameAs": [
+          "https://t.me/ai_news_by_carni"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://news.carni.ltd/#website",
+        "url": "https://news.carni.ltd/",
+        "name": "AI News by Carni",
+        "description": {{ site.description | jsonify }},
+        "inLanguage": "ru",
+        "publisher": {
+          "@id": "https://news.carni.ltd/#organization"
+        }
+      }
+    ]
+  }
+  </script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-D2SGE0T08Y"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
