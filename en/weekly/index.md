@@ -1,17 +1,15 @@
 ---
 layout: default
-title: AI Weekly
+title: Week in Review
 lang: en
 translation_url: /weekly/
 permalink: /en/weekly/
-description: "AI Weekly by Carni: the market shifts, products, deployment patterns and business opportunities that actually mattered this week."
+description: "AI News by Carni weekly reports: the shifts that actually mattered in AI."
 ---
 
 {% assign reports = site.pages | where: "report_type", "weekly_en" | sort: "report_date" | reverse %}
 
-# AI Weekly
-
-<p class="lead">Not seven daily reports stitched together. One weekly view of what strengthened, reached production, lost relevance or changed the economics of AI.</p>
+# Week in Review
 
 {% if reports.size > 0 %}
 <div class="grid">
@@ -23,4 +21,6 @@ description: "AI Weekly by Carni: the market shifts, products, deployment patter
 </a>
 {% endfor %}
 </div>
+{% else %}
+**No published reports yet.**
 {% endif %}
