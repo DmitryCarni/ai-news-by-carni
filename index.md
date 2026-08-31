@@ -1,6 +1,8 @@
 ---
 layout: default
 title: Главная
+lang: ru
+translation_url: /en/
 ---
 
 {% assign daily_reports = site.pages | where: "report_type", "daily" | sort: "report_date" | reverse %}
