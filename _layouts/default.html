@@ -263,7 +263,7 @@
         <span><strong>AI News by Carni</strong><small>{% if is_en %}Trends · AI Architecture · Business{% else %}Тренды · Архитектура ИИ · Бизнес{% endif %}</small></span>
       </a>
       <div class="header-actions">
-        {% unless is_en %}<div class="header-telegram">Канал в <a href="https://t.me/+KotqtD1F8EEwZDli" target="_blank" rel="noopener noreferrer">Telegram</a></div>{% endunless %}
+        <div class="header-telegram">{% if is_en %}Channel on {% else %}Канал в {% endif %}<a href="https://t.me/+KotqtD1F8EEwZDli" target="_blank" rel="noopener noreferrer">Telegram</a></div>
         <button id="theme-toggle" class="theme-button" type="button">
           <span class="theme-button-icon" aria-hidden="true">☀</span>
           <span class="theme-button-label">{{ light_theme_label }}</span>
@@ -271,9 +271,13 @@
       </div>
       <nav>
         {% if is_en %}
-        <a href="{{ '/en/daily/' | relative_url }}">Daily</a>
-        <a href="{{ '/en/weekly/' | relative_url }}">Weekly</a>
+        <a href="{{ '/en/daily/' | relative_url }}">News</a>
+        <a href="{{ '/en/weekly/' | relative_url }}">Week in Review</a>
+        <a href="{{ '/en/about/' | relative_url }}">About</a>
         <a href="{% if alternate_url %}{{ alternate_url }}{% else %}{{ '/' | relative_url }}{% endif %}" hreflang="ru">RU</a>
+        <a class="nav-search-link" href="{{ '/en/search/' | relative_url }}" aria-label="Search" title="Search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </a>
         {% else %}
         <a href="{{ '/daily/' | relative_url }}">Новости</a>
         <a href="{{ '/weekly/' | relative_url }}">Главное за неделю</a>
