@@ -38,7 +38,12 @@ layout: default
   {% endif %}
 {% endfor %}
 
-{% if page.report_type == "daily" %}
+{% if page.report_type == "daily_en" %}
+  {% assign archive_path = '/en/daily/' %}
+  {% assign archive_label = 'AI Daily' %}
+  {% assign prev_label = '← Previous day' %}
+  {% assign next_label = 'Next day →' %}
+{% elsif page.report_type == "daily" %}
   {% assign archive_path = '/daily/' %}
   {% assign archive_label = 'Все новости' %}
   {% assign prev_label = '← Предыдущий день' %}
