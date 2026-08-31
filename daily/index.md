@@ -1,6 +1,8 @@
 ---
 layout: default
 title: Новости
+lang: ru
+translation_url: /en/daily/
 permalink: /daily/
 ---
 
