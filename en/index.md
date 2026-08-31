@@ -4,17 +4,33 @@ title: English Edition
 lang: en
 translation_url: /
 permalink: /en/
-description: "AI News by Carni filters the AI market noise into one weekly view of the shifts that actually matter for technology, deployment and business."
+description: "AI News by Carni filters the AI market noise into daily signals and a weekly view of the shifts that actually matter for technology, deployment and business."
 ---
 
+{% assign daily_reports = site.pages | where: "report_type", "daily_en" | sort: "report_date" | reverse %}
 {% assign weekly_reports = site.pages | where: "report_type", "weekly_en" | sort: "report_date" | reverse %}
+{% assign latest_daily = daily_reports | first %}
 {% assign latest_weekly = weekly_reports | first %}
 
 <section class="hero" style="padding-top:20px">
 <h1>AI News by Carni</h1>
-<p class="lead"><strong>The noise stops here.</strong><br>What actually mattered in AI — once a week.</p>
+<p class="lead"><strong>The noise stops here.</strong><br>What matters in AI — every day, then after the noise, every week.</p>
 
 <div class="grid">
+{% if latest_daily %}
+<a class="card" href="{{ latest_daily.url | relative_url }}">
+  <span class="kicker">HOT IN AI</span>
+  <strong>{{ latest_daily.card_title | default: latest_daily.title }}</strong>
+  <p>{{ latest_daily.summary | default: latest_daily.description }}</p>
+</a>
+{% else %}
+<a class="card" href="{{ '/en/daily/' | relative_url }}">
+  <span class="kicker">HOT IN AI</span>
+  <strong>AI Daily</strong>
+  <p>The signals that actually mattered today — without news for the sake of news.</p>
+</a>
+{% endif %}
+
 {% if latest_weekly %}
 <a class="card" href="{{ latest_weekly.url | relative_url }}">
   <span class="kicker">AFTER THE NOISE</span>
@@ -28,11 +44,5 @@ description: "AI News by Carni filters the AI market noise into one weekly view 
   <p>The shifts that changed the week in AI — and why they matter.</p>
 </a>
 {% endif %}
-
-<a class="card" href="{{ '/' | relative_url }}">
-  <span class="kicker">RUSSIAN EDITION</span>
-  <strong>Daily + Weekly</strong>
-  <p>The full Russian edition includes daily reports and the weekly radar.</p>
-</a>
 </div>
 </section>
