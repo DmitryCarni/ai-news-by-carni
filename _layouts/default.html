@@ -1,23 +1,53 @@
+{% assign page_lang = page.lang | default: 'ru' %}
+{% assign is_en = false %}
+{% if page_lang == 'en' %}{% assign is_en = true %}{% endif %}
+{% assign meta_title = page.title | default: site.title %}
+{% assign meta_description = page.description | default: page.summary | default: site.description %}
+{% assign canonical_url = page.url | default: '/' | absolute_url %}
+{% assign alternate_url = nil %}
+{% if page.translation_url %}
+  {% assign alternate_url = page.translation_url | absolute_url %}
+{% elsif page.report_type == 'weekly' and page_lang == 'ru' %}
+  {% capture alternate_path %}/en{{ page.url }}{% endcapture %}
+  {% assign alternate_url = alternate_path | absolute_url %}
+{% endif %}
+{% if is_en %}
+  {% assign schema_site_description = 'AI News by Carni filters the AI market noise into the shifts that actually matter for technology, deployment and business.' %}
+  {% assign light_theme_label = 'Light theme' %}
+  {% assign dark_theme_label = 'Dark theme' %}
+{% else %}
+  {% assign schema_site_description = site.description %}
+  {% assign light_theme_label = 'Светлая тема' %}
+  {% assign dark_theme_label = 'Тёмная тема' %}
+{% endif %}
 <!doctype html>
-<html lang="ru">
+<html lang="{{ page_lang }}" data-lang="{{ page_lang }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  {% assign meta_title = page.title | default: site.title %}
-  {% assign meta_description = page.description | default: page.summary | default: site.description %}
-  {% assign canonical_url = page.url | default: '/' | absolute_url %}
   <meta name="description" content="{{ meta_description | escape }}">
   <title>{% if page.url == '/' %}{{ site.title }}{% elsif page.title %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
   <link rel="canonical" href="{{ canonical_url }}">
+  {% if alternate_url %}
+    {% if is_en %}
+  <link rel="alternate" hreflang="en" href="{{ canonical_url }}">
+  <link rel="alternate" hreflang="ru" href="{{ alternate_url }}">
+  <link rel="alternate" hreflang="x-default" href="{{ alternate_url }}">
+    {% else %}
+  <link rel="alternate" hreflang="ru" href="{{ canonical_url }}">
+  <link rel="alternate" hreflang="en" href="{{ alternate_url }}">
+  <link rel="alternate" hreflang="x-default" href="{{ canonical_url }}">
+    {% endif %}
+  {% endif %}
 
-  <meta property="og:locale" content="ru_RU">
+  <meta property="og:locale" content="{% if is_en %}en_US{% else %}ru_RU{% endif %}">
   <meta property="og:site_name" content="AI News by Carni">
   <meta property="og:title" content="{{ meta_title | escape }}">
   <meta property="og:description" content="{{ meta_description | escape }}">
   <meta property="og:url" content="{{ canonical_url }}">
   <meta property="og:type" content="{% if page.report_type %}article{% else %}website{% endif %}">
   {% if page.report_type %}
-  <meta property="article:section" content="{% if page.report_type == 'daily' %}Новости ИИ{% else %}Главное за неделю{% endif %}">
+  <meta property="article:section" content="{% if page.report_type == 'daily' %}Новости ИИ{% elsif is_en %}AI Weekly{% else %}Главное за неделю{% endif %}">
   {% endif %}
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="{{ meta_title | escape }}">
@@ -45,8 +75,8 @@
         "@id": "https://news.carni.ltd/#website",
         "url": "https://news.carni.ltd/",
         "name": "AI News by Carni",
-        "description": {{ site.description | jsonify }},
-        "inLanguage": "ru",
+        "description": {{ schema_site_description | jsonify }},
+        "inLanguage": ["ru", "en"],
         "publisher": {
           "@id": "https://news.carni.ltd/#organization"
         }
@@ -57,7 +87,7 @@
         "url": {{ canonical_url | jsonify }},
         "name": {{ meta_title | jsonify }},
         "description": {{ meta_description | jsonify }},
-        "inLanguage": "ru",
+        "inLanguage": {{ page_lang | jsonify }},
         "isPartOf": {
           "@id": "https://news.carni.ltd/#website"
         }
@@ -68,7 +98,7 @@
         "url": {{ canonical_url | jsonify }},
         "headline": {{ meta_title | jsonify }},
         "description": {{ meta_description | jsonify }},
-        "inLanguage": "ru",
+        "inLanguage": {{ page_lang | jsonify }},
         "mainEntityOfPage": {
           "@id": {{ canonical_url | append: '#webpage' | jsonify }}
         },
@@ -81,7 +111,7 @@
         "publisher": {
           "@id": "https://news.carni.ltd/#organization"
         },
-        "articleSection": "{% if page.report_type == 'daily' %}Новости ИИ{% else %}Главное за неделю{% endif %}"
+        "articleSection": "{% if page.report_type == 'daily' %}Новости ИИ{% elsif is_en %}AI Weekly{% else %}Главное за неделю{% endif %}"
       }{% endif %}
     ]
   }
@@ -198,6 +228,12 @@
       color:#2f6feb;
       filter:none;
     }
+    html[data-lang="en"] h2#fundamental::before{content:"01 · GLOBAL VECTOR"}
+    html[data-lang="en"] h2#applied::before{content:"02 · LEADING DIRECTIONS"}
+    html[data-lang="en"] h2#stack::before{content:"03 · TECHNOLOGY"}
+    html[data-lang="en"] h2#finance::before{content:"04 · FINANCE"}
+    html[data-lang="en"] h2#finance-tools::before{content:"05 · TOOLS"}
+    html[data-lang="en"] h2#monetization::before{content:"06 · BUSINESS"}
     @media(max-width:700px){
       .site-header .header-inner{min-height:76px;gap:12px}
       .site-header .brand{gap:14px}
@@ -211,7 +247,7 @@
 <body>
   <header class="site-header">
     <div class="wrap header-inner">
-      <a class="brand" href="{{ '/' | relative_url }}">
+      <a class="brand" href="{% if is_en %}{{ '/en/' | relative_url }}{% else %}{{ '/' | relative_url }}{% endif %}">
         <span class="brand-mark brand-circuit" aria-hidden="true">
           <svg viewBox="0 0 112 30" role="img" focusable="false">
             <path class="trace-muted" d="M0 7H48L57 2H90" />
@@ -223,30 +259,41 @@
             <circle class="node-main" cx="103" cy="23" r="2.05" />
           </svg>
         </span>
-        <span><strong>AI News by Carni</strong><small>Тренды · Архитектура ИИ · Бизнес</small></span>
+        <span><strong>AI News by Carni</strong><small>{% if is_en %}Trends · AI Architecture · Business{% else %}Тренды · Архитектура ИИ · Бизнес{% endif %}</small></span>
       </a>
       <div class="header-actions">
-        <div class="header-telegram">Канал в <a href="https://t.me/+KotqtD1F8EEwZDli" target="_blank" rel="noopener noreferrer">Telegram</a></div>
+        {% unless is_en %}<div class="header-telegram">Канал в <a href="https://t.me/+KotqtD1F8EEwZDli" target="_blank" rel="noopener noreferrer">Telegram</a></div>{% endunless %}
         <button id="theme-toggle" class="theme-button" type="button">
           <span class="theme-button-icon" aria-hidden="true">☀</span>
-          <span class="theme-button-label">Светлая тема</span>
+          <span class="theme-button-label">{{ light_theme_label }}</span>
         </button>
       </div>
       <nav>
+        {% if is_en %}
+        <a href="{{ '/en/weekly/' | relative_url }}">Weekly</a>
+        <a href="{% if alternate_url %}{{ alternate_url }}{% else %}{{ '/' | relative_url }}{% endif %}" hreflang="ru">RU</a>
+        {% else %}
         <a href="{{ '/daily/' | relative_url }}">Новости</a>
         <a href="{{ '/weekly/' | relative_url }}">Главное за неделю</a>
         <a href="{{ '/about/' | relative_url }}">О проекте</a>
+        <a href="{% if alternate_url %}{{ alternate_url }}{% else %}{{ '/en/' | relative_url }}{% endif %}" hreflang="en">EN</a>
         <a class="nav-search-link" href="{{ '/search/' | relative_url }}" aria-label="Поиск" title="Поиск">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         </a>
+        {% endif %}
       </nav>
     </div>
   </header>
   <main class="wrap content">{{ content }}</main>
   <footer class="wrap footer">
     <div class="footer-brand">
+      {% if is_en %}
+      <strong>AI News by Carni · A filter for the most important events and trends in AI</strong>
+      <small>Market signals · Deployment technology · Business opportunities</small>
+      {% else %}
       <strong>AI News by Carni · Фильтр главных событий и трендов в мире ИИ</strong>
       <small>Сигналы рынка · Технологии внедрения · Возможности для бизнеса</small>
+      {% endif %}
     </div>
   </footer>
   <script>
@@ -260,8 +307,8 @@
         const isLight = theme === 'light';
         document.documentElement.dataset.theme = isLight ? 'light' : 'dark';
         icon.textContent = isLight ? '☾' : '☀';
-        label.textContent = isLight ? 'Тёмная тема' : 'Светлая тема';
-        button.setAttribute('aria-label', isLight ? 'Включить тёмную тему' : 'Включить светлую тему');
+        label.textContent = isLight ? {{ dark_theme_label | jsonify }} : {{ light_theme_label | jsonify }};
+        button.setAttribute('aria-label', isLight ? {{ dark_theme_label | jsonify }} : {{ light_theme_label | jsonify }});
         if (remember) {
           try { localStorage.setItem('ai-news-theme', isLight ? 'light' : 'dark'); } catch (_) {}
         }
