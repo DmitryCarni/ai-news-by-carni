@@ -1,6 +1,6 @@
 ---
 layout: default
-title: AI News by Carni
+title: English Edition
 lang: en
 translation_url: /
 permalink: /en/
