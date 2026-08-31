@@ -1,6 +1,8 @@
 ---
 layout: default
 title: О проекте
+lang: ru
+translation_url: /en/about/
 permalink: /about/
 ---
 
