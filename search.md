@@ -1,6 +1,8 @@
 ---
 layout: default
 title: Поиск
+lang: ru
+translation_url: /en/search/
 permalink: /search/
 ---
 
