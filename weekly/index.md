@@ -1,6 +1,8 @@
 ---
 layout: default
 title: Главное за неделю
+lang: ru
+translation_url: /en/weekly/
 permalink: /weekly/
 ---
 
