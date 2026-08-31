@@ -7,9 +7,10 @@
 {% assign alternate_url = nil %}
 {% if page.translation_url %}
   {% assign alternate_url = page.translation_url | absolute_url %}
-{% elsif page.report_type == 'weekly' and page_lang == 'ru' %}
+{% elsif page_lang == 'ru' and page.report_type %}
   {% capture alternate_path %}/en{{ page.url }}{% endcapture %}
-  {% assign alternate_url = alternate_path | absolute_url %}
+  {% assign alternate_page = site.pages | where: "url", alternate_path | first %}
+  {% if alternate_page %}{% assign alternate_url = alternate_path | absolute_url %}{% endif %}
 {% endif %}
 {% if is_en %}
   {% assign schema_site_description = 'AI News by Carni filters the AI market noise into the shifts that actually matter for technology, deployment and business.' %}
@@ -47,7 +48,7 @@
   <meta property="og:url" content="{{ canonical_url }}">
   <meta property="og:type" content="{% if page.report_type %}article{% else %}website{% endif %}">
   {% if page.report_type %}
-  <meta property="article:section" content="{% if page.report_type == 'daily' %}Новости ИИ{% elsif is_en %}AI Weekly{% else %}Главное за неделю{% endif %}">
+  <meta property="article:section" content="{% if is_en and page.report_type == 'daily_en' %}AI News{% elsif is_en %}AI Weekly{% elsif page.report_type == 'daily' %}Новости ИИ{% else %}Главное за неделю{% endif %}">
   {% endif %}
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="{{ meta_title | escape }}">
@@ -93,7 +94,7 @@
         }
       }{% if page.report_type %},
       {
-        "@type": "{% if page.report_type == 'daily' %}NewsArticle{% else %}Article{% endif %}",
+        "@type": "{% if page.report_type == 'daily' or page.report_type == 'daily_en' %}NewsArticle{% else %}Article{% endif %}",
         "@id": {{ canonical_url | append: '#article' | jsonify }},
         "url": {{ canonical_url | jsonify }},
         "headline": {{ meta_title | jsonify }},
@@ -111,7 +112,7 @@
         "publisher": {
           "@id": "https://news.carni.ltd/#organization"
         },
-        "articleSection": "{% if page.report_type == 'daily' %}Новости ИИ{% elsif is_en %}AI Weekly{% else %}Главное за неделю{% endif %}"
+        "articleSection": "{% if is_en and page.report_type == 'daily_en' %}AI News{% elsif is_en %}AI Weekly{% elsif page.report_type == 'daily' %}Новости ИИ{% else %}Главное за неделю{% endif %}"
       }{% endif %}
     ]
   }
@@ -270,6 +271,7 @@
       </div>
       <nav>
         {% if is_en %}
+        <a href="{{ '/en/daily/' | relative_url }}">Daily</a>
         <a href="{{ '/en/weekly/' | relative_url }}">Weekly</a>
         <a href="{% if alternate_url %}{{ alternate_url }}{% else %}{{ '/' | relative_url }}{% endif %}" hreflang="ru">RU</a>
         {% else %}
