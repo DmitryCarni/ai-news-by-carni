@@ -40,7 +40,7 @@ layout: default
 
 {% if page.report_type == "daily_en" %}
   {% assign archive_path = '/en/daily/' %}
-  {% assign archive_label = 'AI Daily' %}
+  {% assign archive_label = 'All news' %}
   {% assign prev_label = '← Previous day' %}
   {% assign next_label = 'Next day →' %}
 {% elsif page.report_type == "daily" %}
@@ -50,7 +50,7 @@ layout: default
   {% assign next_label = 'Следующий день →' %}
 {% elsif page_lang == "en" %}
   {% assign archive_path = '/en/weekly/' %}
-  {% assign archive_label = 'AI Weekly' %}
+  {% assign archive_label = 'Week in Review' %}
   {% assign prev_label = '← Previous week' %}
   {% assign next_label = 'Next week →' %}
 {% else %}
