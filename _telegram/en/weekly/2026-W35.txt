@@ -1,0 +1,18 @@
+AI Weekly — August 24–30, 2026
+
+Week in review:
+• AI is moving from answering to controlled execution. Scalable Capital opened real brokerage operations to ChatGPT, Claude, Codex and Grok through MCP/CLI, while critical transactions still require explicit human confirmation.
+• Google launched Gemini Enterprise for Financial Services and Gemini Enterprise for Legal. The important layer is not only the model: domain skills, governed connectors, permissions, licensed data, audit trails and agents inside real workflows are becoming the product.
+• AWS and NVIDIA plan another 2 million NVIDIA GPUs for 2027–2028. AI infrastructure increasingly looks like a multi-year industrial capital cycle, making execution cost and architecture competitive factors in their own right.
+• AWS introduced framework-agnostic AgentCore Evaluations through OpenTelemetry/OpenInference. Agent trajectories, tool calls and regressions are becoming a separate engineering layer.
+
+On the horizon:
+Anthropic previewed the Model Hardware Standard for agents controlling physical devices such as lab equipment, robotic arms and industrial systems. Still early, but the agent stack is beginning to leave the software-only world.
+
+Business opportunities:
+• Governed AI workflows for finance and ERP: read → propose → validate → approve → execute → audit.
+• Agent QA and observability: regression tests, tool-call validation, production-session scoring and alerts.
+• Physical-agent integration: device drivers, safety boundaries, logging and test environments.
+
+Full analysis:
+https://news.carni.ltd/en/weekly/2026-W35/
