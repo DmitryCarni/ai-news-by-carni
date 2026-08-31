@@ -86,6 +86,7 @@ jobs:
                   'en/index.md': '/en/',
                   'en/daily/index.md': '/en/daily/',
                   'en/weekly/index.md': '/en/weekly/',
+                  'en/about.md': '/en/about/',
               }
               if path in static_map:
                   urls.append(f'https://{host}{static_map[path]}')
