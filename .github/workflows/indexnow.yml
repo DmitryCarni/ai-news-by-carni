@@ -68,6 +68,11 @@ jobs:
                   urls.append(f'https://{host}/weekly/{m.group(1)}/')
                   continue
 
+              m = re.fullmatch(r'en/daily/(\d{4}-\d{2}-\d{2})\.md', path)
+              if m:
+                  urls.append(f'https://{host}/en/daily/{m.group(1)}/')
+                  continue
+
               m = re.fullmatch(r'en/weekly/(\d{4}-W\d{2})\.md', path)
               if m:
                   urls.append(f'https://{host}/en/weekly/{m.group(1)}/')
@@ -79,6 +84,7 @@ jobs:
                   'weekly/index.md': '/weekly/',
                   'about.md': '/about/',
                   'en/index.md': '/en/',
+                  'en/daily/index.md': '/en/daily/',
                   'en/weekly/index.md': '/en/weekly/',
               }
               if path in static_map:
