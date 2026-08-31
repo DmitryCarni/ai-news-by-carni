@@ -11,7 +11,8 @@ permissions:
 
 env:
   BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-  CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  RU_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  EN_CHAT_ID: '-1004292228334'
 
 jobs:
   publish:
@@ -22,30 +23,46 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Find teaser and publish
+      - name: Find teasers and publish
         shell: bash
         run: |
           set -euo pipefail
 
-          if [[ -z "${BOT_TOKEN}" || -z "${CHAT_ID}" ]]; then
-            echo "Telegram secrets are not configured yet; skipping publication."
+          if [[ -z "${BOT_TOKEN}" ]]; then
+            echo "Telegram bot token is not configured; skipping publication."
             exit 0
           fi
 
-          FILE="$(git diff-tree --no-commit-id --name-only -r "${GITHUB_SHA}" | grep '^_telegram/.*\.txt$' | head -n 1 || true)"
-          if [[ -z "${FILE}" ]]; then
-            echo "No Telegram teaser file found in this commit."
+          mapfile -t FILES < <(git diff-tree --no-commit-id --name-only -r "${GITHUB_SHA}" | grep '^_telegram/.*\.txt$' || true)
+          if (( ${#FILES[@]} == 0 )); then
+            echo "No Telegram teaser files found in this commit."
             exit 0
           fi
 
-          SIZE="$(wc -c < "${FILE}")"
-          if (( SIZE > 15000 )); then
-            echo "Teaser file is unexpectedly large (${SIZE} bytes)."
-            exit 1
-          fi
+          for FILE in "${FILES[@]}"; do
+            if [[ "${FILE}" == _telegram/en/* ]]; then
+              CHAT_ID="${EN_CHAT_ID}"
+              EDITION="EN"
+            else
+              CHAT_ID="${RU_CHAT_ID}"
+              EDITION="RU"
+            fi
 
-          curl --fail-with-body --silent --show-error \
-            -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
-            --data-urlencode "chat_id=${CHAT_ID}" \
-            --data-urlencode "text@${FILE}" \
-            --data-urlencode "disable_web_page_preview=false"
+            if [[ -z "${CHAT_ID}" ]]; then
+              echo "${EDITION} Telegram chat id is not configured; skipping ${FILE}."
+              continue
+            fi
+
+            SIZE="$(wc -c < "${FILE}")"
+            if (( SIZE > 15000 )); then
+              echo "Teaser file is unexpectedly large (${SIZE} bytes): ${FILE}"
+              exit 1
+            fi
+
+            echo "Publishing ${FILE} to ${EDITION} channel."
+            curl --fail-with-body --silent --show-error \
+              -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+              --data-urlencode "chat_id=${CHAT_ID}" \
+              --data-urlencode "text@${FILE}" \
+              --data-urlencode "disable_web_page_preview=false"
+          done
