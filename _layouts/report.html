@@ -2,6 +2,7 @@
 layout: default
 ---
 
+{% assign page_lang = page.lang | default: 'ru' %}
 {% assign report_content = content %}
 {% assign report_content = report_content | replace: '<h2 id="fundamental">Фундаментальные тренды AI-отрасли</h2>', '<h2 id="fundamental">Фундаментальные тренды</h2>' %}
 {% assign report_content = report_content | replace: '<h2 id="applied">Прикладные направления AI-отрасли</h2>', '<h2 id="applied">Где ИИ становится продуктом</h2>' %}
@@ -42,6 +43,11 @@ layout: default
   {% assign archive_label = 'Все новости' %}
   {% assign prev_label = '← Предыдущий день' %}
   {% assign next_label = 'Следующий день →' %}
+{% elsif page_lang == "en" %}
+  {% assign archive_path = '/en/weekly/' %}
+  {% assign archive_label = 'AI Weekly' %}
+  {% assign prev_label = '← Previous week' %}
+  {% assign next_label = 'Next week →' %}
 {% else %}
   {% assign archive_path = '/weekly/' %}
   {% assign archive_label = 'Главное за неделю' %}
