@@ -1,0 +1,14 @@
+AI Daily — August 30, 2026
+
+• AI infrastructure itself is becoming part of the risk model. SemiAnalysis published ClusterMAX 3.0 security findings across neocloud infrastructure, including tenant-isolation, Kubernetes, container and network-segmentation failures. For companies, choosing an inference provider increasingly looks like security due diligence — not just comparing GPU or token prices.
+
+• Caterpillar shows what mature vertical AI looks like. Cat AI Assistant already helps technicians retrieve repair procedures, diagnose equipment and identify parts, backed by roughly 1.6 million connected assets and more than 16 PB of structured data. The defensible asset is not the LLM — it is proprietary operating data embedded in a real workflow.
+
+• ERP.io launched an AI-native ERP/CRM built around a shared data model for sales, operations, finance, projects and analytics. It is still an early signal, but the architecture matters: AI is being designed together with the transactional core rather than added to ERP afterwards.
+
+Business opportunities:
+• Independent AI/GPU infrastructure audits: tenant isolation, runtime and driver versions, Kubernetes, networking, secrets and administrative access.
+• Narrow vertical assistants built around unique company data in equipment service, manufacturing, construction and field operations.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-08-30/
