@@ -86,8 +86,9 @@ body {
   position: relative;
   z-index: 5;
   color: var(--white);
+  font-family: "DejaVu Sans Condensed", "DejaVu Sans", Arial, sans-serif;
   font-weight: 800;
-  letter-spacing: -.025em;
+  letter-spacing: -.018em;
   text-transform: uppercase;
   text-shadow: 0 0 16px rgba(46,167,255,.07);
 }
@@ -111,10 +112,10 @@ body {
 .hook-title {
   position: absolute;
   z-index: 5;
-  left: 220px;
-  right: 220px;
-  top: 565px;
-  font-size: 91px;
+  left: 245px;
+  right: 205px;
+  top: 600px;
+  font-size: 80px;
   line-height: 1.07;
   text-align: left;
 }
@@ -140,34 +141,39 @@ body {
   letter-spacing: .12em;
 }
 
-/* Scene 1 — ERP: fixed 43/57 split, no overlap, same proportions as storyboard. */
+/* Scene 1 — ERP: fixed split, no overlap, proportions follow storyboard. */
 .visual-erp-cubes {
   display: grid;
-  grid-template-columns: 43% 57%;
+  grid-template-columns: 47% 53%;
 }
 .erp-copy {
   position: relative;
   z-index: 5;
-  padding: 205px 10px 170px 72px;
+  padding: 245px 18px 205px 72px;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 .erp-copy .storyboard-title {
-  font-size: 61px;
+  font-size: 43px;
   line-height: 1.08;
+}
+.erp-copy .title-line:first-child {
+  font-size: 68px;
+  line-height: .95;
+  margin-bottom: 12px;
 }
 .erp-copy p {
   margin: 48px 0 0;
   max-width: 330px;
   color: var(--muted);
-  font-size: 30px;
+  font-size: 25px;
   line-height: 1.42;
 }
 .erp-art {
   position: relative;
   z-index: 4;
-  padding: 265px 35px 230px 0;
+  padding: 235px 18px 205px 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -189,7 +195,7 @@ body {
   align-items: center;
 }
 .radar-copy .storyboard-title {
-  font-size: 54px;
+  font-size: 49px;
   line-height: 1.09;
 }
 .radar-art {
@@ -212,7 +218,7 @@ body {
   top: 195px;
 }
 .agents-copy .storyboard-title {
-  font-size: 60px;
+  font-size: 54px;
   line-height: 1.09;
 }
 .agents-icons {
@@ -262,7 +268,7 @@ body {
   top: 205px;
 }
 .growth-copy .storyboard-title {
-  font-size: 61px;
+  font-size: 54px;
   line-height: 1.09;
 }
 .growth-art {
@@ -299,7 +305,7 @@ body {
   width: 55%;
 }
 .cta-copy .storyboard-title {
-  font-size: 58px;
+  font-size: 51px;
   line-height: 1.08;
 }
 .cta-telegram {
