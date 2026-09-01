@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://news.carni.ltd/shorts/manifest.schema.json",
+  "title": "AI News by Carni Shorts Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "id",
+    "lang",
+    "kind",
+    "report_url",
+    "hook",
+    "narration",
+    "caption",
+    "cta",
+    "scenes"
+  ],
+  "properties": {
+    "version": {"const": 1},
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{5,80}$"
+    },
+    "lang": {"enum": ["ru", "en"]},
+    "kind": {"enum": ["daily", "weekly"]},
+    "report_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://news\\.carni\\.ltd/"
+    },
+    "hook": {"type": "string", "minLength": 3, "maxLength": 120},
+    "narration": {"type": "string", "minLength": 20, "maxLength": 1200},
+    "caption": {"type": "string", "minLength": 3, "maxLength": 500},
+    "cta": {"type": "string", "minLength": 3, "maxLength": 140},
+    "scenes": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "duration", "text"],
+        "properties": {
+          "type": {
+            "enum": ["hook", "signal", "meaning", "shift", "takeaway", "cta"]
+          },
+          "duration": {
+            "type": "number",
+            "minimum": 1.5,
+            "maximum": 12
+          },
+          "kicker": {"type": "string", "maxLength": 48},
+          "text": {"type": "string", "minLength": 2, "maxLength": 180},
+          "accent": {"type": "string", "maxLength": 64},
+          "detail": {"type": "string", "maxLength": 180}
+        }
+      }
+    }
+  }
+}
