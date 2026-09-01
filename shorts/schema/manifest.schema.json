@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://news.carni.ltd/shorts/manifest.schema.json",
-  "title": "AI News by Carni Shorts Manifest v1.1",
+  "title": "AI News by Carni Shorts Manifest v1.2",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -19,56 +19,45 @@
   ],
   "properties": {
     "version": {"const": 1},
-    "id": {
-      "type": "string",
-      "pattern": "^[a-z0-9][a-z0-9-]{5,80}$"
-    },
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{5,80}$"},
     "lang": {"enum": ["ru", "en"]},
     "kind": {"enum": ["daily", "weekly"]},
-    "report_url": {
-      "type": "string",
-      "format": "uri",
-      "pattern": "^https://news\\.carni\\.ltd/"
-    },
-    "telegram_url": {
-      "type": "string",
-      "format": "uri",
-      "pattern": "^https://t\\.me/"
-    },
+    "report_url": {"type": "string", "format": "uri", "pattern": "^https://news\\.carni\\.ltd/"},
+    "telegram_url": {"type": "string", "format": "uri", "pattern": "^https://t\\.me/"},
     "hook": {"type": "string", "minLength": 3, "maxLength": 120},
     "narration": {"type": "string", "minLength": 20, "maxLength": 1200},
     "caption": {"type": "string", "minLength": 3, "maxLength": 500},
-    "cta": {"type": "string", "minLength": 3, "maxLength": 160},
+    "cta": {"type": "string", "minLength": 3, "maxLength": 180},
     "scenes": {
       "type": "array",
-      "minItems": 4,
-      "maxItems": 8,
+      "minItems": 7,
+      "maxItems": 7,
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["type", "duration", "text"],
+        "required": ["type", "duration", "text", "visual"],
         "properties": {
-          "type": {
-            "enum": ["hook", "signal", "meaning", "shift", "takeaway", "cta"]
-          },
-          "duration": {
-            "type": "number",
-            "minimum": 1.5,
-            "maximum": 12
-          },
+          "type": {"enum": ["hook", "signal", "meaning", "shift", "takeaway", "cta", "outro"]},
+          "duration": {"type": "number", "minimum": 1.5, "maximum": 12},
           "kicker": {"type": "string", "maxLength": 48},
-          "text": {"type": "string", "minLength": 2, "maxLength": 180},
-          "accent": {"type": "string", "maxLength": 80},
+          "text": {"type": "string", "minLength": 2, "maxLength": 220},
+          "accent": {"type": "string", "maxLength": 100},
           "detail": {"type": "string", "maxLength": 220},
           "visual": {
-            "enum": ["hero-grid", "risk-network", "attack-chain", "provider-stack", "security-check", "cta-links"]
+            "enum": [
+              "story-hook",
+              "erp-cubes",
+              "decision-radar",
+              "agents-processes",
+              "infra-growth",
+              "cta-globe",
+              "outro-brand"
+            ]
           },
-          "metric": {"type": "string", "maxLength": 40},
-          "metric_label": {"type": "string", "maxLength": 80},
           "visual_items": {
             "type": "array",
             "maxItems": 6,
-            "items": {"type": "string", "minLength": 1, "maxLength": 36}
+            "items": {"type": "string", "minLength": 1, "maxLength": 40}
           }
         }
       }
