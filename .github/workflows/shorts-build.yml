@@ -1,0 +1,80 @@
+name: Build Carni Shorts prototype
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'shorts/manifests/**/*.json'
+      - 'shorts/renderer/**'
+      - 'shorts/schema/**'
+      - '.github/workflows/shorts-build.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+
+      - name: Install Python dependencies
+        run: python -m pip install --disable-pip-version-check pillow jsonschema
+
+      - name: Build all Shorts manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/shorts
+          mapfile -d '' MANIFESTS < <(find shorts/manifests -type f -name '*.json' -print0 2>/dev/null || true)
+          if (( ${#MANIFESTS[@]} == 0 )); then
+            echo 'No Shorts manifests found; nothing to build.'
+            exit 0
+          fi
+          for manifest in "${MANIFESTS[@]}"; do
+            echo "Rendering ${manifest}"
+            python shorts/renderer/render.py "${manifest}" --output-dir build/shorts
+          done
+
+      - name: Validate generated MP4 files
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          files=(build/shorts/*.mp4)
+          if (( ${#files[@]} == 0 )); then
+            echo 'No MP4 files generated.'
+            exit 0
+          fi
+          for file in "${files[@]}"; do
+            echo "Validating ${file}"
+            ffprobe -v error \
+              -select_streams v:0 \
+              -show_entries stream=codec_name,width,height,r_frame_rate \
+              -of default=noprint_wrappers=1 "${file}"
+            ffprobe -v error \
+              -show_entries format=duration,size \
+              -of default=noprint_wrappers=1 "${file}"
+          done
+
+      - name: Upload prototype artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: carni-shorts-${{ github.run_number }}
+          path: build/shorts/*.mp4
+          if-no-files-found: ignore
+          retention-days: 14
