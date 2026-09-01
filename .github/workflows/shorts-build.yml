@@ -65,7 +65,7 @@ jobs:
             echo "Rendering ${manifest}"
             python shorts/renderer/render.py "${manifest}" --output-dir build/shorts
             echo "Adding ElevenLabs v3 voice + scene-aware captions to ${manifest}"
-            python shorts/audio/add_voiceover.py "${manifest}" --output-dir build/shorts
+            python shorts/audio/run_voiceover.py "${manifest}" --output-dir build/shorts
           done
 
       - name: Validate generated MP4 files
