@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 import subprocess
 import tempfile
@@ -38,6 +39,45 @@ def probe_duration(path: Path) -> float:
     return float(proc.stdout.strip())
 
 
+def merge_srt_cues(raw_srt: str, max_words: int) -> str:
+    """Merge timed edge-tts cues into compact readable subtitle phrases."""
+    blocks = [b.strip() for b in re.split(r"\n\s*\n", raw_srt.strip()) if b.strip()]
+    cues: list[tuple[str, str, str]] = []
+    for block in blocks:
+        lines = [line.strip() for line in block.splitlines() if line.strip()]
+        timing_index = next((i for i, line in enumerate(lines) if " --> " in line), None)
+        if timing_index is None or timing_index + 1 >= len(lines):
+            continue
+        start, end = lines[timing_index].split(" --> ", 1)
+        text = " ".join(lines[timing_index + 1:]).strip()
+        if text:
+            cues.append((start, end, text))
+
+    if not cues:
+        fail("TTS returned no parseable subtitle cues")
+
+    merged: list[tuple[str, str, str]] = []
+    group: list[tuple[str, str, str]] = []
+    word_count = 0
+
+    for cue in cues:
+        cue_words = max(1, len(cue[2].split()))
+        if group and word_count + cue_words > max_words:
+            merged.append((group[0][0], group[-1][1], " ".join(x[2] for x in group)))
+            group = []
+            word_count = 0
+        group.append(cue)
+        word_count += cue_words
+
+    if group:
+        merged.append((group[0][0], group[-1][1], " ".join(x[2] for x in group)))
+
+    return "\n\n".join(
+        f"{index}\n{start} --> {end}\n{text}"
+        for index, (start, end, text) in enumerate(merged, 1)
+    ) + "\n"
+
+
 def synthesize(manifest: dict, audio_path: Path, srt_path: Path) -> None:
     cfg = manifest["tts"]
     if cfg["provider"] != "edge-tts":
@@ -56,14 +96,13 @@ def synthesize(manifest: dict, audio_path: Path, srt_path: Path) -> None:
         for chunk in communicate.stream_sync():
             if chunk["type"] == "audio":
                 audio.write(chunk["data"])
-            elif chunk["type"] in ("WordBoundary", "SentenceBoundary"):
+            elif chunk["type"] == "WordBoundary":
                 submaker.feed(chunk)
 
-    submaker.merge_cues(cfg["subtitle_words"])
-    srt_text = submaker.get_srt().strip()
-    if not srt_text:
+    raw_srt = submaker.get_srt().strip()
+    if not raw_srt:
         fail("TTS returned no subtitle timing metadata")
-    srt_path.write_text(srt_text + "\n", encoding="utf-8")
+    srt_path.write_text(merge_srt_cues(raw_srt, cfg["subtitle_words"]), encoding="utf-8")
 
 
 def mux_and_burn(video_path: Path, audio_path: Path, srt_path: Path, total: float, output_path: Path, work: Path) -> None:
