@@ -89,6 +89,7 @@ def synthesize(manifest: dict, audio_path: Path, srt_path: Path) -> None:
         rate=cfg["rate"],
         volume=cfg["volume"],
         pitch=cfg["pitch"],
+        boundary="WordBoundary",
     )
     submaker = edge_tts.SubMaker()
 
