@@ -31,9 +31,10 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg fonts-dejavu-core
+          google-chrome --version || google-chrome-stable --version
 
       - name: Install Python dependencies
-        run: python -m pip install --disable-pip-version-check pillow jsonschema
+        run: python -m pip install --disable-pip-version-check jsonschema playwright qrcode[pil]
 
       - name: Build all Shorts manifests
         shell: bash
