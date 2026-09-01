@@ -4,7 +4,20 @@
   "title": "AI News by Carni Shorts Manifest v2",
   "type": "object",
   "additionalProperties": false,
-  "required": ["version", "id", "lang", "kind", "report_url", "telegram_url", "hook", "narration", "caption", "cta", "scenes"],
+  "required": [
+    "version",
+    "id",
+    "lang",
+    "kind",
+    "report_url",
+    "telegram_url",
+    "hook",
+    "narration",
+    "caption",
+    "cta",
+    "tts",
+    "scenes"
+  ],
   "properties": {
     "version": {"const": 2},
     "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{5,80}$"},
@@ -16,6 +29,19 @@
     "narration": {"type": "string", "minLength": 20, "maxLength": 1400},
     "caption": {"type": "string", "minLength": 3, "maxLength": 600},
     "cta": {"type": "string", "minLength": 3, "maxLength": 220},
+    "tts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "voice", "rate", "volume", "pitch", "subtitle_words"],
+      "properties": {
+        "provider": {"const": "edge-tts"},
+        "voice": {"type": "string", "minLength": 3, "maxLength": 80},
+        "rate": {"type": "string", "pattern": "^[+-][0-9]{1,2}%$"},
+        "volume": {"type": "string", "pattern": "^[+-][0-9]{1,2}%$"},
+        "pitch": {"type": "string", "pattern": "^[+-][0-9]{1,3}Hz$"},
+        "subtitle_words": {"type": "integer", "minimum": 3, "maximum": 8}
+      }
+    },
     "scenes": {
       "type": "array",
       "minItems": 6,
