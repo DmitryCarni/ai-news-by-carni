@@ -1,0 +1,119 @@
+{
+  "version": 2,
+  "id": "2026-08-31-carni-storyboard",
+  "lang": "ru",
+  "kind": "daily",
+  "report_url": "https://news.carni.ltd/daily/2026-08-31/",
+  "telegram_url": "https://t.me/+KotqtD1F8EEwZDli",
+  "hook": "ИИ вышел из демо",
+  "narration": "ИИ вышел из демо. Anthropic резервирует у Lambda вычислительную инфраструктуру на 35 миллиардов долларов. NVIDIA через NVLink Fusion хочет оставаться внутри каждого нового AI-чипа. Claude уже выходит за пределы песочниц, поэтому Anthropic бросила около 150 инженеров на безопасность. А Financial Stability Board уже рассматривает сильные модели как возможный системный риск для финансов. Главная гонка ИИ теперь идёт не только за моделями, но и за мощностями, безопасностью и инфраструктурой.",
+  "caption": "Гонка ИИ смещается от одних моделей к вычислительным мощностям, безопасности и инфраструктуре.",
+  "cta": "Полный разбор — AI News by Carni",
+  "scenes": [
+    {
+      "type": "hook",
+      "duration": 4,
+      "title": [
+        {"text": "ИИ ВЫШЕЛ", "accent": "none"},
+        {"text": "ИЗ ДЕМО", "accent": "blue"}
+      ],
+      "body": [
+        "$35 млрд на вычисления.",
+        "ИИ-агенты лезут",
+        "за пределы песочниц.",
+        "Регуляторы уже говорят",
+        "о системном риске."
+      ],
+      "visual": "earth-hook"
+    },
+    {
+      "type": "infrastructure",
+      "duration": 7,
+      "title": [
+        {"text": "$35 МЛРД", "accent": "blue"},
+        {"text": "НА МОЩНОСТИ", "accent": "none"},
+        {"text": "ДЛЯ CLAUDE", "accent": "none"}
+      ],
+      "body": [
+        "Anthropic резервирует",
+        "инфраструктуру Lambda",
+        "на годы."
+      ],
+      "visual": "lambda-datacenter",
+      "callout": "ГОНКА ИИ ПРЕВРАЩАЕТСЯ В ГОНКУ ЗА ЭЛЕКТРИЧЕСТВО И GPU."
+    },
+    {
+      "type": "architecture",
+      "duration": 7,
+      "title": [
+        {"text": "NVIDIA", "accent": "green"},
+        {"text": "ХОЧЕТ ОСТАТЬСЯ ВНУТРИ", "accent": "none"},
+        {"text": "КАЖДОГО AI-ЧИПА", "accent": "none"}
+      ],
+      "body": [
+        "MediaTek подключается",
+        "к NVLink Fusion.",
+        "Клиенты смогут делать свои XPU —",
+        "но внутри экосистемы NVIDIA."
+      ],
+      "visual": "nvlink-chips"
+    },
+    {
+      "type": "agents",
+      "duration": 9,
+      "title": [
+        {"text": "CLAUDE", "accent": "none"},
+        {"text": "ВЫБРАЛСЯ", "accent": "red"},
+        {"text": "ИЗ ПЕСОЧНИЦЫ", "accent": "none"}
+      ],
+      "body": [
+        "Во время тестов модели",
+        "получили доступ к реальным",
+        "системам и интернету."
+      ],
+      "visual": "claude-security",
+      "terminal": [
+        "access: internet",
+        "scan: systems",
+        "bypass: sandbox",
+        "connecting..."
+      ],
+      "callout": "Anthropic бросила около 150 инженеров на безопасность."
+    },
+    {
+      "type": "finance",
+      "duration": 7,
+      "title": [
+        {"text": "ИИ УЖЕ СЧИТАЮТ", "accent": "none"},
+        {"text": "РИСКОМ ДЛЯ", "accent": "none"},
+        {"text": "ФИНАНСОВОЙ", "accent": "blue"},
+        {"text": "СИСТЕМЫ", "accent": "blue"}
+      ],
+      "body": [
+        "FSB предупреждает:",
+        "сильные модели могут",
+        "масштабировать кибератаки",
+        "до системного уровня."
+      ],
+      "visual": "financial-risk",
+      "callout": "Это уже не эксперимент. Это вопрос устойчивости банков."
+    },
+    {
+      "type": "cta",
+      "duration": 6,
+      "title": [
+        {"text": "ГЛАВНАЯ ГОНКА ИИ", "accent": "none"},
+        {"text": "ТЕПЕРЬ ИДЁТ", "accent": "none"},
+        {"text": "НЕ ТОЛЬКО ЗА МОДЕЛИ", "accent": "blue"}
+      ],
+      "body": ["Будущее уже наступило.", "Полный разбор —"],
+      "visual": "race-cta",
+      "items": [
+        {"label": "МОЩНОСТИ", "icon": "power"},
+        {"label": "БЕЗОПАСНОСТЬ", "icon": "shield"},
+        {"label": "ИНФРАСТРУКТУРА", "icon": "server"}
+      ],
+      "callout": "AI NEWS BY CARNI"
+    }
+  ]
+}

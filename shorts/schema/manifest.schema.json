@@ -1,63 +1,62 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://news.carni.ltd/shorts/manifest.schema.json",
-  "title": "AI News by Carni Shorts Manifest v1.2",
+  "title": "AI News by Carni Shorts Manifest v2",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "version",
-    "id",
-    "lang",
-    "kind",
-    "report_url",
-    "telegram_url",
-    "hook",
-    "narration",
-    "caption",
-    "cta",
-    "scenes"
-  ],
+  "required": ["version", "id", "lang", "kind", "report_url", "telegram_url", "hook", "narration", "caption", "cta", "scenes"],
   "properties": {
-    "version": {"const": 1},
+    "version": {"const": 2},
     "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{5,80}$"},
     "lang": {"enum": ["ru", "en"]},
     "kind": {"enum": ["daily", "weekly"]},
     "report_url": {"type": "string", "format": "uri", "pattern": "^https://news\\.carni\\.ltd/"},
     "telegram_url": {"type": "string", "format": "uri", "pattern": "^https://t\\.me/"},
-    "hook": {"type": "string", "minLength": 3, "maxLength": 120},
-    "narration": {"type": "string", "minLength": 20, "maxLength": 1200},
-    "caption": {"type": "string", "minLength": 3, "maxLength": 500},
-    "cta": {"type": "string", "minLength": 3, "maxLength": 180},
+    "hook": {"type": "string", "minLength": 3, "maxLength": 140},
+    "narration": {"type": "string", "minLength": 20, "maxLength": 1400},
+    "caption": {"type": "string", "minLength": 3, "maxLength": 600},
+    "cta": {"type": "string", "minLength": 3, "maxLength": 220},
     "scenes": {
       "type": "array",
-      "minItems": 7,
-      "maxItems": 7,
+      "minItems": 6,
+      "maxItems": 6,
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["type", "duration", "text", "visual"],
+        "required": ["type", "duration", "title", "visual"],
         "properties": {
-          "type": {"enum": ["hook", "signal", "meaning", "shift", "takeaway", "cta", "outro"]},
-          "duration": {"type": "number", "minimum": 1.5, "maximum": 12},
-          "kicker": {"type": "string", "maxLength": 48},
-          "text": {"type": "string", "minLength": 2, "maxLength": 220},
-          "accent": {"type": "string", "maxLength": 100},
-          "detail": {"type": "string", "maxLength": 220},
-          "visual": {
-            "enum": [
-              "story-hook",
-              "erp-cubes",
-              "decision-radar",
-              "agents-processes",
-              "infra-growth",
-              "cta-globe",
-              "outro-brand"
-            ]
-          },
-          "visual_items": {
+          "type": {"enum": ["hook", "infrastructure", "architecture", "agents", "finance", "cta"]},
+          "duration": {"type": "number", "minimum": 3, "maximum": 10},
+          "title": {
             "type": "array",
-            "maxItems": 6,
-            "items": {"type": "string", "minLength": 1, "maxLength": 40}
+            "minItems": 1,
+            "maxItems": 5,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["text"],
+              "properties": {
+                "text": {"type": "string", "minLength": 1, "maxLength": 60},
+                "accent": {"enum": ["blue", "green", "orange", "red", "none"]}
+              }
+            }
+          },
+          "body": {"type": "array", "maxItems": 8, "items": {"type": "string", "maxLength": 100}},
+          "visual": {"enum": ["earth-hook", "lambda-datacenter", "nvlink-chips", "claude-security", "financial-risk", "race-cta"]},
+          "callout": {"type": "string", "maxLength": 180},
+          "terminal": {"type": "array", "maxItems": 6, "items": {"type": "string", "maxLength": 50}},
+          "items": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["label", "icon"],
+              "properties": {
+                "label": {"type": "string", "maxLength": 50},
+                "icon": {"enum": ["power", "shield", "server", "telegram", "web"]}
+              }
+            }
           }
         }
       }
