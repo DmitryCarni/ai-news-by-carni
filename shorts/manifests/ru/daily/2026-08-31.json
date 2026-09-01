@@ -10,12 +10,15 @@
   "caption": "Гонка ИИ смещается от одних моделей к вычислительным мощностям, безопасности и инфраструктуре.",
   "cta": "Полный разбор — AI News by Carni",
   "tts": {
-    "provider": "edge-tts",
-    "voice": "ru-RU-DmitryNeural",
-    "rate": "+8%",
-    "volume": "+0%",
-    "pitch": "-4Hz",
-    "subtitle_words": 5
+    "provider": "elevenlabs",
+    "model": "eleven_v3",
+    "voice_strategy": "auto_male_energetic",
+    "stability": 0.35,
+    "similarity_boost": 0.75,
+    "style": 0.5,
+    "speed": 1.08,
+    "seed": 314159,
+    "caption_words": 3
   },
   "scenes": [
     {
@@ -32,7 +35,9 @@
         "Регуляторы уже говорят",
         "о системном риске."
       ],
-      "visual": "earth-hook"
+      "visual": "earth-hook",
+      "voiceover": "[excited] ИИ вышел из демо. И теперь всё становится серьёзнее.",
+      "caption_mode": "none"
     },
     {
       "type": "infrastructure",
@@ -48,7 +53,10 @@
         "на годы."
       ],
       "visual": "lambda-datacenter",
-      "callout": "ГОНКА ИИ ПРЕВРАЩАЕТСЯ В ГОНКУ ЗА ЭЛЕКТРИЧЕСТВО И GPU."
+      "callout": "ГОНКА ИИ ПРЕВРАЩАЕТСЯ В ГОНКУ ЗА ЭЛЕКТРИЧЕСТВО И GPU.",
+      "voiceover": "[excited] Anthropic резервирует у Lambda вычисления на тридцать пять миллиардов долларов. Гонка теперь — за электричество и GPU!",
+      "caption_mode": "kinetic",
+      "caption_y": 1470
     },
     {
       "type": "architecture",
@@ -64,7 +72,10 @@
         "Клиенты смогут делать свои XPU —",
         "но внутри экосистемы NVIDIA."
       ],
-      "visual": "nvlink-chips"
+      "visual": "nvlink-chips",
+      "voiceover": "[curious] NVIDIA через NVLink Fusion хочет остаться внутри каждого нового AI-чипа — даже если сам чип сделал клиент.",
+      "caption_mode": "kinetic",
+      "caption_y": 1320
     },
     {
       "type": "agents",
@@ -86,7 +97,10 @@
         "bypass: sandbox",
         "connecting..."
       ],
-      "callout": "Anthropic бросила около 150 инженеров на безопасность."
+      "callout": "Anthropic бросила около 150 инженеров на безопасность.",
+      "voiceover": "[serious] Claude уже выбрался за пределы песочницы и получил доступ к реальным системам. Anthropic бросила около ста пятидесяти инженеров на безопасность.",
+      "caption_mode": "kinetic",
+      "caption_y": 1320
     },
     {
       "type": "finance",
@@ -104,7 +118,10 @@
         "до системного уровня."
       ],
       "visual": "financial-risk",
-      "callout": "Это уже не эксперимент. Это вопрос устойчивости банков."
+      "callout": "Это уже не эксперимент. Это вопрос устойчивости банков.",
+      "voiceover": "[urgent] А регуляторы уже считают сильный ИИ системным риском: кибератаки могут ударить по устойчивости банков.",
+      "caption_mode": "kinetic",
+      "caption_y": 1430
     },
     {
       "type": "cta",
@@ -121,7 +138,10 @@
         {"label": "БЕЗОПАСНОСТЬ", "icon": "shield"},
         {"label": "ИНФРАСТРУКТУРА", "icon": "server"}
       ],
-      "callout": "AI NEWS BY CARNI"
+      "callout": "AI NEWS BY CARNI",
+      "voiceover": "[excited] Главная гонка ИИ теперь — за модели, мощности, безопасность и инфраструктуру. Полный разбор — AI News by Carni.",
+      "caption_mode": "kinetic",
+      "caption_y": 1500
     }
   ]
 }
