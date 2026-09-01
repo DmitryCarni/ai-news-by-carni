@@ -86,10 +86,10 @@ h3{font-size:21px;margin-top:32px}
 .card .kicker{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
 .card strong{display:block;font-size:20px;margin:5px 0 6px}
 .card p{color:var(--muted);margin:0}
-.archive-grid{grid-template-columns:1fr}
-.archive-card{padding:22px 24px}
+.archive-grid{grid-template-columns:minmax(0,1fr)}
+.archive-card{padding:22px 24px;min-width:0;max-width:100%;overflow:hidden}
 .archive-card .archive-date{font-size:26px;line-height:1.2;margin:0 0 8px;letter-spacing:-.02em}
-.archive-card .archive-summary{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.archive-card .archive-summary{font-size:15px;min-width:0;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .score{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 20px}
 .pill{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 10px;font-size:13px;transition:background-color .2s ease,border-color .2s ease}
 .stage{font-weight:650}
@@ -157,7 +157,7 @@ h2#fundamental{margin-top:30px}
   .content{padding-top:28px}
   .grid{grid-template-columns:1fr}
   .archive-card .archive-date{font-size:22px}
-  .archive-card .archive-summary{white-space:normal}
+  .archive-card .archive-summary{white-space:normal;overflow-wrap:anywhere}
   .footer{flex-direction:column}
   h2#fundamental,
   h2#applied,
