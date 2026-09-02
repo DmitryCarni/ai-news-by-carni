@@ -1,0 +1,20 @@
+AI in review — September 1, 2026
+
+AI is moving from advice to real-world action — and permissions, security and control are becoming the next bottleneck.
+
+• OpenAI says Astra is its first upcoming model to reach the Critical cybersecurity threshold. With tools and access, it can identify previously unknown vulnerabilities and build working exploit chains without step-by-step human guidance. Its strongest cyber capabilities will be restricted and wrapped in additional safeguards.
+
+• Amazon Quick now lets business users build internal apps from a natural-language description and connect them to systems such as Salesforce, Jira, ServiceNow, Microsoft 365, Google Workspace, databases and data warehouses. This is moving beyond code generation toward business users creating working applications over enterprise data.
+
+• HashiCorp Vault Enterprise 2.1 has made Agentic IAM generally available: explicit agent identities, authorization on each request, delegated user workflows, OAuth integration, a central agent registry and Terraform management. Agent permissions are becoming a first-class infrastructure layer.
+
+• Genpact launched its Record-to-Report Suite for financial close workflows covering journal entries, reconciliations and intercompany processes. The vendor projects up to 40% lower peak close workload and up to 99% of intercompany breaks resolved in real time; Tenneco is piloting the suite.
+
+Where the product opportunity is:
+
+1. Agent permissioning as an implementation service: inventory tools and tokens, replace broad access with narrow grants, add logging, high-risk approvals and an emergency stop path.
+
+2. Narrow finance agents for reconciliations and exceptions: AI proposes the likely cause, deterministic checks validate the numbers, humans approve risky actions, and the system executes or routes the fix.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-01/
