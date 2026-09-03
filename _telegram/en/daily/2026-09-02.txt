@@ -1,0 +1,22 @@
+Day in review — September 2, 2026
+
+AI agents are leaving pilot mode. The market is starting to sell not just intelligence, but execution, control and infrastructure around it.
+
+• Google launched the Fairwind Program: Gemini 3.8 Flash Cyber plus CodeMender is designed to autonomously find, verify and fix vulnerabilities. The strongest capabilities are restricted to trusted organizations; Google says more than 650 partners are participating.
+
+• Microsoft made the GitHub Copilot harness generally available in Copilot Studio. It manages context, model calls, workflows, MCP servers and connected agents, with tasks running in a secure sandbox. Enterprise agents are increasingly becoming governed runtimes rather than prompts wrapped around an LLM.
+
+• Owkin licensed K Pro, its AI Scientist for oncology and immunology, to Boehringer Ingelheim together with multimodal patient data. This is a repeatable commercial pattern: model + specialist tools + differentiated data + a reproducible research workflow.
+
+• Accrual agreed to acquire Puzzle's accounting-firm technology, including its AI-native general ledger and month-end close products. The finance signal is clear: AI is moving from isolated assistants toward production platforms around bookkeeping, reconciliation, close and professional review.
+
+• HPE and Oracle expanded a multi-year networking deployment for OCI's large GPU clusters. As AI factories scale, the bottleneck is no longer just accelerator supply — networking, telemetry and congestion management directly affect the economics of compute.
+
+Where product opportunity is emerging:
+
+1. Agent control planes as a service: permissions, network boundaries, approval for risky actions, logging, shutdown triggers and recovery procedures.
+
+2. Narrow accounting AI workflows: pick one expensive operation such as reconciliation, close or exception handling and sell measurable labor reduction with deterministic checks and human approval.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-02/
