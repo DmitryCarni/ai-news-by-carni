@@ -7,7 +7,7 @@ on:
       - '_telegram/**/*.txt'
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -23,7 +23,7 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Find teasers and publish
+      - name: Publish or edit teasers
         shell: bash
         run: |
           set -euo pipefail
@@ -33,13 +33,76 @@ jobs:
             exit 0
           fi
 
-          mapfile -t FILES < <(git diff-tree --no-commit-id --name-only -r "${GITHUB_SHA}" | grep '^_telegram/.*\.txt$' || true)
-          if (( ${#FILES[@]} == 0 )); then
-            echo "No Telegram teaser files found in this commit."
+          telegram_call() {
+            local method="$1"
+            shift
+            local response
+            response="$(curl --silent --show-error \
+              -X POST "https://api.telegram.org/bot${BOT_TOKEN}/${method}" \
+              "$@")"
+
+            if [[ "$(jq -r '.ok // false' <<<"${response}")" != "true" ]]; then
+              local description
+              description="$(jq -r '.description // "unknown Telegram API error"' <<<"${response}")"
+              if [[ "${method}" == "editMessageText" && "${description}" == *"message is not modified"* ]]; then
+                echo "Telegram message already has this text; nothing to edit." >&2
+                printf '%s' "${response}"
+                return 0
+              fi
+              echo "Telegram ${method} failed: ${description}" >&2
+              return 1
+            fi
+
+            printf '%s' "${response}"
+          }
+
+          read_state() {
+            local state_file="$1"
+            local wait_for_state="${2:-false}"
+            local attempts=1
+
+            if [[ "${wait_for_state}" == "true" ]]; then
+              attempts=18
+            fi
+
+            if [[ -f "${state_file}" ]]; then
+              cat "${state_file}"
+              return 0
+            fi
+
+            for ((attempt=1; attempt<=attempts; attempt++)); do
+              git fetch --quiet origin main
+              if git show "origin/main:${state_file}" 2>/dev/null; then
+                return 0
+              fi
+
+              if (( attempt < attempts )); then
+                echo "Waiting for Telegram state for ${state_file} (${attempt}/${attempts})..." >&2
+                sleep 5
+              fi
+            done
+
+            return 1
+          }
+
+          mapfile -t CHANGES < <(
+            git diff-tree --no-commit-id --name-status -r "${GITHUB_SHA}" |
+              awk -F '\t' '$2 ~ /^_telegram\/.*\.txt$/ && ($1 == "A" || $1 == "M") {print $1 "\t" $2}'
+          )
+
+          if (( ${#CHANGES[@]} == 0 )); then
+            echo "No added or modified Telegram teaser files found in this commit."
             exit 0
           fi
 
-          for FILE in "${FILES[@]}"; do
+          STATE_CHANGED=false
+
+          for CHANGE in "${CHANGES[@]}"; do
+            STATUS="${CHANGE%%$'\t'*}"
+            FILE="${CHANGE#*$'\t'}"
+            STATE_FILE="_telegram/.state/${FILE#_telegram/}"
+            STATE_FILE="${STATE_FILE%.txt}.json"
+
             if [[ "${FILE}" == _telegram/en/* ]]; then
               CHAT_ID="${EN_CHAT_ID}"
               EDITION="EN"
@@ -59,10 +122,72 @@ jobs:
               exit 1
             fi
 
-            echo "Publishing ${FILE} to ${EDITION} channel."
-            curl --fail-with-body --silent --show-error \
-              -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+            STATE_JSON=""
+
+            # A workflow can be re-run after the message has already been sent and
+            # its state committed. In that case edit the known message instead of
+            # creating another duplicate.
+            if [[ "${STATUS}" == "A" ]] && STATE_JSON="$(read_state "${STATE_FILE}" false)"; then
+              STATUS="M"
+            fi
+
+            if [[ "${STATUS}" == "A" ]]; then
+              echo "Publishing new ${FILE} to ${EDITION} channel."
+              RESPONSE="$(telegram_call sendMessage \
+                --data-urlencode "chat_id=${CHAT_ID}" \
+                --data-urlencode "text@${FILE}" \
+                --data-urlencode "disable_web_page_preview=false")"
+
+              MESSAGE_ID="$(jq -r '.result.message_id // empty' <<<"${RESPONSE}")"
+              if [[ -z "${MESSAGE_ID}" ]]; then
+                echo "Telegram sendMessage returned no message_id for ${FILE}." >&2
+                exit 1
+              fi
+
+              mkdir -p "$(dirname "${STATE_FILE}")"
+              jq -n \
+                --arg source_file "${FILE}" \
+                --arg edition "${EDITION}" \
+                --argjson message_id "${MESSAGE_ID}" \
+                '{source_file: $source_file, edition: $edition, message_id: $message_id}' \
+                > "${STATE_FILE}"
+              STATE_CHANGED=true
+              echo "Stored Telegram message_id ${MESSAGE_ID} in ${STATE_FILE}."
+              continue
+            fi
+
+            # Editorial polishing can land seconds after the initial publication.
+            # Wait up to 90 seconds for the first workflow to persist message_id.
+            if [[ -z "${STATE_JSON}" ]]; then
+              if ! STATE_JSON="$(read_state "${STATE_FILE}" true)"; then
+                echo "No Telegram state found for modified teaser ${FILE}." >&2
+                echo "Refusing to send a replacement message because that would create a duplicate." >&2
+                exit 1
+              fi
+            fi
+
+            MESSAGE_ID="$(jq -r '.message_id // empty' <<<"${STATE_JSON}")"
+            if [[ -z "${MESSAGE_ID}" ]]; then
+              echo "Telegram state has no message_id: ${STATE_FILE}" >&2
+              exit 1
+            fi
+
+            echo "Editing Telegram message ${MESSAGE_ID} from ${FILE} in ${EDITION} channel."
+            telegram_call editMessageText \
               --data-urlencode "chat_id=${CHAT_ID}" \
+              --data-urlencode "message_id=${MESSAGE_ID}" \
               --data-urlencode "text@${FILE}" \
-              --data-urlencode "disable_web_page_preview=false"
+              --data-urlencode "disable_web_page_preview=false" \
+              >/dev/null
           done
+
+          if [[ "${STATE_CHANGED}" == "true" ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git switch -c telegram-publish-state
+            git add _telegram/.state
+            git commit -m "Track Telegram message ids"
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
+          fi
