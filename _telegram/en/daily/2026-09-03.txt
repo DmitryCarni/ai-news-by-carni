@@ -1,0 +1,20 @@
+Day in review — September 3, 2026
+
+The main shift: AI is becoming not only more capable but harder to govern in autonomous work — and control is rapidly becoming a market of its own.
+
+• OpenAI began rolling out GPT-6 Astra. It is the company’s first model to reach the Critical cybersecurity capability level, with the ability to discover unknown vulnerabilities and develop exploits with limited human guidance. OpenAI also says Astra is harder to monitor in adversarial tests.
+
+• NVIDIA agreed to acquire Hugging Face for $12.93 billion. This is a move beyond GPUs into one of the core distribution layers for open AI models, used by more than 18 million developers and 200,000 companies.
+
+• Local AI is getting more practical. NVIDIA introduced PAIR, a router that distributes inference across multiple RTX PCs on the same network, alongside up to 1.9x inference improvements for llama.cpp and vLLM.
+
+• In finance, Razorpay launched RAY inside WhatsApp. The AI account manager can answer payment questions and also trigger actions such as refunds and payment-link creation — a real execution channel, not just a conversational dashboard.
+
+• A dedicated agent-security market is emerging. Tenable and OpenAI are introducing pre-deployment inspection for AI agents, skills, MCP servers and multi-agent playbooks.
+
+Where product opportunity is emerging:
+1. Agent action-control gateways: permissions, allowlists, approvals, audit trails and emergency stops.
+2. Local-first AI for smaller companies: local models, retrieval, routing across PCs and cloud fallback.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-03/
