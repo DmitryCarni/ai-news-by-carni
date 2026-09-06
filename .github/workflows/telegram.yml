@@ -9,10 +9,15 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: telegram-publish-state
+  cancel-in-progress: false
+
 env:
   BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
   RU_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
   EN_CHAT_ID: '-1004292228334'
+  STATE_BRANCH: telegram-state
 
 jobs:
   publish:
@@ -56,35 +61,6 @@ jobs:
             printf '%s' "${response}"
           }
 
-          read_state() {
-            local state_file="$1"
-            local wait_for_state="${2:-false}"
-            local attempts=1
-
-            if [[ "${wait_for_state}" == "true" ]]; then
-              attempts=18
-            fi
-
-            if [[ -f "${state_file}" ]]; then
-              cat "${state_file}"
-              return 0
-            fi
-
-            for ((attempt=1; attempt<=attempts; attempt++)); do
-              git fetch --quiet origin main
-              if git show "origin/main:${state_file}" 2>/dev/null; then
-                return 0
-              fi
-
-              if (( attempt < attempts )); then
-                echo "Waiting for Telegram state for ${state_file} (${attempt}/${attempts})..." >&2
-                sleep 5
-              fi
-            done
-
-            return 1
-          }
-
           mapfile -t CHANGES < <(
             git diff-tree --no-commit-id --name-status -r "${GITHUB_SHA}" |
               awk -F '\t' '$2 ~ /^_telegram\/.*\.txt$/ && ($1 == "A" || $1 == "M") {print $1 "\t" $2}'
@@ -95,7 +71,49 @@ jobs:
             exit 0
           fi
 
-          STATE_CHANGED=false
+          # Telegram publication state lives on a dedicated branch. This keeps
+          # technical message-id commits out of main, so they cannot trigger a
+          # GitHub Pages rebuild. Workflow-level concurrency serializes writers.
+          git fetch --quiet origin \
+            "+refs/heads/${STATE_BRANCH}:refs/remotes/origin/${STATE_BRANCH}"
+
+          STATE_WORKTREE="${RUNNER_TEMP}/telegram-state"
+          rm -rf "${STATE_WORKTREE}"
+          git worktree add --detach "${STATE_WORKTREE}" "origin/${STATE_BRANCH}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          read_state() {
+            local state_file="$1"
+            if [[ -f "${STATE_WORKTREE}/${state_file}" ]]; then
+              cat "${STATE_WORKTREE}/${state_file}"
+              return 0
+            fi
+            return 1
+          }
+
+          persist_state() {
+            local state_file="$1"
+            local source_file="$2"
+            local edition="$3"
+            local message_id="$4"
+
+            mkdir -p "${STATE_WORKTREE}/$(dirname "${state_file}")"
+            jq -n \
+              --arg source_file "${source_file}" \
+              --arg edition "${edition}" \
+              --argjson message_id "${message_id}" \
+              '{source_file: $source_file, edition: $edition, message_id: $message_id}' \
+              > "${STATE_WORKTREE}/${state_file}"
+
+            git -C "${STATE_WORKTREE}" add "${state_file}"
+            git -C "${STATE_WORKTREE}" commit \
+              -m "Track Telegram message id for ${source_file}"
+            git -C "${STATE_WORKTREE}" push origin "HEAD:${STATE_BRANCH}"
+
+            echo "Stored Telegram message_id ${message_id} on ${STATE_BRANCH}:${state_file}."
+          }
 
           for CHANGE in "${CHANGES[@]}"; do
             STATUS="${CHANGE%%$'\t'*}"
@@ -124,10 +142,9 @@ jobs:
 
             STATE_JSON=""
 
-            # A workflow can be re-run after the message has already been sent and
-            # its state committed. In that case edit the known message instead of
-            # creating another duplicate.
-            if [[ "${STATUS}" == "A" ]] && STATE_JSON="$(read_state "${STATE_FILE}" false)"; then
+            # A re-run of an add commit must edit the known message rather than
+            # create another one if state was already persisted successfully.
+            if STATE_JSON="$(read_state "${STATE_FILE}")"; then
               STATUS="M"
             fi
 
@@ -144,26 +161,16 @@ jobs:
                 exit 1
               fi
 
-              mkdir -p "$(dirname "${STATE_FILE}")"
-              jq -n \
-                --arg source_file "${FILE}" \
-                --arg edition "${EDITION}" \
-                --argjson message_id "${MESSAGE_ID}" \
-                '{source_file: $source_file, edition: $edition, message_id: $message_id}' \
-                > "${STATE_FILE}"
-              STATE_CHANGED=true
-              echo "Stored Telegram message_id ${MESSAGE_ID} in ${STATE_FILE}."
+              # Persist immediately after sendMessage so a later editorial run
+              # can safely edit this exact Telegram post.
+              persist_state "${STATE_FILE}" "${FILE}" "${EDITION}" "${MESSAGE_ID}"
               continue
             fi
 
-            # Editorial polishing can land seconds after the initial publication.
-            # Wait up to 90 seconds for the first workflow to persist message_id.
             if [[ -z "${STATE_JSON}" ]]; then
-              if ! STATE_JSON="$(read_state "${STATE_FILE}" true)"; then
-                echo "No Telegram state found for modified teaser ${FILE}." >&2
-                echo "Refusing to send a replacement message because that would create a duplicate." >&2
-                exit 1
-              fi
+              echo "No Telegram state found for modified teaser ${FILE}." >&2
+              echo "Refusing to send a replacement message because that would create a duplicate." >&2
+              exit 1
             fi
 
             MESSAGE_ID="$(jq -r '.message_id // empty' <<<"${STATE_JSON}")"
@@ -180,14 +187,3 @@ jobs:
               --data-urlencode "disable_web_page_preview=false" \
               >/dev/null
           done
-
-          if [[ "${STATE_CHANGED}" == "true" ]]; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git switch -c telegram-publish-state
-            git add _telegram/.state
-            git commit -m "Track Telegram message ids"
-            git fetch origin main
-            git rebase origin/main
-            git push origin HEAD:main
-          fi
