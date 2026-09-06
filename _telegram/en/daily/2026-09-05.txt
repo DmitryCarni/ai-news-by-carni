@@ -1,0 +1,17 @@
+Day in review — September 5, 2026
+
+The clearest shift today: AI is moving out of the chat window and into the physical and commercial economy.
+
+TCS announced HyperVault's planned Hyderabad campus with up to 1GW of capacity, high-density GPU deployments and liquid cooling. The capacity is planned, not online yet, but the scale shows how quickly AI infrastructure is becoming an energy-and-engineering business.
+
+GreenCore said its AI Agent Stack handled 24.5 million inbound AI-agent transactions in August, up from roughly 9.5 million per month in May–July. The numbers are vendor-reported, so they deserve caution, but the direction matters: software agents are beginning to appear as machine-originated commercial customers rather than just assistants for people.
+
+At IFA, Tuya presented a full-stack physical-AI platform spanning home, energy and robotics, plus developer tooling for hardware makers. The important change is architectural: AI is becoming a reusable platform inside physical products instead of a one-off “smart” feature.
+
+In finance, Reuters reported that Anthropic's IPO marketing is now expected no earlier than mid-October and that the company is working on a roughly $15 billion revolving credit facility. If the listing proceeds, public markets will get a much clearer look at frontier-AI economics: capex, debt, margins and the return on massive compute commitments.
+
+Product opportunities:
+• make B2B catalogs and ordering flows readable and actionable for buying agents;
+• optimize expensive AI infrastructure through GPU utilization, workload routing, energy management and cloud-cost control.
+
+https://news.carni.ltd/en/daily/2026-09-05/
