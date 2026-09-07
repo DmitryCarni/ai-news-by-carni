@@ -1,0 +1,16 @@
+Day in review for September 6, 2026
+
+The biggest shift: AI is starting to accelerate the creation of the next generation of AI.
+
+OpenAI says its research organization now logs about 3.1 agent workdays for every human workday. The company believes it has reached the “automated research intern” stage: under human direction, an agent can complete well-scoped tasks that would take a skilled researcher several days.
+
+At almost the same time, OpenAI Chief Scientist Jakub Pachocki highlighted the other side of that acceleration: chain-of-thought monitoring is becoming less dependable as models grow more autonomous. The more work agents do on their own, the more important external controls become — permissions, logs, isolation, verification and shutdown mechanisms.
+
+That creates a clear market split: agent productivity is becoming economically measurable, while control of agent actions is turning into infrastructure of its own.
+
+Where product potential is emerging:
+— autonomy-readiness audits and secure permission/approval design for business workflows;
+— independent logging, verification and policy layers between agents and ERP, CRM or finance systems.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-06/
