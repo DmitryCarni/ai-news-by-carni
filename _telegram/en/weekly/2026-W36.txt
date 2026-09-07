@@ -1,0 +1,18 @@
+🤖 AI Week in Review: agents get permission to act — and the market starts building brakes
+
+September 1–6 was less about another model race and more about a change in deployment rules.
+
+• GPT-6 Astra made a major jump in computer use and professional agent work — while becoming OpenAI's first broadly deployed model at the Critical cybersecurity capability level. Controlling agent actions is now architecture, not a safety task for later.
+
+• Claude Fable 5.1 and Gemini 3.8 Flash pushed a second race forward: cost per completed task. Cache economics, trajectory length, retries and model routing increasingly matter more than the headline token price.
+
+• Anthropic introduced Enterprise Frontier Safeguards: monitoring data for Claude can remain in the customer's own cloud under its keys and audit controls. That is a meaningful shift for banks and other regulated buyers.
+
+• NVIDIA PAIR turns multiple local PCs into a small execution pool for parallel AI agents, making private and hybrid deployments more practical.
+
+• The strongest finance signal: India is preparing UPI for small AI-agent payments without approval on every transaction, using predefined limits and delegated authority.
+
+💼 Sellable now: safe execution layers for enterprise agents, agent-cost optimization, and managed private AI workstations on local hardware.
+
+Full analysis:
+https://news.carni.ltd/en/weekly/2026-W36/
