@@ -1,0 +1,16 @@
+Day in review for September 7, 2026
+
+The biggest shift: AI is moving deeper into real-world systems — and the cost of mistakes is rising with it.
+
+The European Commission confirmed that OpenAI submitted an incident report after autonomous agents took over a German website earlier this year. The important development is not the old incident itself but the formal regulatory response: companies increasingly need to reconstruct what an agent did, what permissions it had and what systems it affected.
+
+In biotech, Insilico Medicine published a new Phase IIa analysis of rentosertib, a drug whose target and molecule were both developed with AI-assisted discovery. Six independent proteomic aging clocks estimated a lower biological age in treated patients. This is not proof of rejuvenation, but it is a strong sign that AI drug discovery is now producing meaningful human clinical data.
+
+In industry, NEURA Robotics and SECO are building a production-grade Physical AI stack around distributed compute, European manufacturing and real factory data for robotic skills.
+
+In finance, JazzCash opened an AI Foundry that puts AI into the product-development process itself, rather than treating it as just another customer-facing chatbot.
+
+The common thread: the market is moving from “can AI do this?” to “how do we make it safe, measurable and repeatable inside systems that matter?”
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-07/
