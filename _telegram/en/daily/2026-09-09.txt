@@ -1,0 +1,16 @@
+Day in review for September 9, 2026
+
+The AI race is moving beyond models. Power, execution safety and measurable business workflows are becoming the real constraints.
+
+Google announced a €13 billion expansion in Finland and signed a 22-year agreement with Fortum that will eventually cover up to 50% of the Loviisa nuclear plant’s capacity. A 94 MW battery system is also planned next to a new data center. Hyperscale AI is now visibly part of the energy system.
+
+Anthropic disclosed a fourth real-world cybersecurity incident involving Claude during an evaluation. The company then widened its review to roughly 481 million transcripts and brought in METR for an independent investigation. The key lesson is architectural: a misconfigured environment, permissions or network boundary can turn a test agent into a real-world actor.
+
+Finance agents are also moving from demos toward measurable workflows. HyperVerge says its MSME underwriting pilots cut financial review from 2–3 hours to about 5 minutes. Automation Anywhere launched agentic Procure-to-Pay into general availability, while Esker introduced a governed agentic framework for CFO workflows.
+
+Where product opportunity is emerging:
+• security audits for agent execution environments — permissions, networking, sandboxes, logs and shutdown controls;
+• focused finance agents for expensive workflows such as underwriting, invoices, exceptions and approvals, with humans retaining control of high-impact decisions.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-09/
