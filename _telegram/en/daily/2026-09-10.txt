@@ -1,0 +1,19 @@
+AI day in review — September 10, 2026
+
+AI agents are moving closer to real money, and the market is starting to build a trust layer around them.
+
+Visa, Mastercard and Ant International are working on a shared Know-Your-Agent framework so payment networks, wallets and agent platforms can recognize trusted AI agents across ecosystems. The shift is important: the industry is preparing not just for agents that recommend what to buy, but for agents that can actually initiate purchases.
+
+NVIDIA is expanding the infrastructure beneath that agent economy. d-Matrix will connect its Raptor XPUs to NVIDIA systems through NVLink Fusion, while NVIDIA and Palantir are deploying a sovereign AI stack inside NVIDIA’s own supply chain.
+
+IBM and NASA released the open NASA-IBM Lunar Foundation Model plus a dataset with more than 30 aligned layers of lunar observations. It is a strong example of scientific AI moving from single-task models toward reusable domain foundations.
+
+In finance, Ripple Treasury expanded GSmart around a governed pattern: the agent proposes an action, cites the relevant policy and waits for a human before execution. For money-moving workflows, controlled action currently looks much more mature than unrestricted autonomy.
+
+Business opportunity:
+• agent identity and registries;
+• permissions, policy enforcement, audit logs and human approval;
+• integration of those controls with ERP, treasury and payment systems.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-10/
