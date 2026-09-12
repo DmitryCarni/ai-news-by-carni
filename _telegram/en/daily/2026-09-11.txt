@@ -1,0 +1,21 @@
+AI Daily — September 11, 2026
+
+AI infrastructure demand is already measured in hundreds of billions of dollars, while enterprise agents are starting to work for days and weeks instead of one chat at a time.
+
+Oracle's remaining performance obligations reached $664B. During the quarter it booked more than $30B in new AI cloud contracts, brought 850 MW of additional data-center capacity online and delivered more than 300,000 GPUs to AI cloud customers. Oracle says demand for AI training and inference still exceeds supply.
+
+Salesforce showed the other side of the shift: seven job-ready agents across sales, service, commerce, employee operations and the back office, plus a new long-horizon runtime. Agents can preserve state, keep working across days or weeks and adapt their plan as new information arrives.
+
+OpenAI, according to Bloomberg and Reuters, is open to slowing frontier AI development and potentially coordinating pace with other labs. This is not a pause announcement, but development speed itself is becoming a strategic safety variable.
+
+Infrastructure capital keeps moving downstream too. Positron AI raised $875M at a $5B valuation for memory-first inference hardware and software — another sign that the economics of running models is becoming its own major market.
+
+In finance, Accenture launched Trusted Wealth Ops on Salesforce and Claude. Reasoning is separated from governed data, permissions, deterministic execution, compliance controls and human approval — a more realistic architecture for AI working around money.
+
+Product opportunities:
+• long-running agents for one end-to-end business process;
+• memory, permissions, audit and checkpoints for those agents;
+• inference-cost and infrastructure optimization.
+
+Full edition:
+https://news.carni.ltd/en/daily/2026-09-11/
