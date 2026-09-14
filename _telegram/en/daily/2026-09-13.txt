@@ -1,0 +1,16 @@
+AI News — September 13, 2026
+
+The biggest shift today: leading AI labs are no longer debating only how fast models can improve. They are increasingly debating whether the pace itself should be deliberately constrained until control catches up.
+
+• Google DeepMind joined a more cautious position already backed in different forms by Anthropic, OpenAI and xAI. There is no formal pause, but frontier-model velocity is becoming a governance question in its own right.
+
+• Microsoft retired Azure Computer Vision API v1.0–v3.1 on September 13. A forgotten endpoint in an old SDK, script or background integration is now an operational risk, not just technical debt.
+
+• The practical takeaway: a mature AI stack needs more than a strong model. Companies need dependency inventories, lifecycle dates, agent permissions, action logs and tested migration paths.
+
+Where the business opportunity is:
+— AI dependency and API lifecycle audits;
+— recurring control of agent permissions, model versions and vendor changes.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-13/
