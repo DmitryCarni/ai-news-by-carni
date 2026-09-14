@@ -1,0 +1,24 @@
+AI Week in Review
+September 7–13, 2026
+
+The defining shift: AI is moving from conversation to execution. The new battleground is no longer just the best model — it is the environment where agents get data, permissions, memory, tools and the ability to act.
+
+• Meta launched Muse, a mass-market personal agent that can keep working after the app closes, book travel, send email and reach checkout. A separate Sentinel agent controls its access to the outside world.
+
+• OpenAI opened the Agents API: durable sessions, context management, tools, MCP and parallel subagents are now available as managed infrastructure instead of another orchestration stack teams have to build themselves.
+
+• The Data agent in ChatGPT Work connects to enterprise data systems, investigates changes in metrics and builds interactive dashboards. Analytics is moving from “build me a report” toward “explain what changed and why.”
+
+• ChatGPT for Financial Services combines GPT-6 Astra, premium financial data, firm Excel/Word/PowerPoint templates and enterprise controls. Vertical AI is becoming a full workspace rather than a model add-on.
+
+• Anthropic documented a real safeguard weakness: harmful work can be decomposed into a chain of superficially benign steps. Security increasingly has to monitor the entire agent trajectory, not just individual prompts.
+
+• GPT-Live-1 separates the voice front end from the reasoning backend, letting natural conversation continue while another agent works with tools. That lowers the barrier to practical phone-based AI services.
+
+Where product potential is strongest:
+— turnkey vertical agents: workflow + permissions + tools + logs + approvals + measurable outcome;
+— financial agents over ERP and internal data, starting read-only with traceable findings;
+— voice reception and support where a low-latency conversation layer delegates complex work to a backend agent.
+
+Full analysis:
+https://news.carni.ltd/en/weekly/2026-W37/
