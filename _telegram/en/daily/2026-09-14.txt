@@ -1,0 +1,13 @@
+AI NEWS · SEPTEMBER 14
+
+AI is moving into finance — and control is becoming part of the product itself.
+
+Anthropic launched Claude for Financial Advisors, connecting Claude to real advisor data across Charles Schwab, BlackRock, Addepar, CRMs, portfolio platforms and planning systems. It can assemble client context, prepare analysis, flag portfolio issues and draft follow-up work — while investment recommendations, client communications and other regulated actions remain subject to human review.
+
+Microsoft published the first draft of its Humanist AI Code of Conduct for MAI models on the same day. Its core principle is unusually explicit: human control outranks task completion. Authorized people must be able to pause, redirect or cancel an AI system, and foundational constraints cannot be removed by operator settings or user prompts.
+
+One more practical signal: Microsoft retired the experimental =COPILOT() function in Excel on September 14. Copilot remains in Excel, but calling a model directly from a cell formula did not become a stable interface.
+
+The larger pattern is clear: mature enterprise AI looks less like a standalone chatbot. It connects to real systems and prepares real actions — while permissions, approvals and auditability become first-class product features.
+
+https://news.carni.ltd/en/daily/2026-09-14/
