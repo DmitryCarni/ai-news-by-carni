@@ -1,23 +1,56 @@
-# AI News by Carni
+# AI News by Carni — public site/content repository
 
-Публичный AI-радар: **тренды, инструменты, монетизация**.
+This repository is the **public output surface** of the wider AI News by Carni system.
 
-Основной принцип: **сначала рынок, потом персональная релевантность**.
+Public site:
+`https://news.carni.ltd/`
 
-## Структура
+## Repository role
 
-- `index.md` — главная
-- `daily/` — ежедневные отчёты
-- `weekly/` — недельные отчёты
-- `_layouts/` — шаблон сайта
-- `assets/css/` — оформление
+Owns:
+- RU/EN Daily reports;
+- RU/EN Weekly reports;
+- Telegram teaser source files;
+- GitHub Pages layouts/assets;
+- public SEO/search infrastructure.
+
+Does **not** own:
+- global project state;
+- Shorts Factory architecture;
+- approval/publisher state;
+- project strategy;
+- global working memory.
+
+## Global source of truth
+
+The control-plane and project-memory repository is:
+
+`DmitryCarni/ai-news-by-carni-private`
+
+For cross-project architecture/current state, use its startup packet:
+
+1. `README.md`
+2. `docs/PROJECT_INDEX.md`
+3. `docs/WORKING_STATE.md`
+4. `docs/KNOWLEDGE_BASE_MAP.md`
+
+Do not create a competing global project-state document in this public repository.
+
+## Local structure
+
+- `index.md` — main page
+- `daily/` — Daily reports
+- `weekly/` — Weekly reports
+- `en/` — English edition
+- `_telegram/` — Telegram teaser source files
+- `_layouts/` — site layouts
+- `assets/` — public assets/styles
 
 ## GitHub Pages
 
-Сайт публикуется из ветки `main`, корень `/(root)`.
+Published from `main`.
 
-Основной адрес:
+Custom domain:
+`news.carni.ltd`
 
-`https://news.carni.ltd/`
-
-GitHub Pages обслуживает сайт через custom domain, заданный файлом `CNAME`.
+The public repository remains authoritative for the **actual public files it contains**, while global product/architecture memory remains in the private control-plane repository.
