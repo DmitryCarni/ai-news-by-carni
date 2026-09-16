@@ -1,0 +1,15 @@
+AI NEWS — SEPTEMBER 15
+
+Enterprise AI is becoming specialized: companies are starting to encode their own domain expertise into models while rolling agents out to tens of thousands of employees.
+
+Salesforce and NVIDIA introduced Koa, a CRM reasoning model built by post-training Nemotron 3 Super on synthetic scenarios modeled on nearly three decades of Salesforce CRM workflows. Salesforce controls the weights and runs inference inside its own infrastructure.
+
+Adecco is taking the deployment side to a different scale: Agentforce Coworker is rolling out across 40+ countries to 27,000 employees. The system connects company data, organizational knowledge and specialized recruiting and sales agents, drawing on context from more than 2.5 million agent-candidate interactions.
+
+In finance, Workiva launched Agent Studio, giving finance, audit and compliance teams a no-code way to build governed agents inside regulated workflows.
+
+And Europe is expanding the inference hardware market. Axelera launched its Europa accelerator, announced AI-factory contracts and Dell/Supermicro integrations, and says it is pursuing a potential sales pipeline of up to $1.5 billion — not booked orders or revenue.
+
+The bigger shift: enterprise value is moving beyond the smartest general model toward domain expertise, proprietary context, tools and controlled execution.
+
+https://news.carni.ltd/en/daily/2026-09-15/
