@@ -1,0 +1,20 @@
+AI News — September 16, 2026
+
+AI is becoming an economy of its own, not just a feature inside software.
+
+• Gartner now forecasts $2.7T in worldwide AI spending for 2026, up 49.5% year over year. Roughly $1.48T is infrastructure: compute, servers and networking still capture the biggest share of the money.
+
+• OpenAI is testing Sponsored Agents. After an ad in ChatGPT, users can enter a separate conversation with the advertiser's agent. New HubSpot and Shopify integrations begin connecting the ad, consultation, CRM and commerce loop.
+
+• Mercury launched Books, full double-entry accounting inside its financial platform. AI continuously categorizes and reconciles transactions, while the Command agent can prepare journal entries and accounting changes that require confirmation before execution.
+
+• Novo Nordisk is bringing Claude Science into real drug R&D workflows, extending pharma's move from isolated AI pilots toward portfolios of AI tools embedded in scientific work.
+
+• OpenAI introduced a formal framework for reporting model-misalignment incidents and published six cases. For enterprise agents, action logs, scoped permissions and control over external calls are becoming baseline engineering requirements.
+
+Where product potential is emerging:
+• governed sales agents between advertising, catalog data and CRM;
+• accounting agents embedded in banking or ERP systems, with auditable actions and human approval.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-16/
