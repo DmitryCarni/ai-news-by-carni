@@ -1,0 +1,18 @@
+AI News — September 17, 2026
+
+The biggest shift today: AI is already taking a measurable role in building its own next generation.
+
+Anthropic published unusually concrete internal numbers. Claude now “leads” 26% of the company’s AI R&D work under human supervision, while more than 90% of research work involves AI at least as a collaborator. Around 30,000 agents were active at any one time on Anthropic’s main internal research and engineering platform. Every action is screened before execution; across more than a billion decisions in August, roughly one in 47,000 was blocked.
+
+Google is pushing the agent model in another direction. CC is becoming a shared household agent with its own verified Google Account, up to six members, per-person permissions, shared memory, Calendar and Tasks. It can fill forms and manage logistics, but needs permission to act or share information outside the group.
+
+The infrastructure race is also moving below the GPU layer. GlobalFoundries and Marvell are expanding SiGe manufacturing capacity for high-speed optical connectivity in AI data centers. As clusters get larger, moving data between accelerators becomes a performance and energy bottleneck of its own.
+
+In finance, Byzfunder launched TraceDataIQ for small-business underwriting. The company says the platform is built on more than $2 billion of financing history across 35,000+ businesses and combines bank data with a broader financial and operational profile.
+
+Where product opportunity is emerging:
+• an agent control plane for identity, permissions, action logs, automated blocking and human approval;
+• shared team agents with persistent memory and per-member access controls.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-17/
