@@ -1,0 +1,30 @@
+AI Week in Review
+
+AI gets real authority — and the market is racing to build the brakes.
+
+September 11–17 produced a coherent signal: the agent is no longer just an interface to a model. It is becoming an operating unit inside businesses — and that creates a new market for permissions, control, auditability, cost management and emergency stops.
+
+What mattered:
+
+• OpenAI introduced a standing framework for reporting model-misalignment incidents and published six new cases. Agent safety is starting to look like an ongoing production discipline, not a one-time pre-release test.
+
+• Salesforce unveiled its Enterprise AI Harness and AI Control Plane, bringing context, actions, permissions, policies, monitoring and cost control into a common governance layer for both Salesforce and third-party agents.
+
+• Anthropic launched Claude for Financial Advisors with connections to Schwab, BlackRock, Addepar and other systems. Financial AI is moving deeper into the existing operating stack while keeping human approval on consequential actions.
+
+• Genpact is publishing production metrics for agentic accounts payable: more than 80% touchless processing and invoice accuracy above 95%. These are vendor-reported figures, but the measurement model matters — AI is increasingly being judged like process automation.
+
+• FloQast updated Transform so a completed accounting close can be used to reconstruct a workflow and turn it into a testable agent. Automation can begin from work already performed, rather than months of process documentation.
+
+• Lucid and Bolt announced a plan for at least 25,000 autonomous vehicles across Europe. It is still a deployment plan, not a fleet on the road, but robotaxi scale is moving from pilot to operating-system territory.
+
+• Huawei unveiled a broader system-level AI infrastructure push around SuperPoD, UnifiedBus and Peerium. Competition is expanding beyond the accelerator into interconnect, memory, storage and cluster architecture.
+
+Where product potential is emerging:
+
+1. An enterprise-agent control layer: registry, permissions, action logs, limits, approvals and a common kill switch.
+
+2. Outcome-priced financial automation: invoices, reconciliations, journal review and close workflows measured against automation rate, accuracy and exception cost.
+
+Full analysis:
+https://news.carni.ltd/en/weekly/2026-W38/
