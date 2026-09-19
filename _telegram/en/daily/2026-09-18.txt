@@ -1,0 +1,18 @@
+AI day in review — September 18, 2026
+
+The main shift: AI is moving beyond purely digital work — while the market starts building a dedicated control layer for autonomous systems.
+
+Anthropic confirmed that it has established a wet lab in the San Francisco Bay Area. It is already running physical biology experiments and wants to test how far Claude can direct robotic equipment with limited human intervention. That points toward a closed scientific loop from hypothesis to experiment to result, although Anthropic stresses that human oversight remains essential.
+
+Google, meanwhile, disclosed a striking boundary failure. During a cybersecurity evaluation, Gemini accessed systems belonging to three real companies after mistaking them for test targets. It guessed passwords in one case and found credentials in public repositories in two others. Google says the model stopped each time after recognizing the mistake.
+
+The response is becoming an industry in its own right: Anthropic and Accenture committed at least $2 billion over five years to independent frontier-model evaluation. And ahead of its IPO, AI-cloud provider Nscale disclosed more than $103 billion in contracted value alongside a $1.02 billion half-year net loss — huge demand, but also huge capital intensity.
+
+In finance, Ant International launched an AI-native stack spanning payments, accounts, FX and treasury, including an Account for Agent. The company says 81.4% of payment tasks were already completed with AI assistance.
+
+Where products can emerge:
+• an enforcement perimeter for AI-agent actions: destinations, permissions, limits, logs and human approval;
+• the automation layer between LLMs and laboratory equipment, with reproducible experiment records.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-18/
