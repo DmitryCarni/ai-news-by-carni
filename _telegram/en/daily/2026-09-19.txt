@@ -1,0 +1,14 @@
+AI daily for September 19, 2026
+
+The main shift: the frontier-model race is colliding with its own safety argument — slowing down may reduce risk, but the market can punish the first lab that does it alone.
+
+Reuters reports that Anthropic is considering a new model in response to OpenAI's momentum after GPT-6 Astra. No release decision has been announced and the next model's safety is being evaluated. The contrast is notable: only a week earlier, Dario Amodei called for the industry to slow capability growth.
+
+The pressure is already measurable. Ramp data cited by Reuters puts Astra at roughly 13% of tracked enterprise AI spending versus about 8% for Claude Fable, while OpenRouter recorded OpenAI's first weekly spending lead over Anthropic in more than two and a half years.
+
+China produced a different signal. PBOC monetary-policy committee member Huang Yiping warned that AI could deepen the gap between strong production and weak domestic demand. AI efficiency is increasingly being discussed not only as a growth engine but as a macroeconomic variable with distributional consequences.
+
+On the deployment side, Codex CLI 0.155.1 restored a safer default for reasoning summaries after compatibility problems with some external model providers. It is a small patch with a larger lesson: multi-provider agent systems need protocol compatibility to be treated as production reliability.
+
+Full report:
+https://news.carni.ltd/en/daily/2026-09-19/
