@@ -1,0 +1,18 @@
+AI day in review — September 20, 2026
+
+China is narrowing another gap in the compute stack.
+
+• CXMT moved its G5 DRAM platform into mass production. The company reports an 11.95 nm active-area half-pitch and at least 50% more gross dies per wafer than its previous generation.
+
+• Two new 24-gigabit LPDDR5X chips are already in volume production, with 50% more capacity than comparable previous-generation CXMT products.
+
+• The US and China opened talks where AI safety sits alongside trade and critical minerals. The agenda includes AI guardrails, self-improving systems and dangerous dual-use applications.
+
+On the horizon: frontier-AI safety is becoming increasingly entangled with export controls and access to compute infrastructure.
+
+Where product potential is emerging:
+• audits of AI-stack dependency on a single cloud, API, region or compute supplier;
+• switchable multi-provider model architectures with cost and quality degradation tested before a disruption happens.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-20/
