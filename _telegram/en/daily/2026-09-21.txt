@@ -1,0 +1,21 @@
+AI day in review — September 21, 2026
+
+Humanoids must prove the economics as AI prepares to accelerate its own R&D.
+
+• China is raising the bar for humanoid-robot IPOs amid concern that valuations and some state-linked revenue are running ahead of real commercial demand. Unitree shares are already about 55% below their peak.
+
+• About 7,000 humanoid robots were sold worldwide in 2025 for industrial and professional applications. Conventional industrial robot installations were roughly 542,000 in 2024.
+
+• OpenAI is preparing for automated AI researchers and proposes common standards for capability measurement, risk assessment and safeguard sufficiency. It says fully autonomous recursive self-improvement is not happening today.
+
+• 60 organizations set a five-year goal to improve AI access for roughly 3.4 billion people whose languages are underrepresented in current models.
+
+On the horizon: autonomy is increasingly judged by economics, reliability and controllability rather than the quality of a demo.
+
+Product opportunities:
+• AI-agent economics audits: cost per successful task, errors and human interventions;
+• tracing, permission limits and human approval for critical actions;
+• local-language and voice AI products with dedicated quality evaluation.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-21/
