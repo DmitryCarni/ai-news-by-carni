@@ -1,0 +1,20 @@
+AI day in review — September 22, 2026
+
+Frontier AI gets cheaper as China builds the full stack.
+
+• OpenAI released GPT-6 Sol and Luna with API prices 50% below GPT-5.6 promotional pricing. Sol costs $2 per million input tokens and $10 per million output tokens.
+
+• Anthropic released Claude Opus 5.5. The company says it delivers roughly Fable 5.1-level performance on most work while cutting total task costs by 40% versus Opus 5.
+
+• Alibaba plans Qwen models up to 5–10 trillion parameters and unveiled Zhenwu V900, which it says is three times faster than its predecessor and can scale to clusters of up to 500,000 chips.
+
+• Banks warn about fraud and privacy risks from AI shopping agents. John Lewis says agent-originated searches rose from 0.3% to 2.5% in a year.
+
+• Palo Alto Networks is turning frontier models into continuous testing for web apps, APIs and cloud infrastructure.
+
+On the horizon: competition is moving rapidly toward the cost of useful AI work and the infrastructure needed to keep agents running continuously.
+
+Business opportunity: recalculate high-volume multi-step workflows on GPT-6 Sol/Luna and Claude Opus 5.5 using cost per successfully completed task rather than token price alone.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-22/
