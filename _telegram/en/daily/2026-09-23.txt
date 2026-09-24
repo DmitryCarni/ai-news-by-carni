@@ -1,0 +1,13 @@
+AI News — September 23
+
+🛡 OpenAI is giving Ukraine access to Daybreak for the cyber defense of civilian infrastructure. Frontier AI is moving from analyst assistant to a governed loop that can find, validate and help fix vulnerabilities.
+
+🏠 Airbnb is expanding engineering access to GPT-6 Astra and other frontier models. Early use goes beyond coding into difficult bug hunts and system design.
+
+🏗 Accenture launched Construct for major capital and infrastructure projects — from data centers and power grids to advanced manufacturing.
+
+🤖 NVIDIA presented a ROS 2 mechanism for near-zero-overhead movement of tensors and point clouds — an important systems layer for physical AI.
+
+The bigger shift: value is moving from access to a model toward complete workflows with data, tools, permissions and verification.
+
+https://news.carni.ltd/en/daily/2026-09-23/
