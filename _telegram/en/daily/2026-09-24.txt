@@ -1,1 +1,5 @@
 AI News — September 24, 2026
+
+Google launched Gemini 3.8 Live with Live Avatar for enterprise agents. Google Cloud also added native MCP server support to API Gateway, making existing REST APIs easier to expose as tools for AI agents.
+
+Full analysis: news.carni.ltd/en/daily/2026-09-24/
