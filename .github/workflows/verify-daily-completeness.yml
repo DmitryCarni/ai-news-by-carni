@@ -1,0 +1,34 @@
+name: Verify Daily completeness
+
+on:
+  pull_request:
+    paths:
+      - "daily/**"
+      - "en/daily/**"
+      - "_telegram/daily/**"
+      - "scripts/verify_daily_completeness.py"
+      - ".github/workflows/verify-daily-completeness.yml"
+  push:
+    branches: [main]
+    paths:
+      - "daily/**"
+      - "en/daily/**"
+      - "_telegram/daily/**"
+      - "scripts/verify_daily_completeness.py"
+      - ".github/workflows/verify-daily-completeness.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify Daily completeness contract
+        run: python scripts/verify_daily_completeness.py
