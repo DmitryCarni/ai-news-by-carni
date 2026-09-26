@@ -20,8 +20,46 @@ REQUIRED_RU_FRONT_MATTER = (
     "permalink:",
 )
 
+REQUIRED_EN_FRONT_MATTER = REQUIRED_RU_FRONT_MATTER + (
+    "lang:",
+    "translation_url:",
+)
+
+MIN_BLOCK_CHARS = 280
+
+def h3_blocks(text: str) -> list[tuple[str, str]]:
+    matches = list(re.finditer(r"(?m)^###\s+(.+?)\s*$", text))
+    blocks: list[tuple[str, str]] = []
+    for index, match in enumerate(matches):
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+        blocks.append((match.group(1).strip(), text[match.end():end].strip()))
+    return blocks
+
 def h3_count(text: str) -> int:
-    return sum(1 for line in text.splitlines() if line.startswith("### "))
+    return len(h3_blocks(text))
+
+def visible_text_len(block: str) -> int:
+    cleaned = re.sub(r"<[^>]+>", " ", block)
+    cleaned = re.sub(r"\[[^\]]+\]\([^\)]+\)", " ", cleaned)
+    cleaned = re.sub(r"https?://\S+", " ", cleaned)
+    cleaned = re.sub(r"\s+", " ", cleaned).strip()
+    return len(cleaned)
+
+def verify_content_blocks(date: str, label: str, text: str, errors: list[str]) -> None:
+    for title, block in h3_blocks(text):
+        if '<div class="score">' not in block:
+            fail(errors, f"{date}: {label} block '{title}' missing score card")
+        pill_count = len(re.findall(r'<span class="pill(?:\s+[^"]*)?">', block))
+        if pill_count != 3:
+            fail(errors, f"{date}: {label} block '{title}' has {pill_count} score pills, expected 3")
+        if "http://" not in block and "https://" not in block:
+            fail(errors, f"{date}: {label} block '{title}' missing direct source URL")
+        if visible_text_len(block) < MIN_BLOCK_CHARS:
+            fail(
+                errors,
+                f"{date}: {label} block '{title}' is suspiciously thin "
+                f"({visible_text_len(block)} visible chars < {MIN_BLOCK_CHARS})",
+            )
 
 def telegram_story_count(path: Path) -> int:
     if not path.exists():
@@ -45,6 +83,7 @@ def verify_date(date: str, errors: list[str]) -> None:
     ru_path = ROOT / "daily" / f"{date}.md"
     en_path = ROOT / "en" / "daily" / f"{date}.md"
     tg_path = ROOT / "_telegram" / "daily" / f"{date}.txt"
+    tg_en_path = ROOT / "_telegram" / "en" / "daily" / f"{date}.txt"
 
     if not ru_path.exists():
         fail(errors, f"{date}: missing RU Daily")
@@ -52,6 +91,10 @@ def verify_date(date: str, errors: list[str]) -> None:
     if not en_path.exists():
         fail(errors, f"{date}: missing EN Daily")
         return
+    if not tg_path.exists():
+        fail(errors, f"{date}: missing RU Telegram teaser")
+    if not tg_en_path.exists():
+        fail(errors, f"{date}: missing EN Telegram teaser")
 
     ru = ru_path.read_text(encoding="utf-8")
     en = en_path.read_text(encoding="utf-8")
@@ -59,6 +102,9 @@ def verify_date(date: str, errors: list[str]) -> None:
     for marker in REQUIRED_RU_FRONT_MATTER:
         if marker not in ru:
             fail(errors, f"{date}: RU Daily missing front-matter field {marker}")
+    for marker in REQUIRED_EN_FRONT_MATTER:
+        if marker not in en:
+            fail(errors, f"{date}: EN Daily missing front-matter field {marker}")
 
     for label, text in (("RU", ru), ("EN", en)):
         if '<div class="report-nav">' not in text:
@@ -67,6 +113,7 @@ def verify_date(date: str, errors: list[str]) -> None:
             fail(errors, f"{date}: {label} Daily missing conclusions block")
         if h3_count(text) < 3:
             fail(errors, f"{date}: {label} Daily has only {h3_count(text)} story/opportunity blocks")
+        verify_content_blocks(date, label, text, errors)
 
     ru_h3 = h3_count(ru)
     en_h3 = h3_count(en)
