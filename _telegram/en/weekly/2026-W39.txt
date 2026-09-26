@@ -1,0 +1,24 @@
+AI Week in Review
+
+AI is getting cheaper, gaining more authority — and running into the control problem.
+
+Five signals defined September 18–24:
+
+• OpenAI and Anthropic both pushed down the cost of strong frontier models, making long-running agent work economical across more workflows.
+
+• Autonomy is scaling with risk: cyber defense, banking and independent model evaluation increasingly require permissions, logging, verification and stop controls.
+
+• China is building vertically across memory, models, accelerators and large clusters while regulators cool an overheated humanoid-robot market.
+
+• Frontier models are moving deeper into real operating workflows at Airbnb, in cyber defense, capital projects and enterprise APIs.
+
+• The agent interface is expanding into video, languages, corporate tools and physical AI.
+
+Where product potential is emerging:
+
+1. An independent control layer for enterprise agents: permissions, tool registry, action logs, limits, human approval and emergency stops.
+
+2. Repricing expensive manual workflows around cheaper frontier models: code, documents, security, reconciliation and research.
+
+Full analysis:
+https://news.carni.ltd/en/weekly/2026-W39/
