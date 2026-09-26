@@ -1,0 +1,12 @@
+AI News — September 25, 2026
+
+🧑‍💼 Microsoft is reorganizing Copilot around Home, Code and Autopilot — a persistent agent for long-running work.
+
+🔬 Claude produced a nine-loop result in N=4 super Yang–Mills that was independently checked by physicist Lance Dixon.
+
+💼 Proaction says Codex-powered personalized demos save 40–60 engineering hours per month and improved progression from initial contact to solution development by 50–60%.
+
+Main takeaway: agentic AI is becoming a real work executor, while scientific AI is increasingly being tested on genuine research problems.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-25/
