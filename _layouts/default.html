@@ -134,7 +134,7 @@
       document.documentElement.dataset.theme = theme;
     })();
   </script>
-  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=report-headings-20260927-5-{{ site.time | date: '%s' }}">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=report-headings-20260927-6-{{ site.time | date: '%s' }}">
   <style>
     .site-header{
       position:relative;
@@ -278,14 +278,8 @@
     .report h2#finance::after,
     .report h2#finance-tools::after,
     .report h2#monetization::after{
-      content:"";
-      position:absolute;
-      left:0;
-      top:26px;
-      bottom:-42px;
-      width:3px;
-      border-radius:999px;
-      background:var(--section-accent);
+      content:none;
+      display:none;
     }
     .report h2#fundamental + h3,
     .report h2#applied + h3,
@@ -294,7 +288,9 @@
     .report h2#finance-tools + h3,
     .report h2#monetization + h3{
       margin-top:0;
-      padding:0 0 8px 20px;
+      padding:0 0 8px 17px;
+      border-left:3px solid var(--section-accent);
+      border-radius:2px 0 0 2px;
       font-size:clamp(28px,4vw,34px);
       line-height:1.2;
       letter-spacing:-.025em;
@@ -313,18 +309,12 @@
       .report h2#finance-tools,
       .report h2#monetization{margin-top:48px;padding:20px 0 6px 16px}
       .report h2#fundamental{margin-top:30px}
-      .report h2#fundamental::after,
-      .report h2#applied::after,
-      .report h2#stack::after,
-      .report h2#finance::after,
-      .report h2#finance-tools::after,
-      .report h2#monetization::after{top:20px;bottom:-40px}
       .report h2#fundamental + h3,
       .report h2#applied + h3,
       .report h2#stack + h3,
       .report h2#finance + h3,
       .report h2#finance-tools + h3,
-      .report h2#monetization + h3{padding-left:16px}
+      .report h2#monetization + h3{padding-left:13px}
     }
   </style>
 </head>
