@@ -119,15 +119,21 @@ h2#applied,
 h2#stack,
 h2#finance,
 h2#finance-tools,
-h2#monetization{position:relative;margin-top:58px;padding:20px 0 0 16px;border-top:1px solid var(--line);font-size:clamp(24px,3.2vw,30px)}
+h2#monetization{position:relative;margin-top:58px;padding:26px 0 6px 20px;border-top:1px solid var(--line);font-size:clamp(28px,4vw,34px)}
 h2#fundamental::after,
 h2#applied::after,
 h2#stack::after,
 h2#finance::after,
 h2#finance-tools::after,
-h2#monetization::after{content:"";position:absolute;left:0;top:20px;bottom:0;width:3px;border-radius:999px;background:var(--section-accent)}
+h2#monetization::after{content:"";position:absolute;left:0;top:26px;bottom:-42px;width:3px;border-radius:999px;background:var(--section-accent)}
+h2#fundamental + h3,
+h2#applied + h3,
+h2#stack + h3,
+h2#finance + h3,
+h2#finance-tools + h3,
+h2#monetization + h3{margin-top:0;padding:2px 0 8px 20px}
 h2#fundamental{margin-top:30px}
-.report h3{margin-top:26px}
+.report h3{font-size:21px}
 
 .footer{border-top:1px solid var(--line);padding:24px 0 44px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:20px}
 .footer-brand strong{display:block;color:var(--lead);font-size:13px;font-weight:650;letter-spacing:.005em}
@@ -152,14 +158,20 @@ h2#fundamental{margin-top:30px}
   h2#stack,
   h2#finance,
   h2#finance-tools,
-  h2#monetization{margin-top:48px;padding:18px 0 0 14px}
+  h2#monetization{margin-top:48px;padding:20px 0 6px 16px}
   h2#fundamental{margin-top:30px}
   h2#fundamental::after,
   h2#applied::after,
   h2#stack::after,
   h2#finance::after,
   h2#finance-tools::after,
-  h2#monetization::after{top:18px}
+  h2#monetization::after{top:20px;bottom:-40px}
+  h2#fundamental + h3,
+  h2#applied + h3,
+  h2#stack + h3,
+  h2#finance + h3,
+  h2#finance-tools + h3,
+  h2#monetization + h3{padding-left:16px}
   .conclusions{margin-top:58px;padding:4px 16px 18px}
   .day-nav{grid-template-columns:1fr;gap:8px}
   .day-nav>*:last-child,.day-nav .archive{text-align:left}
