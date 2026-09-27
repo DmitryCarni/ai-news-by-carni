@@ -161,20 +161,24 @@
     .site-header .header-channels{
       position:relative;
       flex:0 0 auto;
-      width:max-content;
-      min-width:118px;
       height:18px;
     }
     .site-header .header-telegram,
     .site-header .header-youtube{
-      position:absolute;
-      left:0;
       white-space:nowrap;
       font-size:14px;
       line-height:18px;
     }
-    .site-header .header-telegram{top:-13px}
-    .site-header .header-youtube{top:13px;color:var(--muted)}
+    .site-header .header-telegram{
+      position:relative;
+      top:-13px;
+    }
+    .site-header .header-youtube{
+      position:absolute;
+      left:0;
+      top:13px;
+      color:var(--muted);
+    }
     .site-header .header-youtube a{
       color:#ff3b30;
       font-weight:700;
@@ -359,7 +363,6 @@
       .site-header .header-actions{gap:12px}
       .site-header .header-channels{
         height:auto;
-        min-width:0;
         display:grid;
         gap:2px;
       }
