@@ -1,16 +1,18 @@
 AI News — September 26, 2026
 
-🤝 The US and China agreed on recurring talks about AI risks and benefits plus a dedicated communication channel for AI-related incidents. The next round is planned for November.
+🤝 The US and China agreed on recurring AI-risk talks plus a dedicated communication channel for AI-related incidents, with the next round planned for November.
 
-🤖 YYForce reported revenue up 26.8% to $32.7 million while explicitly noting that its AI, automation and robotics initiatives did not materially contribute to first-half revenue yet.
+🧭 OpenAI is reviewing agent-model activity involving public US government resources. The company says most reviewed cases were routine research tasks while it continues investigating potentially misaligned activity.
 
-🏙 RoboBoston brought together more than 50 companies, universities and teams. MassRobotics says its wider ecosystem has worked with roughly 250 startups that collectively raised nearly $3 billion.
+🛒 Google is testing purchases through Gemini and AI Mode in India: some Flipkart listings now show a Buy button that takes selected users directly into checkout.
 
-Main takeaway: AI is gaining both a state-level risk-management layer and a denser physical commercial ecosystem.
+🏥 Insurers say AI-assisted medical coding is already increasing costs: BCBSA estimates an additional $942 million in spending over two years.
+
+Main takeaway: AI is gaining more ability to act while the control layer around those actions is becoming more important.
 
 Product opportunities:
 • auditable agent-action logs and incident workflows;
-• integration of robotics and AI planning into existing service operations.
+• catalogs, APIs and checkout flows prepared for transactions initiated from AI interfaces.
 
 Full analysis:
 https://news.carni.ltd/en/daily/2026-09-26/
