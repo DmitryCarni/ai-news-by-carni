@@ -134,7 +134,7 @@
       document.documentElement.dataset.theme = theme;
     })();
   </script>
-  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=report-headings-20260927-8-{{ site.time | date: '%s' }}">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=report-headings-20260927-9-{{ site.time | date: '%s' }}">
   <style>
     .site-header{
       position:relative;
@@ -235,6 +235,7 @@
     .report h2#stack,
     .report h2#finance,
     .report h2#finance-tools,
+    .report h2#risk,
     .report h2#monetization{
       position:relative;
       margin-top:58px;
@@ -251,6 +252,7 @@
     .report h2#stack::before,
     .report h2#finance::before,
     .report h2#finance-tools::before,
+    .report h2#risk::before,
     .report h2#monetization::before{
       display:block!important;
       margin:0 0 8px!important;
@@ -266,18 +268,21 @@
     .report h2#stack::before{content:"ТЕХНОЛОГИИ"!important}
     .report h2#finance::before{content:"ФИНАНСЫ"!important}
     .report h2#finance-tools::before{content:"ИНСТРУМЕНТЫ"!important}
+    .report h2#risk::before{content:"РИСКИ И КОНТРОЛЬ"!important}
     .report h2#monetization::before{content:"МОНЕТИЗАЦИЯ"!important}
     html[data-lang="en"] .report h2#fundamental::before{content:"GLOBAL VECTOR"!important}
     html[data-lang="en"] .report h2#applied::before{content:"LEADING DIRECTIONS"!important}
     html[data-lang="en"] .report h2#stack::before{content:"TECHNOLOGY"!important}
     html[data-lang="en"] .report h2#finance::before{content:"FINANCE"!important}
     html[data-lang="en"] .report h2#finance-tools::before{content:"TOOLS"!important}
+    html[data-lang="en"] .report h2#risk::before{content:"RISK AND CONTROL"!important}
     html[data-lang="en"] .report h2#monetization::before{content:"BUSINESS"!important}
     .report h2#fundamental::after,
     .report h2#applied::after,
     .report h2#stack::after,
     .report h2#finance::after,
     .report h2#finance-tools::after,
+    .report h2#risk::after,
     .report h2#monetization::after{
       content:"";
       display:block;
@@ -294,6 +299,7 @@
     .report h2#stack + h3,
     .report h2#finance + h3,
     .report h2#finance-tools + h3,
+    .report h2#risk + h3,
     .report h2#monetization + h3{
       position:relative;
       margin-top:0;
@@ -308,6 +314,7 @@
     .report h2#stack + h3::before,
     .report h2#finance + h3::before,
     .report h2#finance-tools + h3::before,
+    .report h2#risk + h3::before,
     .report h2#monetization + h3::before{
       content:"";
       position:absolute;
@@ -330,6 +337,7 @@
       .report h2#stack,
       .report h2#finance,
       .report h2#finance-tools,
+      .report h2#risk,
       .report h2#monetization{margin-top:48px;padding:20px 0 6px 16px}
       .report h2#fundamental{margin-top:30px}
       .report h2#fundamental + h3,
@@ -337,6 +345,7 @@
       .report h2#stack + h3,
       .report h2#finance + h3,
       .report h2#finance-tools + h3,
+      .report h2#risk + h3,
       .report h2#monetization + h3{padding-left:13px}
     }
   </style>
