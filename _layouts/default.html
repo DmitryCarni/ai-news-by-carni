@@ -134,7 +134,7 @@
       document.documentElement.dataset.theme = theme;
     })();
   </script>
-  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=report-headings-20260927-3-{{ site.time | date: '%s' }}">
   <style>
     .site-header{
       position:relative;
@@ -229,12 +229,54 @@
       color:#2f6feb;
       filter:none;
     }
-    html[data-lang="en"] h2#fundamental::before{content:"01 · GLOBAL VECTOR"}
-    html[data-lang="en"] h2#applied::before{content:"02 · LEADING DIRECTIONS"}
-    html[data-lang="en"] h2#stack::before{content:"03 · TECHNOLOGY"}
-    html[data-lang="en"] h2#finance::before{content:"04 · FINANCE"}
-    html[data-lang="en"] h2#finance-tools::before{content:"05 · TOOLS"}
-    html[data-lang="en"] h2#monetization::before{content:"06 · BUSINESS"}
+    /* Critical report-heading layout. Kept inline so stale cached CSS cannot restore old numbered pseudo-headings. */
+    .report h2#fundamental::before,
+    .report h2#applied::before,
+    .report h2#stack::before,
+    .report h2#finance::before,
+    .report h2#finance-tools::before,
+    .report h2#monetization::before{
+      content:none!important;
+      display:none!important;
+    }
+    .report h2#fundamental,
+    .report h2#applied,
+    .report h2#stack,
+    .report h2#finance,
+    .report h2#finance-tools,
+    .report h2#monetization{
+      position:relative;
+      margin-top:58px;
+      padding:26px 0 6px 20px;
+      border-top:1px solid var(--line);
+      font-size:clamp(28px,4vw,34px);
+    }
+    .report h2#fundamental{margin-top:30px}
+    .report h2#fundamental::after,
+    .report h2#applied::after,
+    .report h2#stack::after,
+    .report h2#finance::after,
+    .report h2#finance-tools::after,
+    .report h2#monetization::after{
+      content:"";
+      position:absolute;
+      left:0;
+      top:26px;
+      bottom:-42px;
+      width:3px;
+      border-radius:999px;
+      background:var(--section-accent);
+    }
+    .report h2#fundamental + h3,
+    .report h2#applied + h3,
+    .report h2#stack + h3,
+    .report h2#finance + h3,
+    .report h2#finance-tools + h3,
+    .report h2#monetization + h3{
+      margin-top:0;
+      padding:2px 0 8px 20px;
+      font-size:21px;
+    }
     @media(max-width:700px){
       .site-header .header-inner{min-height:76px;gap:12px}
       .site-header .brand{gap:14px}
@@ -242,6 +284,25 @@
       .site-header nav{gap:8px}
       .brand-mark.brand-circuit{width:80px;height:24px;flex-basis:80px}
       .site-header::before{right:8%}
+      .report h2#fundamental,
+      .report h2#applied,
+      .report h2#stack,
+      .report h2#finance,
+      .report h2#finance-tools,
+      .report h2#monetization{margin-top:48px;padding:20px 0 6px 16px}
+      .report h2#fundamental{margin-top:30px}
+      .report h2#fundamental::after,
+      .report h2#applied::after,
+      .report h2#stack::after,
+      .report h2#finance::after,
+      .report h2#finance-tools::after,
+      .report h2#monetization::after{top:20px;bottom:-40px}
+      .report h2#fundamental + h3,
+      .report h2#applied + h3,
+      .report h2#stack + h3,
+      .report h2#finance + h3,
+      .report h2#finance-tools + h3,
+      .report h2#monetization + h3{padding-left:16px}
     }
   </style>
 </head>
