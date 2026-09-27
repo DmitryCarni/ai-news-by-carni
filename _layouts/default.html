@@ -134,7 +134,7 @@
       document.documentElement.dataset.theme = theme;
     })();
   </script>
-  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=report-headings-20260927-4-{{ site.time | date: '%s' }}">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=report-headings-20260927-5-{{ site.time | date: '%s' }}">
   <style>
     .site-header{
       position:relative;
@@ -252,13 +252,13 @@
     .report h2#finance-tools::before,
     .report h2#monetization::before{
       display:block!important;
-      margin:0!important;
-      color:var(--text)!important;
-      font-size:clamp(28px,4vw,34px)!important;
+      margin:0 0 8px!important;
+      color:var(--section-accent)!important;
+      font-size:12px!important;
       line-height:1.2!important;
-      letter-spacing:-.025em!important;
-      text-transform:none!important;
-      font-weight:700!important;
+      letter-spacing:.1em!important;
+      text-transform:uppercase!important;
+      font-weight:800!important;
     }
     .report h2#fundamental::before{content:"ГЛОБАЛЬНЫЙ ВЕКТОР"!important}
     .report h2#applied::before{content:"ВЕДУЩИЕ НАПРАВЛЕНИЯ"!important}
@@ -294,8 +294,10 @@
     .report h2#finance-tools + h3,
     .report h2#monetization + h3{
       margin-top:0;
-      padding:6px 0 8px 20px;
-      font-size:21px;
+      padding:0 0 8px 20px;
+      font-size:clamp(28px,4vw,34px);
+      line-height:1.2;
+      letter-spacing:-.025em;
     }
     @media(max-width:700px){
       .site-header .header-inner{min-height:76px;gap:12px}
