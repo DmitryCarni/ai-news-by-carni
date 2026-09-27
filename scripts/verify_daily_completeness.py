@@ -70,6 +70,14 @@ def strict_news_coverage(text: str) -> tuple[int, set[str], set[str]]:
                 news_blocks += count
     return news_blocks, news_sections, unknown_sections
 
+def conclusions_numbered(text: str) -> bool:
+    match = re.search(r'<div id="conclusions"[^>]*>(.*?)</div>', text, flags=re.S)
+    if not match:
+        return False
+    numbered = re.findall(r"(?m)^\s*\d+\.\s+\S", match.group(1))
+    return len(numbered) >= 2
+
+
 def visible_text_len(block: str) -> int:
     cleaned = re.sub(r"<[^>]+>", " ", block)
     cleaned = re.sub(r"\[[^\]]+\]\([^\)]+\)", " ", cleaned)
@@ -189,6 +197,8 @@ def verify_date(date: str, errors: list[str]) -> None:
                 fail(errors, f"{date}: {label} Daily has only {news_blocks} factual news blocks; expected at least {MIN_STRICT_NEWS_BLOCKS} (business opportunities do not count)")
             if len(news_sections) < MIN_STRICT_NEWS_SECTIONS:
                 fail(errors, f"{date}: {label} Daily covers only {len(news_sections)} canonical news rubrics; expected at least {MIN_STRICT_NEWS_SECTIONS} of {len(CANONICAL_NEWS_SECTIONS)}")
+            if not conclusions_numbered(text):
+                fail(errors, f"{date}: {label} Daily conclusions must contain at least 2 numbered takeaways")
 
     teaser_count = telegram_story_count(tg_path)
     if teaser_count and ru_h3 < teaser_count:
