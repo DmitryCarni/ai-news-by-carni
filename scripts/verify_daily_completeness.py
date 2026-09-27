@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 START_DATE = "2026-09-24"
 STRICT_RADAR_START_DATE = "2026-09-27"
 
-CANONICAL_NEWS_SECTIONS = ("fundamental", "applied", "stack", "finance", "finance-tools")
+CANONICAL_NEWS_SECTIONS = ("fundamental", "risk", "applied", "stack", "finance", "finance-tools")
 CANONICAL_SECTION_IDS = set(CANONICAL_NEWS_SECTIONS) | {"monetization", "conclusions"}
 MIN_STRICT_NEWS_BLOCKS = 5
 MIN_STRICT_NEWS_SECTIONS = 4
