@@ -68,7 +68,8 @@
         "name": "Carni",
         "url": "https://news.carni.ltd/",
         "sameAs": [
-          "https://t.me/ai_news_by_carni"
+          "https://t.me/ai_news_by_carni",
+          "https://www.youtube.com/@ainewsbycarni"
         ]
       },
       {
@@ -156,6 +157,27 @@
     .site-header .header-actions{
       gap:14px;
       flex:0 0 auto;
+    }
+    .site-header .header-channels{
+      position:relative;
+      flex:0 0 auto;
+      width:max-content;
+      min-width:118px;
+      height:18px;
+    }
+    .site-header .header-telegram,
+    .site-header .header-youtube{
+      position:absolute;
+      left:0;
+      white-space:nowrap;
+      font-size:14px;
+      line-height:18px;
+    }
+    .site-header .header-telegram{top:-13px}
+    .site-header .header-youtube{top:13px;color:var(--muted)}
+    .site-header .header-youtube a{
+      color:#ff3b30;
+      font-weight:700;
     }
     .site-header nav{
       gap:14px;
@@ -335,6 +357,18 @@
       .site-header .header-inner{min-height:76px;gap:12px}
       .site-header .brand{gap:14px}
       .site-header .header-actions{gap:12px}
+      .site-header .header-channels{
+        height:auto;
+        min-width:0;
+        display:grid;
+        gap:2px;
+      }
+      .site-header .header-telegram,
+      .site-header .header-youtube{
+        position:static;
+        line-height:16px;
+        font-size:13px;
+      }
       .site-header nav{gap:8px}
       .brand-mark.brand-circuit{width:80px;height:24px;flex-basis:80px}
       .site-header::before{right:8%}
@@ -374,7 +408,10 @@
         <span><strong>AI News by Carni</strong><small>{% if is_en %}Trends · AI Architecture · Business{% else %}Тренды · Архитектура ИИ · Бизнес{% endif %}</small></span>
       </a>
       <div class="header-actions">
-        <div class="header-telegram">{% if is_en %}Channel on {% else %}Канал в {% endif %}<a href="{% if is_en %}https://t.me/+GL8hr7x4uVsyMDMy{% else %}https://t.me/+KotqtD1F8EEwZDli{% endif %}" target="_blank" rel="noopener noreferrer">Telegram</a></div>
+        <div class="header-channels">
+          <div class="header-telegram">{% if is_en %}Channel on {% else %}Канал в {% endif %}<a href="{% if is_en %}https://t.me/+GL8hr7x4uVsyMDMy{% else %}https://t.me/+KotqtD1F8EEwZDli{% endif %}" target="_blank" rel="noopener noreferrer">Telegram</a></div>
+          <div class="header-youtube">{% if is_en %}Channel on {% else %}Канал в {% endif %}<a href="https://www.youtube.com/@ainewsbycarni" target="_blank" rel="noopener noreferrer">YouTube</a></div>
+        </div>
         <button id="theme-toggle" class="theme-button" type="button">
           <span class="theme-button-icon" aria-hidden="true">☀</span>
           <span class="theme-button-label">{{ light_theme_label }}</span>
