@@ -134,7 +134,7 @@
       document.documentElement.dataset.theme = theme;
     })();
   </script>
-  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=report-headings-20260927-6-{{ site.time | date: '%s' }}">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=report-headings-20260927-7-{{ site.time | date: '%s' }}">
   <style>
     .site-header{
       position:relative;
@@ -278,8 +278,15 @@
     .report h2#finance::after,
     .report h2#finance-tools::after,
     .report h2#monetization::after{
-      content:none;
-      display:none;
+      content:"";
+      display:block;
+      position:absolute;
+      left:0;
+      top:26px;
+      bottom:0;
+      width:3px;
+      background:var(--section-accent);
+      border-radius:999px 999px 0 0;
     }
     .report h2#fundamental + h3,
     .report h2#applied + h3,
@@ -290,7 +297,7 @@
       margin-top:0;
       padding:0 0 8px 17px;
       border-left:3px solid var(--section-accent);
-      border-radius:2px 0 0 2px;
+      border-radius:0 0 0 2px;
       font-size:clamp(28px,4vw,34px);
       line-height:1.2;
       letter-spacing:-.025em;
