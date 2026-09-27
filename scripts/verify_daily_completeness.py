@@ -7,6 +7,12 @@ import unicodedata
 
 ROOT = Path(__file__).resolve().parents[1]
 START_DATE = "2026-09-24"
+STRICT_RADAR_START_DATE = "2026-09-27"
+
+CANONICAL_NEWS_SECTIONS = ("fundamental", "applied", "stack", "finance", "finance-tools")
+CANONICAL_SECTION_IDS = set(CANONICAL_NEWS_SECTIONS) | {"monetization", "conclusions"}
+MIN_STRICT_NEWS_BLOCKS = 5
+MIN_STRICT_NEWS_SECTIONS = 4
 
 REQUIRED_RU_FRONT_MATTER = (
     "layout:",
@@ -37,6 +43,32 @@ def h3_blocks(text: str) -> list[tuple[str, str]]:
 
 def h3_count(text: str) -> int:
     return len(h3_blocks(text))
+
+
+def section_blocks(text: str) -> list[tuple[str, str, str]]:
+    matches = list(re.finditer(r"(?m)^##\s+(.+?)(?:\s+\{#([a-z0-9-]+)\})?\s*$", text))
+    sections: list[tuple[str, str, str]] = []
+    for index, match in enumerate(matches):
+        title = match.group(1).strip()
+        section_id = (match.group(2) or ("conclusions" if title in {"Итоги дня", "Day in review"} else "")).strip()
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+        sections.append((title, section_id, text[match.end():end].strip()))
+    return sections
+
+
+def strict_news_coverage(text: str) -> tuple[int, set[str], set[str]]:
+    news_blocks = 0
+    news_sections: set[str] = set()
+    unknown_sections: set[str] = set()
+    for title, section_id, body in section_blocks(text):
+        if section_id and section_id not in CANONICAL_SECTION_IDS:
+            unknown_sections.add(section_id)
+        if section_id in CANONICAL_NEWS_SECTIONS:
+            count = h3_count(body)
+            if count:
+                news_sections.add(section_id)
+                news_blocks += count
+    return news_blocks, news_sections, unknown_sections
 
 def visible_text_len(block: str) -> int:
     cleaned = re.sub(r"<[^>]+>", " ", block)
@@ -119,6 +151,16 @@ def verify_date(date: str, errors: list[str]) -> None:
     en_h3 = h3_count(en)
     if ru_h3 != en_h3:
         fail(errors, f"{date}: RU/EN block count mismatch ({ru_h3} vs {en_h3})")
+
+    if date >= STRICT_RADAR_START_DATE:
+        for label, text in (("RU", ru), ("EN", en)):
+            news_blocks, news_sections, unknown_sections = strict_news_coverage(text)
+            if unknown_sections:
+                fail(errors, f"{date}: {label} Daily uses non-canonical section ids: {', '.join(sorted(unknown_sections))}")
+            if news_blocks < MIN_STRICT_NEWS_BLOCKS:
+                fail(errors, f"{date}: {label} Daily has only {news_blocks} factual news blocks; expected at least {MIN_STRICT_NEWS_BLOCKS} (business opportunities do not count)")
+            if len(news_sections) < MIN_STRICT_NEWS_SECTIONS:
+                fail(errors, f"{date}: {label} Daily covers only {len(news_sections)} canonical news rubrics; expected at least {MIN_STRICT_NEWS_SECTIONS} of {len(CANONICAL_NEWS_SECTIONS)}")
 
     teaser_count = telegram_story_count(tg_path)
     if teaser_count and ru_h3 < teaser_count:
