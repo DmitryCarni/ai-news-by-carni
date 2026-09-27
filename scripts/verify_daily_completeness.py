@@ -70,6 +70,14 @@ def strict_news_coverage(text: str) -> tuple[int, set[str], set[str]]:
                 news_blocks += count
     return news_blocks, news_sections, unknown_sections
 
+def conclusions_numbered(text: str) -> bool:
+    match = re.search(r'<div id="conclusions"[^>]*>(.*?)</div>', text, flags=re.S)
+    if not match:
+        return False
+    numbered = re.findall(r"(?m)^\s*\d+\.\s+\S", match.group(1))
+    return len(numbered) >= 2
+
+
 def visible_text_len(block: str) -> int:
     cleaned = re.sub(r"<[^>]+>", " ", block)
     cleaned = re.sub(r"\[[^\]]+\]\([^\)]+\)", " ", cleaned)
@@ -110,6 +118,34 @@ def telegram_story_count(path: Path) -> int:
 
 def fail(errors: list[str], message: str) -> None:
     errors.append(message)
+
+
+def front_matter_value(text: str, key: str) -> str | None:
+    match = re.search(rf"(?m)^{re.escape(key)}:\s*(.+?)\s*$", text)
+    return match.group(1).strip().strip('"').strip("'") if match else None
+
+
+def verify_language_metadata(errors: list[str]) -> None:
+    checks = (
+        (ROOT / "daily", "daily", None, "RU Daily"),
+        (ROOT / "en" / "daily", "daily_en", "en", "EN Daily"),
+        (ROOT / "weekly", "weekly", None, "RU Weekly"),
+        (ROOT / "en" / "weekly", "weekly_en", "en", "EN Weekly"),
+    )
+    for folder, expected_type, expected_lang, label in checks:
+        for path in sorted(folder.glob("*.md")):
+            if path.name == "index.md":
+                continue
+            text = path.read_text(encoding="utf-8")
+            report_type = front_matter_value(text, "report_type")
+            lang = front_matter_value(text, "lang")
+            if report_type != expected_type:
+                fail(errors, f"{path.relative_to(ROOT)}: {label} report_type={report_type!r}, expected {expected_type!r}")
+            if expected_lang is not None and lang != expected_lang:
+                fail(errors, f"{path.relative_to(ROOT)}: {label} lang={lang!r}, expected {expected_lang!r}")
+            if expected_lang is None and lang == "en":
+                fail(errors, f"{path.relative_to(ROOT)}: {label} must not be tagged lang=en")
+
 
 def verify_date(date: str, errors: list[str]) -> None:
     ru_path = ROOT / "daily" / f"{date}.md"
@@ -161,6 +197,8 @@ def verify_date(date: str, errors: list[str]) -> None:
                 fail(errors, f"{date}: {label} Daily has only {news_blocks} factual news blocks; expected at least {MIN_STRICT_NEWS_BLOCKS} (business opportunities do not count)")
             if len(news_sections) < MIN_STRICT_NEWS_SECTIONS:
                 fail(errors, f"{date}: {label} Daily covers only {len(news_sections)} canonical news rubrics; expected at least {MIN_STRICT_NEWS_SECTIONS} of {len(CANONICAL_NEWS_SECTIONS)}")
+            if not conclusions_numbered(text):
+                fail(errors, f"{date}: {label} Daily conclusions must contain at least 2 numbered takeaways")
 
     teaser_count = telegram_story_count(tg_path)
     if teaser_count and ru_h3 < teaser_count:
@@ -171,6 +209,7 @@ def verify_date(date: str, errors: list[str]) -> None:
 
 def main() -> int:
     errors: list[str] = []
+    verify_language_metadata(errors)
     dates = sorted(
         p.stem
         for p in (ROOT / "daily").glob("20??-??-??.md")
