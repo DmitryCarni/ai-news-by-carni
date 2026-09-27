@@ -119,26 +119,15 @@ h2#applied,
 h2#stack,
 h2#finance,
 h2#finance-tools,
-h2#monetization{position:relative;margin-top:72px;padding:32px 0 0 20px;border-top:1px solid var(--line)}
-h2#fundamental::before,
-h2#applied::before,
-h2#stack::before,
-h2#finance::before,
-h2#finance-tools::before,
-h2#monetization::before{display:block;margin:0 0 10px;color:var(--section-accent);font-size:12px;line-height:1.2;letter-spacing:.1em;text-transform:uppercase;font-weight:800}
+h2#monetization{position:relative;margin-top:58px;padding:20px 0 0 16px;border-top:1px solid var(--line);font-size:clamp(24px,3.2vw,30px)}
 h2#fundamental::after,
 h2#applied::after,
 h2#stack::after,
 h2#finance::after,
 h2#finance-tools::after,
-h2#monetization::after{content:"";position:absolute;left:0;top:32px;bottom:0;width:3px;border-radius:999px;background:var(--section-accent)}
-h2#fundamental::before{content:"01 · ГЛОБАЛЬНЫЙ ВЕКТОР"}
-h2#applied::before{content:"02 · ВЕДУЩИЕ НАПРАВЛЕНИЯ"}
-h2#stack::before{content:"03 · ТЕХНОЛОГИИ"}
-h2#finance::before{content:"04 · ФИНАНСЫ"}
-h2#finance-tools::before{content:"05 · ИНСТРУМЕНТЫ"}
-h2#monetization::before{content:"06 · МОНЕТИЗАЦИЯ"}
+h2#monetization::after{content:"";position:absolute;left:0;top:20px;bottom:0;width:3px;border-radius:999px;background:var(--section-accent)}
 h2#fundamental{margin-top:30px}
+.report h3{margin-top:26px}
 
 .footer{border-top:1px solid var(--line);padding:24px 0 44px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:20px}
 .footer-brand strong{display:block;color:var(--lead);font-size:13px;font-weight:650;letter-spacing:.005em}
@@ -163,14 +152,14 @@ h2#fundamental{margin-top:30px}
   h2#stack,
   h2#finance,
   h2#finance-tools,
-  h2#monetization{margin-top:58px;padding:26px 0 0 16px}
+  h2#monetization{margin-top:48px;padding:18px 0 0 14px}
   h2#fundamental{margin-top:30px}
   h2#fundamental::after,
   h2#applied::after,
   h2#stack::after,
   h2#finance::after,
   h2#finance-tools::after,
-  h2#monetization::after{top:26px}
+  h2#monetization::after{top:18px}
   .conclusions{margin-top:58px;padding:4px 16px 18px}
   .day-nav{grid-template-columns:1fr;gap:8px}
   .day-nav>*:last-child,.day-nav .archive{text-align:left}
