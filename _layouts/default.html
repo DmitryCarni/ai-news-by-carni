@@ -134,7 +134,7 @@
       document.documentElement.dataset.theme = theme;
     })();
   </script>
-  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=report-headings-20260927-9-{{ site.time | date: '%s' }}">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v=report-headings-20260927-10-{{ site.time | date: '%s' }}">
   <style>
     .site-header{
       position:relative;
@@ -228,6 +228,12 @@
     html[data-theme="light"] .brand-mark.brand-circuit{
       color:#2f6feb;
       filter:none;
+    }
+    /* All report story titles share one visual size. Only the first story after a chapter heading receives the blue accent. */
+    .report h3{
+      font-size:clamp(28px,4vw,34px)!important;
+      line-height:1.2!important;
+      letter-spacing:-.025em!important;
     }
     /* Critical report-heading layout. Two visible levels: chapter label -> story title. */
     .report h2#fundamental,
