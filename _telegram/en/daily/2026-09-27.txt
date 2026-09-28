@@ -1,0 +1,18 @@
+AI News — September 27, 2026
+
+🇨🇳 China is weighing whether to allow ByteDance and Alibaba to buy Nvidia RTX PRO 5500 chips. Reuters notes that The Information's report has not been independently verified and no final approval has been announced.
+
+🏛 Australia's Senate has called the CEOs of OpenAI and Anthropic to an AI inquiry amid scrutiny of autonomous-agent incidents and access to government systems.
+
+🤖 HD Hyundai Robotics plans to transfer humanoid-AI capabilities — perception, planning and precision manipulation — into conventional industrial and collaborative robots.
+
+🧩 Anthropic launched Claude Marketplace with more than 2,000 plugins and connectors, creating a distribution layer around MCP, Agent Skills and partner products.
+
+Main takeaway: AI competition is expanding beyond models into compute access, agent oversight, physical deployment and integration marketplaces.
+
+Product opportunities:
+• packaged MCP/connectors with transparent permissions and action auditing;
+• manufacturing-data layers for training and controlling more autonomous robots.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-27/
