@@ -20,7 +20,7 @@
 
 `DmitryCarni/ai-news-by-carni-private`
 
-Каноническая база знаний находится только в его каталоге `docs/`.
+Каноническая база знаний находится только в его каталоге `docs/knowledge/`.
 
 ## Структура
 
@@ -45,7 +45,7 @@ Daily должен попадать в `main` только полным verified
 
 Редакционные правила находятся в:
 
-`DmitryCarni/ai-news-by-carni-private/docs/AI_RADAR_RULES.md`
+`DmitryCarni/ai-news-by-carni-private/docs/knowledge/03_РЕДАКЦИЯ_И_РАДАР.md`
 
 ## Язык документации
 
