@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import date as Date, timedelta
 from pathlib import Path
 import re
 import sys
@@ -89,6 +90,13 @@ def factual_headlines(text: str) -> set[str]:
             if normalized:
                 headlines.add(normalized)
     return headlines
+
+
+def report_nav_targets(text: str) -> set[str]:
+    match = re.search(r'<div class="report-nav">(.*?)</div>', text, flags=re.S)
+    if not match:
+        return set()
+    return set(re.findall(r'href="#([a-z0-9-]+)"', match.group(1)))
 
 def conclusions_numbered(text: str) -> bool:
     match = re.search(r'<div id="conclusions"[^>]*>(.*?)</div>', text, flags=re.S)
@@ -222,6 +230,10 @@ def verify_date(date: str, errors: list[str]) -> None:
                     fail(errors, f"{date}: {label} Daily has only {news_blocks} factual news blocks; expected at least one story in each of {len(CANONICAL_NEWS_SECTIONS)} factual rubrics")
                 if section_h3_count(text, "monetization") < 1:
                     fail(errors, f"{date}: {label} Daily is missing mandatory business-opportunity analysis")
+                required_nav = set(CANONICAL_NEWS_SECTIONS) | {"monetization", "conclusions"}
+                missing_nav = sorted(required_nav - report_nav_targets(text))
+                if missing_nav:
+                    fail(errors, f"{date}: {label} Daily report-nav is missing mandatory anchors: {', '.join(missing_nav)}")
             else:
                 if news_blocks < LEGACY_2026_09_27_MIN_NEWS_BLOCKS:
                     fail(errors, f"{date}: {label} Daily has only {news_blocks} factual news blocks; expected at least {LEGACY_2026_09_27_MIN_NEWS_BLOCKS}")
@@ -232,7 +244,7 @@ def verify_date(date: str, errors: list[str]) -> None:
                 fail(errors, f"{date}: {label} Daily conclusions must contain at least 2 numbered takeaways")
 
         if date >= FULL_RUBRIC_START_DATE:
-            previous_date = str((__import__("datetime").date.fromisoformat(date) - __import__("datetime").timedelta(days=1)))
+            previous_date = str(Date.fromisoformat(date) - timedelta(days=1))
             previous_ru_path = ROOT / "daily" / f"{previous_date}.md"
             if previous_ru_path.exists():
                 duplicates = factual_headlines(ru) & factual_headlines(previous_ru_path.read_text(encoding="utf-8"))
