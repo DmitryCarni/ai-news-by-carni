@@ -1,44 +1,27 @@
-# AI News by Carni — Shorts Stage 1
+# Legacy Shorts Stage 1
 
-Stage 1 proves the deterministic technical path:
+Этот каталог относится к раннему публичному POC Shorts и **не является текущим production renderer**.
 
-`manifest.json → validate → draw scenes → FFmpeg → 1080×1920 MP4`
+Текущий production Shorts находится в:
 
-Editorial selection and wording happen before this pipeline. The renderer does not research, choose stories or rewrite conclusions.
+`DmitryCarni/ai-news-by-carni-private/shorts/remotion`
 
-## Current scope
+Канонический contract:
 
-- RU Daily pilot first;
-- one strongest signal per Short;
-- 30–45 seconds target;
-- approved Carni Shorts v1 dark/cold-blue visual language;
-- H.264 video + silent AAC track for Stage 1;
-- MP4 is stored as a GitHub Actions artifact, not committed to Git;
-- TTS, timed subtitles and platform publishing are later stages.
+`DmitryCarni/ai-news-by-carni-private/docs/SHORTS_SYSTEM.md`
 
-## Repository layout
+## Что осталось здесь
 
-```text
-shorts/
-  manifests/ru/daily/*.json
-  renderer/render.py
-  schema/manifest.schema.json
-```
+Исторический Stage 1 демонстрировал путь:
 
-## Local build
+`manifest.json → validate → draw scenes → FFmpeg → 1080×1920 MP4`.
 
-Requirements: Python 3.12+, FFmpeg/ffprobe, DejaVu Sans, `pillow`, `jsonschema`.
+Эти файлы можно использовать только как legacy reference. Они не определяют:
+- current ShortSpec;
+- Reviewer;
+- Storyboard;
+- production music;
+- thumbnail;
+- YouTube publication.
 
-```bash
-python shorts/renderer/render.py \
-  shorts/manifests/ru/daily/2026-08-30.json \
-  --output-dir build/shorts
-```
-
-Expected output:
-
-```text
-build/shorts/2026-08-30-infrastructure-risk.mp4
-```
-
-A manifest push or renderer/schema change triggers `.github/workflows/shorts-build.yml`. The workflow renders all current manifests, validates the generated MP4 stream and uploads the result as a 14-day workflow artifact.
+Новые production изменения сюда не добавлять.
