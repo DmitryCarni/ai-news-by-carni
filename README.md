@@ -1,56 +1,49 @@
-# AI News by Carni — public site/content repository
+# AI News by Carni — публичный сайт и контент
 
-This repository is the **public output surface** of the wider AI News by Carni system.
+Этот репозиторий содержит публичную поверхность проекта AI News by Carni.
 
-Public site:
+Сайт:
 `https://news.carni.ltd/`
 
-## Repository role
+## Что хранится здесь
 
-Owns:
-- RU/EN Daily reports;
-- RU/EN Weekly reports;
-- Telegram teaser source files;
-- GitHub Pages layouts/assets;
-- public SEO/search infrastructure.
+- RU Daily;
+- EN Daily;
+- RU/EN Weekly;
+- Telegram teaser source;
+- GitHub Pages layouts и assets;
+- search/SEO-инфраструктура;
+- публичные служебные страницы.
 
-Does **not** own:
-- global project state;
-- Shorts Factory architecture;
-- approval/publisher state;
-- project strategy;
-- global working memory.
+## Что здесь не хранится
 
-## Global source of truth
+Этот репозиторий не ведёт отдельную глобальную базу знаний проекта.
 
-The control-plane and project-memory repository is:
+Архитектура, текущий production-state, Shorts Factory, Reviewer contracts и эксплуатационные правила находятся в:
 
-`DmitryCarni/ai-news-by-carni-private`
+`DmitryCarni/ai-news-by-carni-private/docs/knowledge/`
 
-For cross-project architecture/current state, use its startup packet:
+Стартовый порядок:
+1. `PROJECT.md`;
+2. `CURRENT_STATE.md`;
+3. один нужный тематический документ.
 
-1. `README.md`
-2. `docs/PROJECT_INDEX.md`
-3. `docs/WORKING_STATE.md`
-4. `docs/KNOWLEDGE_BASE_MAP.md`
+## Основная структура
 
-Do not create a competing global project-state document in this public repository.
-
-## Local structure
-
-- `index.md` — main page
-- `daily/` — Daily reports
-- `weekly/` — Weekly reports
-- `en/` — English edition
-- `_telegram/` — Telegram teaser source files
-- `_layouts/` — site layouts
-- `assets/` — public assets/styles
+- `index.md` — главная;
+- `daily/` — русские Daily;
+- `weekly/` — русские Weekly;
+- `en/` — английская версия;
+- `_telegram/` — source для Telegram;
+- `_layouts/` — layout сайта;
+- `assets/` — публичные assets;
+- `shorts/` — исторический ранний prototype, не текущая production Shorts Factory.
 
 ## GitHub Pages
 
-Published from `main`.
+Production branch: `main`.
 
 Custom domain:
-`news.carni.ltd`
+`news.carni.ltd`.
 
-The public repository remains authoritative for the **actual public files it contains**, while global product/architecture memory remains in the private control-plane repository.
+Фактические публичные файлы этого репозитория являются источником истины для опубликованного сайта. Глобальные правила проекта здесь не дублируются.
