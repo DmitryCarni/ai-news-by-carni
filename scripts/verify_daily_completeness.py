@@ -8,11 +8,12 @@ import unicodedata
 ROOT = Path(__file__).resolve().parents[1]
 START_DATE = "2026-09-24"
 STRICT_RADAR_START_DATE = "2026-09-27"
+FULL_RUBRIC_START_DATE = "2026-09-28"
 
 CANONICAL_NEWS_SECTIONS = ("fundamental", "risk", "applied", "stack", "finance", "finance-tools")
 CANONICAL_SECTION_IDS = set(CANONICAL_NEWS_SECTIONS) | {"monetization", "conclusions"}
-MIN_STRICT_NEWS_BLOCKS = 4
-MIN_STRICT_NEWS_SECTIONS = 3
+LEGACY_2026_09_27_MIN_NEWS_BLOCKS = 4
+LEGACY_2026_09_27_MIN_NEWS_SECTIONS = 3
 
 REQUIRED_RU_FRONT_MATTER = (
     "layout:",
@@ -69,6 +70,25 @@ def strict_news_coverage(text: str) -> tuple[int, set[str], set[str]]:
                 news_sections.add(section_id)
                 news_blocks += count
     return news_blocks, news_sections, unknown_sections
+
+
+def section_h3_count(text: str, target_section_id: str) -> int:
+    for _title, section_id, body in section_blocks(text):
+        if section_id == target_section_id:
+            return h3_count(body)
+    return 0
+
+
+def factual_headlines(text: str) -> set[str]:
+    headlines: set[str] = set()
+    for _title, section_id, body in section_blocks(text):
+        if section_id not in CANONICAL_NEWS_SECTIONS:
+            continue
+        for title, _block in h3_blocks(body):
+            normalized = re.sub(r"[^0-9a-zа-яё]+", " ", title.casefold(), flags=re.I).strip()
+            if normalized:
+                headlines.add(normalized)
+    return headlines
 
 def conclusions_numbered(text: str) -> bool:
     match = re.search(r'<div id="conclusions"[^>]*>(.*?)</div>', text, flags=re.S)
@@ -193,12 +213,31 @@ def verify_date(date: str, errors: list[str]) -> None:
             news_blocks, news_sections, unknown_sections = strict_news_coverage(text)
             if unknown_sections:
                 fail(errors, f"{date}: {label} Daily uses non-canonical section ids: {', '.join(sorted(unknown_sections))}")
-            if news_blocks < MIN_STRICT_NEWS_BLOCKS:
-                fail(errors, f"{date}: {label} Daily has only {news_blocks} factual news blocks; expected at least {MIN_STRICT_NEWS_BLOCKS} (business opportunities do not count)")
-            if len(news_sections) < MIN_STRICT_NEWS_SECTIONS:
-                fail(errors, f"{date}: {label} Daily covers only {len(news_sections)} canonical news rubrics; expected at least {MIN_STRICT_NEWS_SECTIONS} of {len(CANONICAL_NEWS_SECTIONS)}")
+
+            if date >= FULL_RUBRIC_START_DATE:
+                missing_sections = [section for section in CANONICAL_NEWS_SECTIONS if section not in news_sections]
+                if missing_sections:
+                    fail(errors, f"{date}: {label} Daily is missing mandatory factual rubrics: {', '.join(missing_sections)}")
+                if news_blocks < len(CANONICAL_NEWS_SECTIONS):
+                    fail(errors, f"{date}: {label} Daily has only {news_blocks} factual news blocks; expected at least one story in each of {len(CANONICAL_NEWS_SECTIONS)} factual rubrics")
+                if section_h3_count(text, "monetization") < 1:
+                    fail(errors, f"{date}: {label} Daily is missing mandatory business-opportunity analysis")
+            else:
+                if news_blocks < LEGACY_2026_09_27_MIN_NEWS_BLOCKS:
+                    fail(errors, f"{date}: {label} Daily has only {news_blocks} factual news blocks; expected at least {LEGACY_2026_09_27_MIN_NEWS_BLOCKS}")
+                if len(news_sections) < LEGACY_2026_09_27_MIN_NEWS_SECTIONS:
+                    fail(errors, f"{date}: {label} Daily covers only {len(news_sections)} factual rubrics; expected at least {LEGACY_2026_09_27_MIN_NEWS_SECTIONS}")
+
             if not conclusions_numbered(text):
                 fail(errors, f"{date}: {label} Daily conclusions must contain at least 2 numbered takeaways")
+
+        if date >= FULL_RUBRIC_START_DATE:
+            previous_date = str((__import__("datetime").date.fromisoformat(date) - __import__("datetime").timedelta(days=1)))
+            previous_ru_path = ROOT / "daily" / f"{previous_date}.md"
+            if previous_ru_path.exists():
+                duplicates = factual_headlines(ru) & factual_headlines(previous_ru_path.read_text(encoding="utf-8"))
+                if duplicates:
+                    fail(errors, f"{date}: RU Daily repeats factual headline(s) from {previous_date}: {', '.join(sorted(duplicates))}")
 
     teaser_count = telegram_story_count(tg_path)
     if teaser_count and ru_h3 < teaser_count:
