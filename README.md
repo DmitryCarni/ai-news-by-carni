@@ -1,56 +1,54 @@
-# AI News by Carni — public site/content repository
+# AI News by Carni — публичный сайт и контент
 
-This repository is the **public output surface** of the wider AI News by Carni system.
+Этот репозиторий — публичная поверхность проекта AI News by Carni.
 
-Public site:
-`https://news.carni.ltd/`
+Сайт: `https://news.carni.ltd/`
 
-## Repository role
+## Роль репозитория
 
-Owns:
-- RU/EN Daily reports;
-- RU/EN Weekly reports;
+Здесь хранятся:
+- RU/EN Daily;
+- RU/EN Weekly;
 - Telegram teaser source files;
 - GitHub Pages layouts/assets;
-- public SEO/search infrastructure.
+- SEO/search infrastructure;
+- публичные файлы сайта.
 
-Does **not** own:
-- global project state;
-- Shorts Factory architecture;
-- approval/publisher state;
-- project strategy;
-- global working memory.
+Здесь **не хранится глобальная база знаний проекта**.
 
-## Global source of truth
-
-The control-plane and project-memory repository is:
+Главный источник архитектуры, production contracts и current state:
 
 `DmitryCarni/ai-news-by-carni-private`
 
-For cross-project architecture/current state, use its startup packet:
+Каноническая база знаний находится только в его каталоге `docs/`.
 
-1. `README.md`
-2. `docs/PROJECT_INDEX.md`
-3. `docs/WORKING_STATE.md`
-4. `docs/KNOWLEDGE_BASE_MAP.md`
+## Структура
 
-Do not create a competing global project-state document in this public repository.
+- `index.md` — главная;
+- `daily/` — RU Daily;
+- `weekly/` — RU Weekly;
+- `en/` — English edition;
+- `_telegram/` — Telegram teaser source;
+- `_layouts/` — layouts;
+- `assets/` — styles/assets;
+- `scripts/` — publication/verifier utilities.
 
-## Local structure
+## Publication
 
-- `index.md` — main page
-- `daily/` — Daily reports
-- `weekly/` — Weekly reports
-- `en/` — English edition
-- `_telegram/` — Telegram teaser source files
-- `_layouts/` — site layouts
-- `assets/` — public assets/styles
-
-## GitHub Pages
-
-Published from `main`.
+GitHub Pages публикуется из `main`.
 
 Custom domain:
+
 `news.carni.ltd`
 
-The public repository remains authoritative for the **actual public files it contains**, while global product/architecture memory remains in the private control-plane repository.
+Daily должен попадать в `main` только полным verified bundle. Частичные placeholder/stub-файлы недопустимы.
+
+Редакционные правила находятся в:
+
+`DmitryCarni/ai-news-by-carni-private/docs/AI_RADAR_RULES.md`
+
+## Язык документации
+
+README и техническая документация ведутся на русском.
+
+English edition сайта остаётся английской — это продуктовый контент, а не project documentation.
