@@ -8,7 +8,7 @@
 
 Канонический contract:
 
-`DmitryCarni/ai-news-by-carni-private/docs/SHORTS_SYSTEM.md`
+`DmitryCarni/ai-news-by-carni-private/docs/knowledge/04_SHORTS_И_REVIEWER.md`
 
 ## Что осталось здесь
 
