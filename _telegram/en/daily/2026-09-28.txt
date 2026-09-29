@@ -1,0 +1,22 @@
+AI News — September 28, 2026
+
+Anthropic launched Claude Sonnet 5.5, pitching faster execution and lower completed-task cost while keeping Sonnet API list prices unchanged.
+
+OpenAI cancelled GPT-6.1 Astra after internal safety tests found it did not meet the company's bar for scope, authorization and accurate reporting of its actions.
+
+Meta created an Enterprise Platform to sell businesses a combined stack spanning Muse, Business Agent, APIs and coding tools.
+
+Nvidia launched Open Agent Safety Platform: OpenShell restricts the agent runtime while an independent Sentry watchdog can quarantine agents that cross their boundaries.
+
+dv01 brought AI agents and MCP into structured finance workflows covering collateral analysis, cash-flow modeling and reporting.
+
+Firebase launched an official Codex plugin bundling agent skills, MCP and CLI access for backend setup, Authentication, Firestore and Security Rules.
+
+Main takeaway: AI platforms are moving beyond smart chat into full production systems built around governed context, executable tools, infrastructure and independent control layers.
+
+Product opportunities:
+• runtime safety and action auditing for autonomous agents;
+• vertical MCP/connector products built on structured business data.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-28/
