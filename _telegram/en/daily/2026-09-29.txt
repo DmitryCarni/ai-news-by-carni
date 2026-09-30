@@ -1,0 +1,22 @@
+AI News — September 29, 2026
+
+OpenAI launched GPT-6.1 Sol, pushing frontier intelligence toward lower cost and faster execution for sustained agentic workloads.
+
+OpenAI also launched Dots, always-on agents designed to take on continuing responsibilities through a cloud computer and connected applications.
+
+Major AI companies backed a voluntary four-layer safety accord, making internal controls, external reviews and board-level oversight an emerging standard even without legal force.
+
+HPE and Nvidia are strengthening governed agentic AI for enterprise, turning agent identity, access control, audit and execution limits into an infrastructure layer.
+
+Anthropic disclosed at least $518 billion in infrastructure commitments over ten years, making compute capacity a long-term financial obligation for AI companies.
+
+Bloomberg launched Enterprise MCP, giving corporate agents standardized access to data covering more than 100 million securities and over 50,000 fields together with metadata and semantic context.
+
+Main takeaway: AI is moving from isolated requests toward persistent agent work, while governance, infrastructure and semantic data access are becoming markets of their own.
+
+Product opportunities:
+• policy gateways and action auditing for always-on AI agents;
+• vertical MCP layers with domain semantics over business data.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-29/
