@@ -1,0 +1,22 @@
+AI News — September 30, 2026
+
+Google introduced Gemini 4 Argon, a frontier model for long-horizon professional work with an output limit of up to 1 million tokens.
+
+OpenAI disclosed a large adversarial-distillation campaign in which operators tried to systematically extract protected model reasoning across thousands of accounts.
+
+DoorDash launched ordering through an ordinary text message, with AI building the cart and carrying user intent through to a transaction.
+
+Restate raised $20 million for durable execution infrastructure that lets long-running agent workflows safely resume after failures.
+
+ElevenLabs doubled its valuation to $22 billion and says its voice agents now handle more than 15 million conversations every week.
+
+AWS added metadata pre-filtering to S3 Vectors, giving agents and RAG systems more reliable retrieval inside authorized document scopes.
+
+Main takeaway: the market is moving from short AI responses toward long-running autonomous work, real transactions and infrastructure that makes that work reliable and secure.
+
+Product opportunities:
+• durable recovery and checkpointing for AI agents;
+• API-model protection against coordinated reasoning extraction.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-09-30/
