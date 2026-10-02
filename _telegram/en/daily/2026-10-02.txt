@@ -1,0 +1,22 @@
+AI News — October 2, 2026
+
+Google is rebuilding federated learning around trusted execution environments, making privacy guarantees externally verifiable through remote attestation. Gboard is already using the new system.
+
+AWS opened the preview of Well-Architected Agent, which reviews cloud architecture across cost, security, performance and resilience and prepares concrete remediation steps.
+
+Supio launched Case Communications, giving its legal agent calls, texts, email and fax as operational channels for moving cases forward under staff oversight.
+
+Supabase raised $150 million and is acquiring Turso, betting on infrastructure where AI agents can create huge numbers of small databases almost as easily as files.
+
+The ECB found that 72% of euro-area firms planning AI investment expect to rely on internal funds, while intangible spending such as training remains harder to finance externally.
+
+Milliman released Contract Clarity for Healthcare, linking AI contract analysis to healthcare cost models so financial impact can be assessed before signing.
+
+Main takeaway: AI is moving deeper into real infrastructure and operations, increasing the value of verifiable control, agent-native data architecture and measurable deployment economics.
+
+Product opportunities:
+• verifiable protected execution for AI working with sensitive data;
+• staged AI adoption with measurable ROI and evidence for financing decisions.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-10-02/
