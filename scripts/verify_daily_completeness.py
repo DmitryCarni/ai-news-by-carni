@@ -11,6 +11,7 @@ START_DATE = "2026-09-24"
 STRICT_RADAR_START_DATE = "2026-09-27"
 FULL_RUBRIC_START_DATE = "2026-09-28"
 STORY_DEPTH_START_DATE = "2026-10-01"
+RU_LANGUAGE_GUARD_START_DATE = "2026-10-01"
 
 CANONICAL_NEWS_SECTIONS = ("fundamental", "risk", "applied", "stack", "finance", "finance-tools")
 CANONICAL_SECTION_IDS = set(CANONICAL_NEWS_SECTIONS) | {"monetization", "conclusions"}
@@ -165,6 +166,49 @@ def verify_story_depth(date: str, label: str, text: str, errors: list[str]) -> N
                 )
 
 
+RU_AVOIDABLE_ENGLISH_PATTERNS = (
+    (r"\bpermissions?\b", "права доступа"),
+    (r"\btool calls?\b", "вызов инструмента"),
+    (r"\baudit log\b", "журнал аудита"),
+    (r"\bpolicy enforcement\b", "контроль/применение правил доступа"),
+    (r"\bcoding agents?\b", "агенты для программирования"),
+    (r"\binfra agents?\b", "инфраструктурные агенты"),
+    (r"\bfinancial assistants?\b", "финансовые помощники"),
+    (r"\bmodel-agnostic\b", "независимый от конкретной модели"),
+    (r"\btool layer\b", "слой инструментов"),
+    (r"\bsandboxed\b", "изолирован в песочнице"),
+    (r"\bread-only-first\b", "сначала только чтение"),
+    (r"\bhuman approval\b", "подтверждение человеком"),
+    (r"\bsecret redaction\b", "сокрытие секретов"),
+    (r"\bspend/rate limits\b", "лимиты расходов и частоты вызовов"),
+    (r"\bincident replay\b", "восстановление хода инцидента"),
+    (r"\benterprise\b", "корпоративный заказчик / крупная компания"),
+    (r"\bcontrolled availability\b", "ограниченный доступ"),
+    (r"\bconsumption-model\b", "оплата по потреблению"),
+    (r"\bcustomer support\b", "поддержка клиентов"),
+    (r"\bend-to-end\b", "сквозной"),
+    (r"\brealtime\b", "в реальном времени"),
+)
+
+
+def verify_ru_readability(date: str, text: str, errors: list[str]) -> None:
+    if date < RU_LANGUAGE_GUARD_START_DATE:
+        return
+
+    prose = re.sub(r"https?://\S+", " ", text)
+    prose = re.sub(r"(?m)^(?:Источник|Источники):.*$", " ", prose)
+    prose = re.sub(r"`[^`]+`", " ", prose)
+
+    for pattern, russian_hint in RU_AVOIDABLE_ENGLISH_PATTERNS:
+        match = re.search(pattern, prose, flags=re.I)
+        if match:
+            fail(
+                errors,
+                f"{date}: RU Daily contains avoidable English '{match.group(0)}'; "
+                f"use natural Russian such as '{russian_hint}' unless it is an exact official identifier",
+            )
+
+
 def verify_content_blocks(date: str, label: str, text: str, errors: list[str]) -> None:
     for title, block in h3_blocks(text):
         if '<div class="score">' not in block:
@@ -263,6 +307,8 @@ def verify_date(date: str, errors: list[str]) -> None:
             fail(errors, f"{date}: {label} Daily has only {h3_count(text)} story/opportunity blocks")
         verify_content_blocks(date, label, text, errors)
         verify_story_depth(date, label, text, errors)
+
+    verify_ru_readability(date, ru, errors)
 
     ru_h3 = h3_count(ru)
     en_h3 = h3_count(en)
