@@ -37,6 +37,8 @@ REQUIRED_EN_FRONT_MATTER = REQUIRED_RU_FRONT_MATTER + (
 MIN_BLOCK_CHARS = 280
 MIN_FACTUAL_DEPTH_CHARS = 700
 MIN_FACTUAL_PROSE_PARAGRAPHS = 3
+MIN_MONETIZATION_DEPTH_CHARS = 650
+MIN_MONETIZATION_PROSE_PARAGRAPHS = 3
 
 def h3_blocks(text: str) -> list[tuple[str, str]]:
     matches = list(re.finditer(r"(?m)^###\s+(.+?)\s*$", text))
@@ -133,24 +135,33 @@ def verify_story_depth(date: str, label: str, text: str, errors: list[str]) -> N
     if date < STORY_DEPTH_START_DATE:
         return
     for _section_title, section_id, body in section_blocks(text):
-        if section_id not in CANONICAL_NEWS_SECTIONS:
+        if section_id in CANONICAL_NEWS_SECTIONS:
+            min_paragraphs = MIN_FACTUAL_PROSE_PARAGRAPHS
+            min_chars = MIN_FACTUAL_DEPTH_CHARS
+            kind = "factual"
+        elif section_id == "monetization":
+            min_paragraphs = MIN_MONETIZATION_PROSE_PARAGRAPHS
+            min_chars = MIN_MONETIZATION_DEPTH_CHARS
+            kind = "monetization"
+        else:
             continue
+
         for title, block in h3_blocks(body):
             paragraphs = factual_prose_paragraphs(block)
             analysis = block.split('<div class="score">', 1)[0].strip()
-            if len(paragraphs) < MIN_FACTUAL_PROSE_PARAGRAPHS:
+            if len(paragraphs) < min_paragraphs:
                 fail(
                     errors,
-                    f"{date}: {label} factual block '{title}' has only "
+                    f"{date}: {label} {kind} block '{title}' has only "
                     f"{len(paragraphs)} prose paragraphs; expected at least "
-                    f"{MIN_FACTUAL_PROSE_PARAGRAPHS} for site-depth coverage",
+                    f"{min_paragraphs} for site-depth coverage",
                 )
-            if visible_text_len(analysis) < MIN_FACTUAL_DEPTH_CHARS:
+            if visible_text_len(analysis) < min_chars:
                 fail(
                     errors,
-                    f"{date}: {label} factual block '{title}' is too thin for "
+                    f"{date}: {label} {kind} block '{title}' is too thin for "
                     f"site-depth coverage ({visible_text_len(analysis)} visible chars < "
-                    f"{MIN_FACTUAL_DEPTH_CHARS})",
+                    f"{min_chars})",
                 )
 
 
