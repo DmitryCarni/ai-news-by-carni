@@ -182,7 +182,6 @@ RU_AVOIDABLE_ENGLISH_PATTERNS = (
     (r"\bsecret redaction\b", "сокрытие секретов"),
     (r"\bspend/rate limits\b", "лимиты расходов и частоты вызовов"),
     (r"\bincident replay\b", "восстановление хода инцидента"),
-    (r"\benterprise\b", "корпоративный заказчик / крупная компания"),
     (r"\bcontrolled availability\b", "ограниченный доступ"),
     (r"\bconsumption-model\b", "оплата по потреблению"),
     (r"\bcustomer support\b", "поддержка клиентов"),
