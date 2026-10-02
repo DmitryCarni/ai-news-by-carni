@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 START_DATE = "2026-09-24"
 STRICT_RADAR_START_DATE = "2026-09-27"
 FULL_RUBRIC_START_DATE = "2026-09-28"
+STORY_DEPTH_START_DATE = "2026-10-01"
 
 CANONICAL_NEWS_SECTIONS = ("fundamental", "risk", "applied", "stack", "finance", "finance-tools")
 CANONICAL_SECTION_IDS = set(CANONICAL_NEWS_SECTIONS) | {"monetization", "conclusions"}
@@ -34,6 +35,8 @@ REQUIRED_EN_FRONT_MATTER = REQUIRED_RU_FRONT_MATTER + (
 )
 
 MIN_BLOCK_CHARS = 280
+MIN_FACTUAL_DEPTH_CHARS = 700
+MIN_FACTUAL_PROSE_PARAGRAPHS = 3
 
 def h3_blocks(text: str) -> list[tuple[str, str]]:
     matches = list(re.finditer(r"(?m)^###\s+(.+?)\s*$", text))
@@ -112,6 +115,44 @@ def visible_text_len(block: str) -> int:
     cleaned = re.sub(r"https?://\S+", " ", cleaned)
     cleaned = re.sub(r"\s+", " ", cleaned).strip()
     return len(cleaned)
+
+def factual_prose_paragraphs(block: str) -> list[str]:
+    analysis = block.split('<div class="score">', 1)[0].strip()
+    paragraphs: list[str] = []
+    for raw in re.split(r"\n\s*\n", analysis):
+        paragraph = raw.strip()
+        if not paragraph:
+            continue
+        if paragraph.startswith(("<", "Источник:", "Источники:", "Source:", "Sources:")):
+            continue
+        paragraphs.append(paragraph)
+    return paragraphs
+
+
+def verify_story_depth(date: str, label: str, text: str, errors: list[str]) -> None:
+    if date < STORY_DEPTH_START_DATE:
+        return
+    for _section_title, section_id, body in section_blocks(text):
+        if section_id not in CANONICAL_NEWS_SECTIONS:
+            continue
+        for title, block in h3_blocks(body):
+            paragraphs = factual_prose_paragraphs(block)
+            analysis = block.split('<div class="score">', 1)[0].strip()
+            if len(paragraphs) < MIN_FACTUAL_PROSE_PARAGRAPHS:
+                fail(
+                    errors,
+                    f"{date}: {label} factual block '{title}' has only "
+                    f"{len(paragraphs)} prose paragraphs; expected at least "
+                    f"{MIN_FACTUAL_PROSE_PARAGRAPHS} for site-depth coverage",
+                )
+            if visible_text_len(analysis) < MIN_FACTUAL_DEPTH_CHARS:
+                fail(
+                    errors,
+                    f"{date}: {label} factual block '{title}' is too thin for "
+                    f"site-depth coverage ({visible_text_len(analysis)} visible chars < "
+                    f"{MIN_FACTUAL_DEPTH_CHARS})",
+                )
+
 
 def verify_content_blocks(date: str, label: str, text: str, errors: list[str]) -> None:
     for title, block in h3_blocks(text):
@@ -210,6 +251,7 @@ def verify_date(date: str, errors: list[str]) -> None:
         if h3_count(text) < 3:
             fail(errors, f"{date}: {label} Daily has only {h3_count(text)} story/opportunity blocks")
         verify_content_blocks(date, label, text, errors)
+        verify_story_depth(date, label, text, errors)
 
     ru_h3 = h3_count(ru)
     en_h3 = h3_count(en)
