@@ -1,20 +1,22 @@
 AI News — October 1, 2026
 
-The US is creating a dedicated command for autonomous systems, turning autonomy from an experimental capability into a distinct operating layer.
+Microsoft launched MAI-Transcribe-2-Streaming and new MAI-Voice models, letting voice agents begin understanding speech before a person has finished talking.
 
-California subpoenaed OpenAI as part of a cybersecurity probe into AI agents. Action controls and audit trails are becoming legal as well as engineering requirements.
+California served OpenAI an investigative subpoena as part of a cybersecurity inquiry involving AI models.
 
-ServiceNow launched Flow, an AI-native service desk inside Slack and Teams that can resolve requests and turn successful solutions into repeatable automation.
+ServiceNow launched Flow, an AI-native service desk that works inside everyday chat channels and turns repeated resolutions into automation.
 
-DigitalOcean introduced Agent Droplets, bundling compute, inference, memory, storage and governed access to 16,000+ tools.
+DigitalOcean introduced Agent Droplets, bundling compute, memory, storage, inference and governed access to more than 16,000 tools into one subscription.
 
-Backbase is making agentic banking a dedicated product direction, while Cohere's Embed 5 separates high-quality indexing from fast live retrieval.
+Armadin raised $255.5 million in Series B funding; Reuters reports a valuation above $2.5 billion for its autonomous AI security platform.
 
-Main takeaway: AI agents are moving from demos into real operating environments, increasing the value of control, reliability and simpler infrastructure.
+Anthropic launched mods for Claude Code, allowing TypeScript functions to rewrite prompts, intercept tool calls, handle permissions and alter the UI.
+
+Main takeaway: agents are moving from demos into real operating environments, increasing the value of low latency, simpler infrastructure and strong action controls.
 
 Product opportunities:
-• lightweight AI service desks for teams without heavyweight ITSM;
-• governance layers for tool permissions, logging and human approval.
+• lightweight AI service desks without heavyweight ITSM;
+• policy and audit gateways for agent tools.
 
 Full analysis:
 https://news.carni.ltd/en/daily/2026-10-01/
