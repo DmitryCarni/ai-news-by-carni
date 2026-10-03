@@ -1,0 +1,34 @@
+name: Verify Weekly completeness
+
+on:
+  pull_request:
+    paths:
+      - "weekly/**"
+      - "en/weekly/**"
+      - "_telegram/weekly/**"
+      - "scripts/verify_weekly_completeness.py"
+      - ".github/workflows/verify-weekly-completeness.yml"
+  push:
+    branches: [main]
+    paths:
+      - "weekly/**"
+      - "en/weekly/**"
+      - "_telegram/weekly/**"
+      - "scripts/verify_weekly_completeness.py"
+      - ".github/workflows/verify-weekly-completeness.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify Weekly completeness contract
+        run: python scripts/verify_weekly_completeness.py
