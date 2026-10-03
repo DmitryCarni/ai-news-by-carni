@@ -1,0 +1,21 @@
+AI Week in Review
+
+September 25 – October 1, 2026
+
+Strong models are getting cheaper per completed task while agent runs get longer. Claude Sonnet 5.5, GPT-6.1 Sol, Gemini 4 Argon and Microsoft's new voice models are pushing the market toward cheaper persistent automation.
+
+At the same time, agent control is moving from internal policy into external oversight. This week brought an international AI-incident channel, parliamentary hearings, a cancelled release after safety testing, new control infrastructure and California's investigative subpoena to OpenAI.
+
+Agents increasingly look less like chat interfaces and more like process owners. Copilot, OpenAI Dots, DoorDash and ServiceNow Flow all point toward systems that wait for events, call tools and complete real operations.
+
+A separate infrastructure stack is forming around the model: durable execution, MCP and domain data, governed tools, memory, cost controls and programmable policy. Restate, DigitalOcean, Bloomberg, HPE/Nvidia, Amazon and Anthropic are building different pieces of that stack.
+
+Capital is confirming the shift. ElevenLabs reached a $22B valuation, Armadin raised $255.5M, and Anthropic disclosed massive infrastructure commitments. Money is moving into voice, security and execution layers where AI becomes a recurring service.
+
+Top business opportunities:
+• a policy gateway between agents and real systems;
+• managed recovery for long-running agent workflows;
+• vertical agent products with proprietary data, trusted tools and measurable outcomes.
+
+Full analysis:
+https://news.carni.ltd/en/weekly/2026-W40/
