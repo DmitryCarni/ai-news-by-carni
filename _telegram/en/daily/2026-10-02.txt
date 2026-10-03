@@ -2,7 +2,7 @@ AI News — October 2, 2026
 
 Google is rebuilding federated learning around trusted execution environments, making privacy guarantees externally verifiable through remote attestation. Gboard is already using the new system.
 
-AWS opened the preview of Well-Architected Agent, which reviews cloud architecture across cost, security, performance and resilience and prepares concrete remediation steps.
+ibl.ai unified OpenRouter, Vertex, Azure Foundry, Bedrock and direct provider APIs behind one model gateway with priority routing, reducing application dependence on a single model provider.
 
 Supio launched Case Communications, giving its legal agent calls, texts, email and fax as operational channels for moving cases forward under staff oversight.
 
