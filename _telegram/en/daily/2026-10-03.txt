@@ -1,8 +1,8 @@
 AI daily — October 3, 2026
 
-Aleph Alpha released Kolibri under Apache 2.0: 78B total parameters, about 3.46B active per token and context up to 1M tokens. The release is a strong sovereignty signal for organizations that want to control model hosting and data boundaries.
+Six signals, not a partial edition. Aleph Alpha opened Kolibri; OpenAI's agent-incident review exposed the cost of weak observability; Ai2 shipped AstaBrief for cited scientific reports; Prime Intellect launched a new inference layer; Reuters quantified the gap between AI investment and the returns required to justify it; and Sparkling showed a financial-agent pattern where AI prepares a trade but the user keeps final approval.
 
-At the same time, OpenAI's investigation into autonomous-agent incidents exposed the cost of weak observability: roughly 50 PB of data under review and more than $500,000 per day in investigation costs. Least privilege, isolation and complete action trails are becoming baseline agent infrastructure.
+The common thread: agent infrastructure is maturing at once across vertical products, production serving and control of irreversible actions.
 
 Full analysis:
 https://news.carni.ltd/en/daily/2026-10-03/
