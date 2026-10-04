@@ -69,6 +69,7 @@ jobs:
 
           if git diff --quiet -- "${expected[@]}"; then
             echo "Bundle already present on main."
+            echo "PUBLISHED=false" >> "${GITHUB_ENV}"
             exit 0
           fi
 
@@ -80,10 +81,12 @@ jobs:
           git commit -m "Publish ${kind} ${token} from verified Radar staging"
           git push origin HEAD:main
 
+          echo "PUBLISHED=true" >> "${GITHUB_ENV}"
           echo "PUBLISHED_KIND=${kind}" >> "${GITHUB_ENV}"
           echo "PUBLISHED_TOKEN=${token}" >> "${GITHUB_ENV}"
 
       - name: Dispatch Telegram and IndexNow after bot push
+        if: env.PUBLISHED == 'true'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
