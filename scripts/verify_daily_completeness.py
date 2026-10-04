@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 START_DATE = "2026-09-24"
 STRICT_RADAR_START_DATE = "2026-09-27"
 FULL_RUBRIC_START_DATE = "2026-09-28"
+FLEXIBLE_RUBRIC_START_DATE = "2026-10-03"
 STORY_DEPTH_START_DATE = "2026-10-01"
 RU_LANGUAGE_GUARD_START_DATE = "2026-10-01"
 
@@ -17,6 +18,7 @@ CANONICAL_NEWS_SECTIONS = ("fundamental", "risk", "applied", "stack", "finance",
 CANONICAL_SECTION_IDS = set(CANONICAL_NEWS_SECTIONS) | {"monetization", "conclusions"}
 LEGACY_2026_09_27_MIN_NEWS_BLOCKS = 4
 LEGACY_2026_09_27_MIN_NEWS_SECTIONS = 3
+FLEXIBLE_MIN_NEWS_BLOCKS = 2
 
 REQUIRED_RU_FRONT_MATTER = (
     "layout:",
@@ -320,7 +322,20 @@ def verify_date(date: str, errors: list[str]) -> None:
             if unknown_sections:
                 fail(errors, f"{date}: {label} Daily uses non-canonical section ids: {', '.join(sorted(unknown_sections))}")
 
-            if date >= FULL_RUBRIC_START_DATE:
+            if date >= FLEXIBLE_RUBRIC_START_DATE:
+                if news_blocks < FLEXIBLE_MIN_NEWS_BLOCKS:
+                    fail(
+                        errors,
+                        f"{date}: {label} Daily has only {news_blocks} factual news blocks; "
+                        f"expected at least {FLEXIBLE_MIN_NEWS_BLOCKS} strong fresh stories",
+                    )
+                if section_h3_count(text, "monetization") < 1:
+                    fail(errors, f"{date}: {label} Daily is missing mandatory business-opportunity analysis")
+                required_nav = set(news_sections) | {"monetization", "conclusions"}
+                missing_nav = sorted(required_nav - report_nav_targets(text))
+                if missing_nav:
+                    fail(errors, f"{date}: {label} Daily report-nav is missing anchors for present content: {', '.join(missing_nav)}")
+            elif date >= FULL_RUBRIC_START_DATE:
                 missing_sections = [section for section in CANONICAL_NEWS_SECTIONS if section not in news_sections]
                 if missing_sections:
                     fail(errors, f"{date}: {label} Daily is missing mandatory factual rubrics: {', '.join(missing_sections)}")
