@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: radar-auto-publish-main
@@ -78,3 +79,20 @@ jobs:
           git add -- "${expected[@]}"
           git commit -m "Publish ${kind} ${token} from verified Radar staging"
           git push origin HEAD:main
+
+          echo "PUBLISHED_KIND=${kind}" >> "${GITHUB_ENV}"
+          echo "PUBLISHED_TOKEN=${token}" >> "${GITHUB_ENV}"
+
+      - name: Dispatch Telegram and IndexNow after bot push
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run telegram.yml --ref main
+          gh workflow run indexnow.yml --ref main
+          if [[ "${PUBLISHED_KIND}" == "Daily" ]]; then
+            gh workflow run verify-daily-completeness.yml --ref main
+          else
+            gh workflow run verify-weekly-completeness.yml --ref main
+          fi
