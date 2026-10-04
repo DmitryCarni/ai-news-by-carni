@@ -67,13 +67,16 @@ jobs:
           git checkout "${VERIFIED_SHA}" -- "${expected[@]}"
           "${verifier[@]}"
 
-          if git diff --quiet -- "${expected[@]}"; then
+          # git checkout <commit> -- paths updates BOTH the index and worktree.
+          # Therefore the publication diff is staged; plain `git diff` compares
+          # worktree vs index and falsely reports "no changes".
+          if git diff --cached --quiet -- "${expected[@]}"; then
             echo "Bundle already present on main."
             echo "PUBLISHED=false" >> "${GITHUB_ENV}"
             exit 0
           fi
 
-          changed="$(git diff --name-only | sort)"
+          changed="$(git diff --cached --name-only | sort)"
           expected_sorted="$(printf '%s\n' "${expected[@]}" | sort)"
           [[ "${changed}" == "${expected_sorted}" ]] || { echo "unexpected working-tree diff" >&2; exit 1; }
 
