@@ -10,7 +10,6 @@ ROOT = Path(__file__).resolve().parents[1]
 START_DATE = "2026-09-24"
 STRICT_RADAR_START_DATE = "2026-09-27"
 FULL_RUBRIC_START_DATE = "2026-09-28"
-FLEXIBLE_RUBRIC_START_DATE = "2026-10-03"
 STORY_DEPTH_START_DATE = "2026-10-01"
 RU_LANGUAGE_GUARD_START_DATE = "2026-10-01"
 
@@ -18,7 +17,6 @@ CANONICAL_NEWS_SECTIONS = ("fundamental", "risk", "applied", "stack", "finance",
 CANONICAL_SECTION_IDS = set(CANONICAL_NEWS_SECTIONS) | {"monetization", "conclusions"}
 LEGACY_2026_09_27_MIN_NEWS_BLOCKS = 4
 LEGACY_2026_09_27_MIN_NEWS_SECTIONS = 3
-FLEXIBLE_MIN_NEWS_BLOCKS = 2
 
 REQUIRED_RU_FRONT_MATTER = (
     "layout:",
@@ -98,6 +96,17 @@ def factual_headlines(text: str) -> set[str]:
             if normalized:
                 headlines.add(normalized)
     return headlines
+
+
+def factual_source_urls(text: str) -> set[str]:
+    urls: set[str] = set()
+    for _title, section_id, body in section_blocks(text):
+        if section_id not in CANONICAL_NEWS_SECTIONS:
+            continue
+        for _story_title, block in h3_blocks(body):
+            for url in re.findall(r"https?://[^\s\)\]>]+", block):
+                urls.add(url.rstrip(".,;:"))
+    return urls
 
 
 def report_nav_targets(text: str) -> set[str]:
@@ -322,20 +331,7 @@ def verify_date(date: str, errors: list[str]) -> None:
             if unknown_sections:
                 fail(errors, f"{date}: {label} Daily uses non-canonical section ids: {', '.join(sorted(unknown_sections))}")
 
-            if date >= FLEXIBLE_RUBRIC_START_DATE:
-                if news_blocks < FLEXIBLE_MIN_NEWS_BLOCKS:
-                    fail(
-                        errors,
-                        f"{date}: {label} Daily has only {news_blocks} factual news blocks; "
-                        f"expected at least {FLEXIBLE_MIN_NEWS_BLOCKS} strong fresh stories",
-                    )
-                if section_h3_count(text, "monetization") < 1:
-                    fail(errors, f"{date}: {label} Daily is missing mandatory business-opportunity analysis")
-                required_nav = set(news_sections) | {"monetization", "conclusions"}
-                missing_nav = sorted(required_nav - report_nav_targets(text))
-                if missing_nav:
-                    fail(errors, f"{date}: {label} Daily report-nav is missing anchors for present content: {', '.join(missing_nav)}")
-            elif date >= FULL_RUBRIC_START_DATE:
+            if date >= FULL_RUBRIC_START_DATE:
                 missing_sections = [section for section in CANONICAL_NEWS_SECTIONS if section not in news_sections]
                 if missing_sections:
                     fail(errors, f"{date}: {label} Daily is missing mandatory factual rubrics: {', '.join(missing_sections)}")
@@ -357,12 +353,30 @@ def verify_date(date: str, errors: list[str]) -> None:
                 fail(errors, f"{date}: {label} Daily conclusions must contain at least 2 numbered takeaways")
 
         if date >= FULL_RUBRIC_START_DATE:
-            previous_date = str(Date.fromisoformat(date) - timedelta(days=1))
-            previous_ru_path = ROOT / "daily" / f"{previous_date}.md"
-            if previous_ru_path.exists():
-                duplicates = factual_headlines(ru) & factual_headlines(previous_ru_path.read_text(encoding="utf-8"))
-                if duplicates:
-                    fail(errors, f"{date}: RU Daily repeats factual headline(s) from {previous_date}: {', '.join(sorted(duplicates))}")
+            current_headlines = factual_headlines(ru)
+            current_urls = factual_source_urls(ru)
+            for days_back in range(1, 8):
+                previous_date = str(Date.fromisoformat(date) - timedelta(days=days_back))
+                previous_ru_path = ROOT / "daily" / f"{previous_date}.md"
+                if not previous_ru_path.exists():
+                    continue
+                previous_ru = previous_ru_path.read_text(encoding="utf-8")
+
+                duplicate_headlines = current_headlines & factual_headlines(previous_ru)
+                if duplicate_headlines:
+                    fail(
+                        errors,
+                        f"{date}: RU Daily repeats factual headline(s) from {previous_date}: "
+                        f"{', '.join(sorted(duplicate_headlines))}",
+                    )
+
+                duplicate_urls = current_urls & factual_source_urls(previous_ru)
+                if duplicate_urls:
+                    fail(
+                        errors,
+                        f"{date}: RU Daily reuses factual source URL(s) from {previous_date}: "
+                        f"{', '.join(sorted(duplicate_urls))}",
+                    )
 
     teaser_count = telegram_story_count(tg_path)
     if teaser_count and ru_h3 < teaser_count:
