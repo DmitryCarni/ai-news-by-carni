@@ -1,0 +1,80 @@
+name: Publish verified Radar staging
+
+on:
+  workflow_run:
+    workflows:
+      - Verify Radar staging transaction
+    types:
+      - completed
+
+permissions:
+  contents: write
+
+concurrency:
+  group: radar-auto-publish-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      (startsWith(github.event.workflow_run.head_branch, 'radar/daily-') ||
+       startsWith(github.event.workflow_run.head_branch, 'radar/weekly-'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Apply exact verified bundle to current main
+        shell: bash
+        env:
+          STAGING_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          VERIFIED_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git fetch --no-tags origin main "${STAGING_BRANCH}:refs/remotes/origin/${STAGING_BRANCH}"
+          actual_sha="$(git rev-parse "origin/${STAGING_BRANCH}")"
+          [[ "${actual_sha}" == "${VERIFIED_SHA}" ]] || { echo "stale verified SHA" >&2; exit 1; }
+
+          if [[ "${STAGING_BRANCH}" == radar/daily-* ]]; then
+            token="${STAGING_BRANCH#radar/daily-}"
+            expected=("daily/${token}.md" "en/daily/${token}.md" "_telegram/daily/${token}.txt" "_telegram/en/daily/${token}.txt")
+            verifier=(python scripts/verify_daily_completeness.py)
+            kind="Daily"
+          else
+            token="${STAGING_BRANCH#radar/weekly-}"
+            expected=("weekly/${token}.md" "en/weekly/${token}.md" "_telegram/weekly/${token}.txt" "_telegram/en/weekly/${token}.txt")
+            verifier=(python scripts/verify_weekly_completeness.py)
+            kind="Weekly"
+          fi
+
+          git fetch --no-tags origin main
+          git reset --hard origin/main
+          git checkout "${VERIFIED_SHA}" -- "${expected[@]}"
+          "${verifier[@]}"
+
+          if git diff --quiet -- "${expected[@]}"; then
+            echo "Bundle already present on main."
+            exit 0
+          fi
+
+          changed="$(git diff --name-only | sort)"
+          expected_sorted="$(printf '%s\n' "${expected[@]}" | sort)"
+          [[ "${changed}" == "${expected_sorted}" ]] || { echo "unexpected working-tree diff" >&2; exit 1; }
+
+          git add -- "${expected[@]}"
+          git commit -m "Publish ${kind} ${token} from verified Radar staging"
+          git push origin HEAD:main
