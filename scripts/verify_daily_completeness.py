@@ -98,6 +98,17 @@ def factual_headlines(text: str) -> set[str]:
     return headlines
 
 
+def factual_source_urls(text: str) -> set[str]:
+    urls: set[str] = set()
+    for _title, section_id, body in section_blocks(text):
+        if section_id not in CANONICAL_NEWS_SECTIONS:
+            continue
+        for _story_title, block in h3_blocks(body):
+            for url in re.findall(r"https?://[^\s\)\]>]+", block):
+                urls.add(url.rstrip(".,;:"))
+    return urls
+
+
 def report_nav_targets(text: str) -> set[str]:
     match = re.search(r'<div class="report-nav">(.*?)</div>', text, flags=re.S)
     if not match:
@@ -319,6 +330,7 @@ def verify_date(date: str, errors: list[str]) -> None:
             news_blocks, news_sections, unknown_sections = strict_news_coverage(text)
             if unknown_sections:
                 fail(errors, f"{date}: {label} Daily uses non-canonical section ids: {', '.join(sorted(unknown_sections))}")
+
             if date >= FULL_RUBRIC_START_DATE:
                 missing_sections = [section for section in CANONICAL_NEWS_SECTIONS if section not in news_sections]
                 if missing_sections:
@@ -341,12 +353,30 @@ def verify_date(date: str, errors: list[str]) -> None:
                 fail(errors, f"{date}: {label} Daily conclusions must contain at least 2 numbered takeaways")
 
         if date >= FULL_RUBRIC_START_DATE:
-            previous_date = str(Date.fromisoformat(date) - timedelta(days=1))
-            previous_ru_path = ROOT / "daily" / f"{previous_date}.md"
-            if previous_ru_path.exists():
-                duplicates = factual_headlines(ru) & factual_headlines(previous_ru_path.read_text(encoding="utf-8"))
-                if duplicates:
-                    fail(errors, f"{date}: RU Daily repeats factual headline(s) from {previous_date}: {', '.join(sorted(duplicates))}")
+            current_headlines = factual_headlines(ru)
+            current_urls = factual_source_urls(ru)
+            for days_back in range(1, 8):
+                previous_date = str(Date.fromisoformat(date) - timedelta(days=days_back))
+                previous_ru_path = ROOT / "daily" / f"{previous_date}.md"
+                if not previous_ru_path.exists():
+                    continue
+                previous_ru = previous_ru_path.read_text(encoding="utf-8")
+
+                duplicate_headlines = current_headlines & factual_headlines(previous_ru)
+                if duplicate_headlines:
+                    fail(
+                        errors,
+                        f"{date}: RU Daily repeats factual headline(s) from {previous_date}: "
+                        f"{', '.join(sorted(duplicate_headlines))}",
+                    )
+
+                duplicate_urls = current_urls & factual_source_urls(previous_ru)
+                if duplicate_urls:
+                    fail(
+                        errors,
+                        f"{date}: RU Daily reuses factual source URL(s) from {previous_date}: "
+                        f"{', '.join(sorted(duplicate_urls))}",
+                    )
 
     teaser_count = telegram_story_count(tg_path)
     if teaser_count and ru_h3 < teaser_count:
