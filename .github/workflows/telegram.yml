@@ -42,19 +42,18 @@ jobs:
           set -euo pipefail
 
           if [[ -z "${BOT_TOKEN}" ]]; then
-            echo "Telegram bot token is not configured; skipping publication."
+            echo 'Telegram bot token is not configured; skipping publication.'
             exit 0
           fi
 
           telegram_call() {
             local method="$1"
             shift
-            local response
+            local response description
             response="$(curl --silent --show-error -X POST "https://api.telegram.org/bot${BOT_TOKEN}/${method}" "$@")"
-            if [[ "$(jq -r '.ok // false' <<<"${response}")" != "true" ]]; then
-              local description
+            if [[ "$(jq -r '.ok // false' <<<"${response}")" != 'true' ]]; then
               description="$(jq -r '.description // "unknown Telegram API error"' <<<"${response}")"
-              if [[ "${method}" == "editMessageText" && "${description}" == *"message is not modified"* ]]; then
+              if [[ "${method}" == 'editMessageText' && "${description}" == *'message is not modified'* ]]; then
                 printf '%s' "${response}"
                 return 0
               fi
@@ -68,9 +67,8 @@ jobs:
           STATE_WORKTREE="${RUNNER_TEMP}/telegram-state"
           rm -rf "${STATE_WORKTREE}"
           git worktree add --detach "${STATE_WORKTREE}" "origin/${STATE_BRANCH}"
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
 
           read_state() {
             local state_file="$1"
@@ -79,176 +77,106 @@ jobs:
           }
 
           persist_state() {
-            local state_file="$1"
-            local source_file="$2"
-            local edition="$3"
-            local message_id="$4"
+            local state_file="$1" source_file="$2" edition="$3" message_id="$4"
             local content_sha256
-            content_sha256="$(sha256sum "${source_file}" | awk '{print $1}')"
-
+            content_sha256="$(sha256sum "${source_file}" | cut -d' ' -f1)"
             mkdir -p "${STATE_WORKTREE}/$(dirname "${state_file}")"
-            jq -n               --arg source_file "${source_file}"               --arg edition "${edition}"               --argjson message_id "${message_id}"               --arg content_sha256 "${content_sha256}"               '{source_file: $source_file, edition: $edition, message_id: $message_id, content_sha256: $content_sha256}'               > "${STATE_WORKTREE}/${state_file}"
-
+            jq -n \
+              --arg source_file "${source_file}" \
+              --arg edition "${edition}" \
+              --argjson message_id "${message_id}" \
+              --arg content_sha256 "${content_sha256}" \
+              '{source_file:$source_file,edition:$edition,message_id:$message_id,content_sha256:$content_sha256}' \
+              > "${STATE_WORKTREE}/${state_file}"
             git -C "${STATE_WORKTREE}" add "${state_file}"
-            if git -C "${STATE_WORKTREE}" diff --cached --quiet; then
-              return 0
+            if ! git -C "${STATE_WORKTREE}" diff --cached --quiet; then
+              git -C "${STATE_WORKTREE}" commit -m "Track Telegram content for ${source_file}"
+              git -C "${STATE_WORKTREE}" push origin "HEAD:${STATE_BRANCH}"
             fi
-            git -C "${STATE_WORKTREE}" commit -m "Track Telegram content for ${source_file}"
-            git -C "${STATE_WORKTREE}" push origin "HEAD:${STATE_BRANCH}"
           }
 
-          declare -a CHANGES=()
+          CHANGES_FILE="${RUNNER_TEMP}/telegram-changes.tsv"
+          : > "${CHANGES_FILE}"
 
-          # Explicit workflow_dispatch is authoritative. This is how bot-pushed
-          # Daily/Weekly bundles identify the exact Telegram files to send/edit.
+          add_change() {
+            local status="$1" file="$2"
+            printf '%s\t%s\n' "${status}" "${file}" >> "${CHANGES_FILE}"
+          }
+
           if [[ -n "${REQUESTED_FILES}" ]]; then
             IFS=',' read -ra FILES <<<"${REQUESTED_FILES}"
             for FILE in "${FILES[@]}"; do
               FILE="$(echo "${FILE}" | xargs)"
-              [[ "${FILE}" =~ ^_telegram/(en/)?(daily|weekly)/.+\.txt$ ]] || { echo "Invalid requested teaser path: ${FILE}" >&2; exit 1; }
+              if [[ ! "${FILE}" =~ ^_telegram/(en/)?(daily|weekly)/.+\.txt$ ]]; then
+                echo "Invalid requested teaser path: ${FILE}" >&2
+                exit 1
+              fi
               [[ -f "${FILE}" ]] || { echo "Requested teaser missing: ${FILE}" >&2; exit 1; }
               STATE_FILE="_telegram/.state/${FILE#_telegram/}"
               STATE_FILE="${STATE_FILE%.txt}.json"
-              if read_state "${STATE_FILE}" >/dev/null; then
-                CHANGES+=("M"$'\t'"${FILE}")
-              else
-                CHANGES+=("A"$'\t'"${FILE}")
-              fi
+              if read_state "${STATE_FILE}" >/dev/null; then add_change M "${FILE}"; else add_change A "${FILE}"; fi
             done
-          elif [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
-            BEFORE_SHA="${{ github.event.before }}"
+          elif [[ "${GITHUB_EVENT_NAME}" == 'push' ]]; then
+            BEFORE_SHA='${{ github.event.before }}'
             if [[ -n "${BEFORE_SHA}" && ! "${BEFORE_SHA}" =~ ^0+$ ]] && git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null; then
-              mapfile -t CHANGES < <(
-                git diff --name-status "${BEFORE_SHA}" "${GITHUB_SHA}" |
-                  awk -F '\t' '$2 ~ /^_telegram\/.*\.txt$/ && ($1 == "A" || $1 == "M") {print $1 "\t" $2}'
-              )
+              git diff --name-status "${BEFORE_SHA}" "${GITHUB_SHA}" | while IFS=$'\t' read -r STATUS FILE; do
+                if [[ ( "${STATUS}" == 'A' || "${STATUS}" == 'M' ) && "${FILE}" =~ ^_telegram/.*\.txt$ ]]; then
+                  add_change "${STATUS}" "${FILE}"
+                fi
+              done
             fi
           fi
 
-          # A generic workflow-file push is a bounded reconciliation pass.
-          # Never sweep the whole historical state: old Telegram messages can be
-          # deleted or outside the editable window, and one such item must not
-          # block current publication. Reconcile only the two newest Daily
-          # messages per language and the newest Weekly per language.
-          if (( ${#CHANGES[@]} == 0 )); then
-            declare -a RECENT_STATE=()
-            for STATE_DIR in               "${STATE_WORKTREE}/_telegram/.state/daily"               "${STATE_WORKTREE}/_telegram/.state/en/daily"; do
-              if [[ -d "${STATE_DIR}" ]]; then
-                while IFS= read -r P; do RECENT_STATE+=("${P}"); done < <(
-                  find "${STATE_DIR}" -maxdepth 1 -type f -name '*.json' | sort -r | head -n 2
-                )
-              fi
+          # If this run was triggered only by a workflow change, reconcile only
+          # the two newest state-backed Daily posts in each language. This is
+          # bounded and cannot create duplicates because every item has message_id.
+          if [[ ! -s "${CHANGES_FILE}" ]]; then
+            for STATE_DIR in \
+              "${STATE_WORKTREE}/_telegram/.state/daily" \
+              "${STATE_WORKTREE}/_telegram/.state/en/daily"; do
+              [[ -d "${STATE_DIR}" ]] || continue
+              while IFS= read -r STATE_PATH; do
+                [[ -n "${STATE_PATH}" ]] || continue
+                STATE_JSON="$(cat "${STATE_PATH}")"
+                FILE="$(jq -r '.source_file // empty' <<<"${STATE_JSON}")"
+                [[ -n "${FILE}" && -f "${FILE}" ]] || continue
+                RECORDED="$(jq -r '.content_sha256 // empty' <<<"${STATE_JSON}")"
+                CURRENT="$(sha256sum "${FILE}" | cut -d' ' -f1)"
+                if [[ -z "${RECORDED}" || "${RECORDED}" != "${CURRENT}" ]]; then add_change M "${FILE}"; fi
+              done < <(find "${STATE_DIR}" -maxdepth 1 -type f -name '*.json' | sort -r | head -n 2)
             done
-            for STATE_DIR in               "${STATE_WORKTREE}/_telegram/.state/weekly"               "${STATE_WORKTREE}/_telegram/.state/en/weekly"; do
-              if [[ -d "${STATE_DIR}" ]]; then
-                while IFS= read -r P; do RECENT_STATE+=("${P}"); done < <(
-                  find "${STATE_DIR}" -maxdepth 1 -type f -name '*.json' | sort -r | head -n 1
-                )
-              fi
-            done
+          fi
 
-            for STATE_PATH in "${RECENT_STATE[@]}"; do
-              STATE_JSON="$(cat "${STATE_PATH}")"
-              FILE="$(jq -r '.source_file // empty' <<<"${STATE_JSON}")"
-              [[ -n "${FILE}" && -f "${FILE}" ]] || continue
-              RECORDED="$(jq -r '.content_sha256 // empty' <<<"${STATE_JSON}")"
-              CURRENT="$(sha256sum "${FILE}" | awk '{print $1}')"
-              if [[ -z "${RECORDED}" || "${RECORDED}" != "${CURRENT}" ]]; then
-                CHANGES+=("M"
-          if (( ${#CHANGES[@]} == 0 )); then
-            echo "Telegram state already matches repository teasers."
+          if [[ ! -s "${CHANGES_FILE}" ]]; then
+            echo 'Telegram state already matches repository teasers.'
             exit 0
           fi
 
-          for CHANGE in "${CHANGES[@]}"; do
-            STATUS="${CHANGE%%$'\t'*}"
-            FILE="${CHANGE#*$'\t'}"
+          sort -u "${CHANGES_FILE}" -o "${CHANGES_FILE}"
+          while IFS=$'\t' read -r STATUS FILE; do
+            [[ -n "${FILE}" ]] || continue
             STATE_FILE="_telegram/.state/${FILE#_telegram/}"
             STATE_FILE="${STATE_FILE%.txt}.json"
-
-            if [[ "${FILE}" == _telegram/en/* ]]; then
-              CHAT_ID="${EN_CHAT_ID}"
-              EDITION="EN"
-            else
-              CHAT_ID="${RU_CHAT_ID}"
-              EDITION="RU"
-            fi
-            [[ -n "${CHAT_ID}" ]] || { echo "${EDITION} chat id missing; skipping ${FILE}"; continue; }
-
+            if [[ "${FILE}" == _telegram/en/* ]]; then CHAT_ID="${EN_CHAT_ID}"; EDITION=EN; else CHAT_ID="${RU_CHAT_ID}"; EDITION=RU; fi
+            [[ -n "${CHAT_ID}" ]] || { echo "${EDITION} chat id missing: ${FILE}" >&2; exit 1; }
             SIZE="$(wc -c < "${FILE}")"
             (( SIZE <= 15000 )) || { echo "Teaser too large: ${FILE}" >&2; exit 1; }
 
-            STATE_JSON=""
-            if STATE_JSON="$(read_state "${STATE_FILE}")"; then
-              STATUS="M"
-            fi
+            STATE_JSON=''
+            if STATE_JSON="$(read_state "${STATE_FILE}")"; then STATUS=M; fi
 
-            if [[ "${STATUS}" == "A" ]]; then
+            if [[ "${STATUS}" == 'A' ]]; then
               echo "Publishing new ${FILE} to ${EDITION}."
-              RESPONSE="$(telegram_call sendMessage                 --data-urlencode "chat_id=${CHAT_ID}"                 --data-urlencode "text@${FILE}"                 --data-urlencode "disable_web_page_preview=false")"
+              RESPONSE="$(telegram_call sendMessage --data-urlencode "chat_id=${CHAT_ID}" --data-urlencode "text@${FILE}" --data-urlencode 'disable_web_page_preview=false')"
               MESSAGE_ID="$(jq -r '.result.message_id // empty' <<<"${RESPONSE}")"
               [[ -n "${MESSAGE_ID}" ]] || { echo "No message_id for ${FILE}" >&2; exit 1; }
               persist_state "${STATE_FILE}" "${FILE}" "${EDITION}" "${MESSAGE_ID}"
-              continue
-            fi
-
-            [[ -n "${STATE_JSON}" ]] || { echo "No Telegram state for modified teaser ${FILE}; refusing duplicate." >&2; exit 1; }
-            MESSAGE_ID="$(jq -r '.message_id // empty' <<<"${STATE_JSON}")"
-            [[ -n "${MESSAGE_ID}" ]] || { echo "State has no message_id: ${STATE_FILE}" >&2; exit 1; }
-
-            echo "Editing Telegram message ${MESSAGE_ID} from ${FILE} in ${EDITION}."
-            telegram_call editMessageText               --data-urlencode "chat_id=${CHAT_ID}"               --data-urlencode "message_id=${MESSAGE_ID}"               --data-urlencode "text@${FILE}"               --data-urlencode "disable_web_page_preview=false" >/dev/null
-
-            persist_state "${STATE_FILE}" "${FILE}" "${EDITION}" "${MESSAGE_ID}"
-          done
-\t'"${FILE}")
-              fi
-            done
-          fi
-
-          if (( ${#CHANGES[@]} == 0 )); then
-            echo "Telegram state already matches repository teasers."
-            exit 0
-          fi
-
-          for CHANGE in "${CHANGES[@]}"; do
-            STATUS="${CHANGE%%$'\t'*}"
-            FILE="${CHANGE#*$'\t'}"
-            STATE_FILE="_telegram/.state/${FILE#_telegram/}"
-            STATE_FILE="${STATE_FILE%.txt}.json"
-
-            if [[ "${FILE}" == _telegram/en/* ]]; then
-              CHAT_ID="${EN_CHAT_ID}"
-              EDITION="EN"
             else
-              CHAT_ID="${RU_CHAT_ID}"
-              EDITION="RU"
-            fi
-            [[ -n "${CHAT_ID}" ]] || { echo "${EDITION} chat id missing; skipping ${FILE}"; continue; }
-
-            SIZE="$(wc -c < "${FILE}")"
-            (( SIZE <= 15000 )) || { echo "Teaser too large: ${FILE}" >&2; exit 1; }
-
-            STATE_JSON=""
-            if STATE_JSON="$(read_state "${STATE_FILE}")"; then
-              STATUS="M"
-            fi
-
-            if [[ "${STATUS}" == "A" ]]; then
-              echo "Publishing new ${FILE} to ${EDITION}."
-              RESPONSE="$(telegram_call sendMessage                 --data-urlencode "chat_id=${CHAT_ID}"                 --data-urlencode "text@${FILE}"                 --data-urlencode "disable_web_page_preview=false")"
-              MESSAGE_ID="$(jq -r '.result.message_id // empty' <<<"${RESPONSE}")"
-              [[ -n "${MESSAGE_ID}" ]] || { echo "No message_id for ${FILE}" >&2; exit 1; }
+              [[ -n "${STATE_JSON}" ]] || { echo "No state for modified teaser ${FILE}; refusing duplicate." >&2; exit 1; }
+              MESSAGE_ID="$(jq -r '.message_id // empty' <<<"${STATE_JSON}")"
+              [[ -n "${MESSAGE_ID}" ]] || { echo "State has no message_id: ${STATE_FILE}" >&2; exit 1; }
+              echo "Editing Telegram message ${MESSAGE_ID} from ${FILE} in ${EDITION}."
+              telegram_call editMessageText --data-urlencode "chat_id=${CHAT_ID}" --data-urlencode "message_id=${MESSAGE_ID}" --data-urlencode "text@${FILE}" --data-urlencode 'disable_web_page_preview=false' >/dev/null
               persist_state "${STATE_FILE}" "${FILE}" "${EDITION}" "${MESSAGE_ID}"
-              continue
             fi
-
-            [[ -n "${STATE_JSON}" ]] || { echo "No Telegram state for modified teaser ${FILE}; refusing duplicate." >&2; exit 1; }
-            MESSAGE_ID="$(jq -r '.message_id // empty' <<<"${STATE_JSON}")"
-            [[ -n "${MESSAGE_ID}" ]] || { echo "State has no message_id: ${STATE_FILE}" >&2; exit 1; }
-
-            echo "Editing Telegram message ${MESSAGE_ID} from ${FILE} in ${EDITION}."
-            telegram_call editMessageText               --data-urlencode "chat_id=${CHAT_ID}"               --data-urlencode "message_id=${MESSAGE_ID}"               --data-urlencode "text@${FILE}"               --data-urlencode "disable_web_page_preview=false" >/dev/null
-
-            persist_state "${STATE_FILE}" "${FILE}" "${EDITION}" "${MESSAGE_ID}"
-          done
+          done < "${CHANGES_FILE}"
