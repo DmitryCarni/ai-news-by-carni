@@ -5,7 +5,13 @@ on:
     branches: [main]
     paths:
       - '_telegram/**/*.txt'
+      - '.github/workflows/telegram.yml'
   workflow_dispatch:
+    inputs:
+      source_files:
+        description: 'Comma-separated exact teaser paths to publish/edit'
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -19,6 +25,7 @@ env:
   RU_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
   EN_CHAT_ID: '-1004292228334'
   STATE_BRANCH: telegram-state
+  REQUESTED_FILES: ${{ github.event.inputs.source_files || '' }}
 
 jobs:
   publish:
@@ -29,7 +36,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Publish or edit teasers
+      - name: Publish, edit or reconcile teasers
         shell: bash
         run: |
           set -euo pipefail
@@ -43,54 +50,21 @@ jobs:
             local method="$1"
             shift
             local response
-            response="$(curl --silent --show-error \
-              -X POST "https://api.telegram.org/bot${BOT_TOKEN}/${method}" \
-              "$@")"
-
+            response="$(curl --silent --show-error -X POST "https://api.telegram.org/bot${BOT_TOKEN}/${method}" "$@")"
             if [[ "$(jq -r '.ok // false' <<<"${response}")" != "true" ]]; then
               local description
               description="$(jq -r '.description // "unknown Telegram API error"' <<<"${response}")"
               if [[ "${method}" == "editMessageText" && "${description}" == *"message is not modified"* ]]; then
-                echo "Telegram message already has this text; nothing to edit." >&2
                 printf '%s' "${response}"
                 return 0
               fi
               echo "Telegram ${method} failed: ${description}" >&2
               return 1
             fi
-
             printf '%s' "${response}"
           }
 
-          BEFORE_SHA="${{ github.event.before }}"
-          COMMIT_MESSAGE="$(git log -1 --pretty=%B "${GITHUB_SHA}")"
-
-          # Pushes to main are normally merge commits. diff-tree on the merge
-          # commit itself can return no files, so compare the push's before/after
-          # SHAs instead.
-          if [[ -n "${BEFORE_SHA}" && ! "${BEFORE_SHA}" =~ ^0+$ ]] && git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null; then
-            mapfile -t CHANGES < <(
-              git diff --name-status "${BEFORE_SHA}" "${GITHUB_SHA}" |
-                awk -F '\t' '$2 ~ /^_telegram\/.*\.txt$/ && ($1 == "A" || $1 == "M") {print $1 "\t" $2}'
-            )
-          else
-            mapfile -t CHANGES < <(
-              git diff-tree --no-commit-id --name-status -r --root "${GITHUB_SHA}" |
-                awk -F '\t' '$2 ~ /^_telegram\/.*\.txt$/ && ($1 == "A" || $1 == "M") {print $1 "\t" $2}'
-            )
-          fi
-
-          if (( ${#CHANGES[@]} == 0 )); then
-            echo "No added or modified Telegram teaser files found in this push."
-            exit 0
-          fi
-
-          # Telegram publication state lives on a dedicated branch. This keeps
-          # technical message-id commits out of main, so they cannot trigger a
-          # GitHub Pages rebuild. Workflow-level concurrency serializes writers.
-          git fetch --quiet origin \
-            "+refs/heads/${STATE_BRANCH}:refs/remotes/origin/${STATE_BRANCH}"
-
+          git fetch --quiet origin "+refs/heads/${STATE_BRANCH}:refs/remotes/origin/${STATE_BRANCH}"
           STATE_WORKTREE="${RUNNER_TEMP}/telegram-state"
           rm -rf "${STATE_WORKTREE}"
           git worktree add --detach "${STATE_WORKTREE}" "origin/${STATE_BRANCH}"
@@ -100,11 +74,8 @@ jobs:
 
           read_state() {
             local state_file="$1"
-            if [[ -f "${STATE_WORKTREE}/${state_file}" ]]; then
-              cat "${STATE_WORKTREE}/${state_file}"
-              return 0
-            fi
-            return 1
+            [[ -f "${STATE_WORKTREE}/${state_file}" ]] || return 1
+            cat "${STATE_WORKTREE}/${state_file}"
           }
 
           persist_state() {
@@ -112,22 +83,68 @@ jobs:
             local source_file="$2"
             local edition="$3"
             local message_id="$4"
+            local content_sha256
+            content_sha256="$(sha256sum "${source_file}" | awk '{print $1}')"
 
             mkdir -p "${STATE_WORKTREE}/$(dirname "${state_file}")"
-            jq -n \
-              --arg source_file "${source_file}" \
-              --arg edition "${edition}" \
-              --argjson message_id "${message_id}" \
-              '{source_file: $source_file, edition: $edition, message_id: $message_id}' \
-              > "${STATE_WORKTREE}/${state_file}"
+            jq -n               --arg source_file "${source_file}"               --arg edition "${edition}"               --argjson message_id "${message_id}"               --arg content_sha256 "${content_sha256}"               '{source_file: $source_file, edition: $edition, message_id: $message_id, content_sha256: $content_sha256}'               > "${STATE_WORKTREE}/${state_file}"
 
             git -C "${STATE_WORKTREE}" add "${state_file}"
-            git -C "${STATE_WORKTREE}" commit \
-              -m "Track Telegram message id for ${source_file}"
+            if git -C "${STATE_WORKTREE}" diff --cached --quiet; then
+              return 0
+            fi
+            git -C "${STATE_WORKTREE}" commit -m "Track Telegram content for ${source_file}"
             git -C "${STATE_WORKTREE}" push origin "HEAD:${STATE_BRANCH}"
-
-            echo "Stored Telegram message_id ${message_id} on ${STATE_BRANCH}:${state_file}."
           }
+
+          declare -a CHANGES=()
+
+          # Explicit workflow_dispatch is authoritative. This is how bot-pushed
+          # Daily/Weekly bundles identify the exact Telegram files to send/edit.
+          if [[ -n "${REQUESTED_FILES}" ]]; then
+            IFS=',' read -ra FILES <<<"${REQUESTED_FILES}"
+            for FILE in "${FILES[@]}"; do
+              FILE="$(echo "${FILE}" | xargs)"
+              [[ "${FILE}" =~ ^_telegram/(en/)?(daily|weekly)/.+\.txt$ ]] || { echo "Invalid requested teaser path: ${FILE}" >&2; exit 1; }
+              [[ -f "${FILE}" ]] || { echo "Requested teaser missing: ${FILE}" >&2; exit 1; }
+              STATE_FILE="_telegram/.state/${FILE#_telegram/}"
+              STATE_FILE="${STATE_FILE%.txt}.json"
+              if read_state "${STATE_FILE}" >/dev/null; then
+                CHANGES+=("M"$'\t'"${FILE}")
+              else
+                CHANGES+=("A"$'\t'"${FILE}")
+              fi
+            done
+          elif [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+            BEFORE_SHA="${{ github.event.before }}"
+            if [[ -n "${BEFORE_SHA}" && ! "${BEFORE_SHA}" =~ ^0+$ ]] && git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null; then
+              mapfile -t CHANGES < <(
+                git diff --name-status "${BEFORE_SHA}" "${GITHUB_SHA}" |
+                  awk -F '\t' '$2 ~ /^_telegram\/.*\.txt$/ && ($1 == "A" || $1 == "M") {print $1 "\t" $2}'
+              )
+            fi
+          fi
+
+          # Generic dispatch / workflow-file change becomes a reconciliation pass.
+          # Only state-backed messages are eligible, so this can edit stale posts
+          # but can never create duplicates of old untracked files.
+          if (( ${#CHANGES[@]} == 0 )); then
+            while IFS= read -r STATE_PATH; do
+              STATE_JSON="$(cat "${STATE_PATH}")"
+              FILE="$(jq -r '.source_file // empty' <<<"${STATE_JSON}")"
+              [[ -n "${FILE}" && -f "${FILE}" ]] || continue
+              RECORDED="$(jq -r '.content_sha256 // empty' <<<"${STATE_JSON}")"
+              CURRENT="$(sha256sum "${FILE}" | awk '{print $1}')"
+              if [[ -z "${RECORDED}" || "${RECORDED}" != "${CURRENT}" ]]; then
+                CHANGES+=("M"$'\t'"${FILE}")
+              fi
+            done < <(find "${STATE_WORKTREE}/_telegram/.state" -type f -name '*.json' | sort)
+          fi
+
+          if (( ${#CHANGES[@]} == 0 )); then
+            echo "Telegram state already matches repository teasers."
+            exit 0
+          fi
 
           for CHANGE in "${CHANGES[@]}"; do
             STATUS="${CHANGE%%$'\t'*}"
@@ -142,77 +159,31 @@ jobs:
               CHAT_ID="${RU_CHAT_ID}"
               EDITION="RU"
             fi
-
-            if [[ -z "${CHAT_ID}" ]]; then
-              echo "${EDITION} Telegram chat id is not configured; skipping ${FILE}."
-              continue
-            fi
+            [[ -n "${CHAT_ID}" ]] || { echo "${EDITION} chat id missing; skipping ${FILE}"; continue; }
 
             SIZE="$(wc -c < "${FILE}")"
-            if (( SIZE > 15000 )); then
-              echo "Teaser file is unexpectedly large (${SIZE} bytes): ${FILE}"
-              exit 1
-            fi
+            (( SIZE <= 15000 )) || { echo "Teaser too large: ${FILE}" >&2; exit 1; }
 
             STATE_JSON=""
-
-            # A re-run of an add commit must edit the known message rather than
-            # create another one if state was already persisted successfully.
             if STATE_JSON="$(read_state "${STATE_FILE}")"; then
               STATUS="M"
             fi
 
             if [[ "${STATUS}" == "A" ]]; then
-              echo "Publishing new ${FILE} to ${EDITION} channel."
-              RESPONSE="$(telegram_call sendMessage \
-                --data-urlencode "chat_id=${CHAT_ID}" \
-                --data-urlencode "text@${FILE}" \
-                --data-urlencode "disable_web_page_preview=false")"
-
+              echo "Publishing new ${FILE} to ${EDITION}."
+              RESPONSE="$(telegram_call sendMessage                 --data-urlencode "chat_id=${CHAT_ID}"                 --data-urlencode "text@${FILE}"                 --data-urlencode "disable_web_page_preview=false")"
               MESSAGE_ID="$(jq -r '.result.message_id // empty' <<<"${RESPONSE}")"
-              if [[ -z "${MESSAGE_ID}" ]]; then
-                echo "Telegram sendMessage returned no message_id for ${FILE}." >&2
-                exit 1
-              fi
-
-              # Persist immediately after sendMessage so a later editorial run
-              # can safely edit this exact Telegram post.
+              [[ -n "${MESSAGE_ID}" ]] || { echo "No message_id for ${FILE}" >&2; exit 1; }
               persist_state "${STATE_FILE}" "${FILE}" "${EDITION}" "${MESSAGE_ID}"
               continue
             fi
 
-            if [[ -z "${STATE_JSON}" ]]; then
-              if [[ "${COMMIT_MESSAGE}" == *"[telegram-recover]"* ]]; then
-                echo "Explicit Telegram recovery requested for state-less modified teaser ${FILE}; publishing as new."
-                RESPONSE="$(telegram_call sendMessage \
-                  --data-urlencode "chat_id=${CHAT_ID}" \
-                  --data-urlencode "text@${FILE}" \
-                  --data-urlencode "disable_web_page_preview=false")"
-                MESSAGE_ID="$(jq -r '.result.message_id // empty' <<<"${RESPONSE}")"
-                if [[ -z "${MESSAGE_ID}" ]]; then
-                  echo "Telegram recovery sendMessage returned no message_id for ${FILE}." >&2
-                  exit 1
-                fi
-                persist_state "${STATE_FILE}" "${FILE}" "${EDITION}" "${MESSAGE_ID}"
-                continue
-              fi
-              echo "No Telegram state found for modified teaser ${FILE}." >&2
-              echo "Refusing to send a replacement message because that would create a duplicate." >&2
-              echo "For a verified missing post, use a commit/merge title containing [telegram-recover]." >&2
-              exit 1
-            fi
-
+            [[ -n "${STATE_JSON}" ]] || { echo "No Telegram state for modified teaser ${FILE}; refusing duplicate." >&2; exit 1; }
             MESSAGE_ID="$(jq -r '.message_id // empty' <<<"${STATE_JSON}")"
-            if [[ -z "${MESSAGE_ID}" ]]; then
-              echo "Telegram state has no message_id: ${STATE_FILE}" >&2
-              exit 1
-            fi
+            [[ -n "${MESSAGE_ID}" ]] || { echo "State has no message_id: ${STATE_FILE}" >&2; exit 1; }
 
-            echo "Editing Telegram message ${MESSAGE_ID} from ${FILE} in ${EDITION} channel."
-            telegram_call editMessageText \
-              --data-urlencode "chat_id=${CHAT_ID}" \
-              --data-urlencode "message_id=${MESSAGE_ID}" \
-              --data-urlencode "text@${FILE}" \
-              --data-urlencode "disable_web_page_preview=false" \
-              >/dev/null
+            echo "Editing Telegram message ${MESSAGE_ID} from ${FILE} in ${EDITION}."
+            telegram_call editMessageText               --data-urlencode "chat_id=${CHAT_ID}"               --data-urlencode "message_id=${MESSAGE_ID}"               --data-urlencode "text@${FILE}"               --data-urlencode "disable_web_page_preview=false" >/dev/null
+
+            persist_state "${STATE_FILE}" "${FILE}" "${EDITION}" "${MESSAGE_ID}"
           done
