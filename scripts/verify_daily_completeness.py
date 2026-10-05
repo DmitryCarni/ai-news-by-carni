@@ -6,12 +6,15 @@ import re
 import sys
 import unicodedata
 
+from render_telegram_teaser import render_daily_teaser
+
 ROOT = Path(__file__).resolve().parents[1]
 START_DATE = "2026-09-24"
 STRICT_RADAR_START_DATE = "2026-09-27"
 FULL_RUBRIC_START_DATE = "2026-09-28"
 STORY_DEPTH_START_DATE = "2026-10-01"
 RU_LANGUAGE_GUARD_START_DATE = "2026-10-01"
+TELEGRAM_EDITORIAL_GUARD_START_DATE = "2026-10-03"
 
 CANONICAL_NEWS_SECTIONS = ("fundamental", "risk", "applied", "stack", "finance", "finance-tools")
 CANONICAL_SECTION_IDS = set(CANONICAL_NEWS_SECTIONS) | {"monetization", "conclusions"}
@@ -377,6 +380,45 @@ def verify_date(date: str, errors: list[str]) -> None:
                         f"{date}: RU Daily reuses factual source URL(s) from {previous_date}: "
                         f"{', '.join(sorted(duplicate_urls))}",
                     )
+
+    if date >= TELEGRAM_EDITORIAL_GUARD_START_DATE and tg_path.exists() and tg_en_path.exists():
+        actual_ru_teaser = tg_path.read_text(encoding="utf-8")
+        actual_en_teaser = tg_en_path.read_text(encoding="utf-8")
+        try:
+            expected_ru_teaser = render_daily_teaser(date, ru, "ru")
+            expected_en_teaser = render_daily_teaser(date, en, "en")
+        except Exception as exc:
+            fail(errors, f"{date}: unable to render canonical Telegram teaser: {exc}")
+        else:
+            if actual_ru_teaser != expected_ru_teaser:
+                fail(
+                    errors,
+                    f"{date}: RU Telegram teaser is not canonical reader format; "
+                    "render it from the published Daily with scripts/render_telegram_teaser.py",
+                )
+            if actual_en_teaser != expected_en_teaser:
+                fail(
+                    errors,
+                    f"{date}: EN Telegram teaser is not canonical reader format; "
+                    "render it from the published Daily with scripts/render_telegram_teaser.py",
+                )
+
+        for label, teaser in (("RU", actual_ru_teaser), ("EN", actual_en_teaser)):
+            if len(teaser) > 3500:
+                fail(errors, f"{date}: {label} Telegram teaser is too long ({len(teaser)} chars > 3500)")
+            lowered = teaser.casefold()
+            forbidden = (
+                "неполного выпуска",
+                "шесть сигналов вместо",
+                "6/6",
+                "missingrubrics",
+                "watchdog",
+                "staging",
+                "recovery",
+            )
+            bad = [term for term in forbidden if term in lowered]
+            if bad:
+                fail(errors, f"{date}: {label} Telegram teaser leaks internal process language: {', '.join(bad)}")
 
     teaser_count = telegram_story_count(tg_path)
     if teaser_count and ru_h3 < teaser_count:
