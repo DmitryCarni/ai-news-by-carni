@@ -1,0 +1,22 @@
+AI daily — October 4, 2026
+
+Mia AI Lab released a new 4-bit GLM-5.3-Flash build that keeps roughly the same footprint and speed while cutting quantization-added error in expert layers by 28–46%. Local AI can gain quality without automatically requiring more expensive GPUs.
+
+The White House created a Super Intelligence Force led by Director of National Intelligence Jay Clayton. The group is meant to coordinate federal AI work across competitiveness, safety, infrastructure and public risk.
+
+Redule surfaced its Agentic AI OS for sales-heavy businesses: agents ingest leads from WhatsApp, Instagram, Facebook and web forms, qualify them, run follow-ups and hand ready opportunities to people. The AI is becoming a workflow operator rather than a separate chatbot.
+
+Qai and MEEZA agreed to host high-performance GPU infrastructure inside Qatar. Enterprise customers get compute with data stored and governed locally, turning data sovereignty into part of the commercial AI product.
+
+DigitalBridge gives SoftBank a mechanism for attracting outside institutional capital into data centers, power and other AI infrastructure. The buildout is now large enough that capital structure matters alongside access to chips.
+
+Hyphenate, formerly Maximor, shows a strong expansion pattern inside finance: the company reports 86x revenue growth, the average customer uses six modules, and 40% add products during the first contract year.
+
+Key takeaway: the next layer of AI competition is not only a model or GPU, but a managed operating boundary where compute, data, control and operations work as one system.
+
+Where there is product potential:
+• Managed enterprise AI: local GPUs, selected models, isolated data, agent action logs and an SLA in the required jurisdiction.
+
+Full analysis:
+
+https://news.carni.ltd/en/daily/2026-10-04/
