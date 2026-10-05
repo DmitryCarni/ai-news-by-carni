@@ -55,11 +55,13 @@ jobs:
             expected=("daily/${token}.md" "en/daily/${token}.md" "_telegram/daily/${token}.txt" "_telegram/en/daily/${token}.txt")
             verifier=(python scripts/verify_daily_completeness.py)
             kind="Daily"
+            telegram_files="_telegram/daily/${token}.txt,_telegram/en/daily/${token}.txt"
           else
             token="${STAGING_BRANCH#radar/weekly-}"
             expected=("weekly/${token}.md" "en/weekly/${token}.md" "_telegram/weekly/${token}.txt" "_telegram/en/weekly/${token}.txt")
             verifier=(python scripts/verify_weekly_completeness.py)
             kind="Weekly"
+            telegram_files="_telegram/weekly/${token}.txt,_telegram/en/weekly/${token}.txt"
           fi
 
           git fetch --no-tags origin main
@@ -87,6 +89,7 @@ jobs:
           echo "PUBLISHED=true" >> "${GITHUB_ENV}"
           echo "PUBLISHED_KIND=${kind}" >> "${GITHUB_ENV}"
           echo "PUBLISHED_TOKEN=${token}" >> "${GITHUB_ENV}"
+          echo "TELEGRAM_FILES=${telegram_files}" >> "${GITHUB_ENV}"
 
       - name: Dispatch Telegram and IndexNow after bot push
         if: env.PUBLISHED == 'true'
@@ -95,7 +98,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          gh workflow run telegram.yml --ref main
+          gh workflow run telegram.yml --ref main -f source_files="${TELEGRAM_FILES}"
           gh workflow run indexnow.yml --ref main
           if [[ "${PUBLISHED_KIND}" == "Daily" ]]; then
             gh workflow run verify-daily-completeness.yml --ref main
