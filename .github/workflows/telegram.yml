@@ -125,20 +125,85 @@ jobs:
             fi
           fi
 
-          # Generic dispatch / workflow-file change becomes a reconciliation pass.
-          # Only state-backed messages are eligible, so this can edit stale posts
-          # but can never create duplicates of old untracked files.
+          # A generic workflow-file push is a bounded reconciliation pass.
+          # Never sweep the whole historical state: old Telegram messages can be
+          # deleted or outside the editable window, and one such item must not
+          # block current publication. Reconcile only the two newest Daily
+          # messages per language and the newest Weekly per language.
           if (( ${#CHANGES[@]} == 0 )); then
-            while IFS= read -r STATE_PATH; do
+            declare -a RECENT_STATE=()
+            for STATE_DIR in               "${STATE_WORKTREE}/_telegram/.state/daily"               "${STATE_WORKTREE}/_telegram/.state/en/daily"; do
+              if [[ -d "${STATE_DIR}" ]]; then
+                while IFS= read -r P; do RECENT_STATE+=("${P}"); done < <(
+                  find "${STATE_DIR}" -maxdepth 1 -type f -name '*.json' | sort -r | head -n 2
+                )
+              fi
+            done
+            for STATE_DIR in               "${STATE_WORKTREE}/_telegram/.state/weekly"               "${STATE_WORKTREE}/_telegram/.state/en/weekly"; do
+              if [[ -d "${STATE_DIR}" ]]; then
+                while IFS= read -r P; do RECENT_STATE+=("${P}"); done < <(
+                  find "${STATE_DIR}" -maxdepth 1 -type f -name '*.json' | sort -r | head -n 1
+                )
+              fi
+            done
+
+            for STATE_PATH in "${RECENT_STATE[@]}"; do
               STATE_JSON="$(cat "${STATE_PATH}")"
               FILE="$(jq -r '.source_file // empty' <<<"${STATE_JSON}")"
               [[ -n "${FILE}" && -f "${FILE}" ]] || continue
               RECORDED="$(jq -r '.content_sha256 // empty' <<<"${STATE_JSON}")"
               CURRENT="$(sha256sum "${FILE}" | awk '{print $1}')"
               if [[ -z "${RECORDED}" || "${RECORDED}" != "${CURRENT}" ]]; then
-                CHANGES+=("M"$'\t'"${FILE}")
+                CHANGES+=("M"
+          if (( ${#CHANGES[@]} == 0 )); then
+            echo "Telegram state already matches repository teasers."
+            exit 0
+          fi
+
+          for CHANGE in "${CHANGES[@]}"; do
+            STATUS="${CHANGE%%$'\t'*}"
+            FILE="${CHANGE#*$'\t'}"
+            STATE_FILE="_telegram/.state/${FILE#_telegram/}"
+            STATE_FILE="${STATE_FILE%.txt}.json"
+
+            if [[ "${FILE}" == _telegram/en/* ]]; then
+              CHAT_ID="${EN_CHAT_ID}"
+              EDITION="EN"
+            else
+              CHAT_ID="${RU_CHAT_ID}"
+              EDITION="RU"
+            fi
+            [[ -n "${CHAT_ID}" ]] || { echo "${EDITION} chat id missing; skipping ${FILE}"; continue; }
+
+            SIZE="$(wc -c < "${FILE}")"
+            (( SIZE <= 15000 )) || { echo "Teaser too large: ${FILE}" >&2; exit 1; }
+
+            STATE_JSON=""
+            if STATE_JSON="$(read_state "${STATE_FILE}")"; then
+              STATUS="M"
+            fi
+
+            if [[ "${STATUS}" == "A" ]]; then
+              echo "Publishing new ${FILE} to ${EDITION}."
+              RESPONSE="$(telegram_call sendMessage                 --data-urlencode "chat_id=${CHAT_ID}"                 --data-urlencode "text@${FILE}"                 --data-urlencode "disable_web_page_preview=false")"
+              MESSAGE_ID="$(jq -r '.result.message_id // empty' <<<"${RESPONSE}")"
+              [[ -n "${MESSAGE_ID}" ]] || { echo "No message_id for ${FILE}" >&2; exit 1; }
+              persist_state "${STATE_FILE}" "${FILE}" "${EDITION}" "${MESSAGE_ID}"
+              continue
+            fi
+
+            [[ -n "${STATE_JSON}" ]] || { echo "No Telegram state for modified teaser ${FILE}; refusing duplicate." >&2; exit 1; }
+            MESSAGE_ID="$(jq -r '.message_id // empty' <<<"${STATE_JSON}")"
+            [[ -n "${MESSAGE_ID}" ]] || { echo "State has no message_id: ${STATE_FILE}" >&2; exit 1; }
+
+            echo "Editing Telegram message ${MESSAGE_ID} from ${FILE} in ${EDITION}."
+            telegram_call editMessageText               --data-urlencode "chat_id=${CHAT_ID}"               --data-urlencode "message_id=${MESSAGE_ID}"               --data-urlencode "text@${FILE}"               --data-urlencode "disable_web_page_preview=false" >/dev/null
+
+            persist_state "${STATE_FILE}" "${FILE}" "${EDITION}" "${MESSAGE_ID}"
+          done
+\t'"${FILE}")
               fi
-            done < <(find "${STATE_WORKTREE}/_telegram/.state" -type f -name '*.json' | sort)
+            done
           fi
 
           if (( ${#CHANGES[@]} == 0 )); then
