@@ -48,7 +48,6 @@ jobs:
                   f"_telegram/daily/{token}.txt",
                   f"_telegram/en/daily/{token}.txt",
               }
-              normalizer = ["python", "scripts/render_telegram_teaser.py", "--date", token, "--write"]
               verifier = ["python", "scripts/verify_daily_completeness.py"]
           elif branch.startswith("radar/weekly-"):
               token = branch.removeprefix("radar/weekly-")
@@ -60,7 +59,6 @@ jobs:
                   f"_telegram/weekly/{token}.txt",
                   f"_telegram/en/weekly/{token}.txt",
               }
-              normalizer = None
               verifier = ["python", "scripts/verify_weekly_completeness.py"]
           else:
               raise SystemExit(f"Unsupported staging branch: {branch}")
@@ -87,8 +85,6 @@ jobs:
                   raise SystemExit(f"Expected artifact missing from worktree: {path}")
 
           print(f"RADAR STAGING IDENTITY: {branch} -> {sorted(expected)}")
-          if normalizer:
-              subprocess.run(normalizer, check=True)
           subprocess.run(verifier, check=True)
           print("RADAR STAGING TRANSACTION: SUCCESS")
           PY
