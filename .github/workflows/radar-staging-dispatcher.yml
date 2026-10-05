@@ -44,7 +44,7 @@ jobs:
             branch="${ref#refs/heads/}"
             echo "Checking ${branch} @ ${sha}"
 
-            encoded_branch="$(python -c 'import os, urllib.parse; print(urllib.parse.quote(os.environ["B"], safe=""))' B="${branch}")"
+            encoded_branch="$(B="${branch}" python -c 'import os, urllib.parse; print(urllib.parse.quote(os.environ["B"], safe=""))')"
             runs="$(gh api -H 'Accept: application/vnd.github+json'               "repos/${GITHUB_REPOSITORY}/actions/workflows/verify-radar-staging.yml/runs?branch=${encoded_branch}&per_page=20")"
 
             status="$(jq -r --arg sha "${sha}" '[.workflow_runs[] | select(.head_sha == $sha)] | sort_by(.created_at) | reverse | .[0].status // empty' <<<"${runs}")"
