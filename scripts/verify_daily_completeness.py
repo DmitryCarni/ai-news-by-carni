@@ -6,8 +6,6 @@ import re
 import sys
 import unicodedata
 
-from render_telegram_teaser import render_daily_teaser
-
 ROOT = Path(__file__).resolve().parents[1]
 START_DATE = "2026-09-24"
 STRICT_RADAR_START_DATE = "2026-09-27"
@@ -384,29 +382,23 @@ def verify_date(date: str, errors: list[str]) -> None:
     if date >= TELEGRAM_EDITORIAL_GUARD_START_DATE and tg_path.exists() and tg_en_path.exists():
         actual_ru_teaser = tg_path.read_text(encoding="utf-8")
         actual_en_teaser = tg_en_path.read_text(encoding="utf-8")
-        try:
-            expected_ru_teaser = render_daily_teaser(date, ru, "ru")
-            expected_en_teaser = render_daily_teaser(date, en, "en")
-        except Exception as exc:
-            fail(errors, f"{date}: unable to render canonical Telegram teaser: {exc}")
-        else:
-            if actual_ru_teaser != expected_ru_teaser:
-                fail(
-                    errors,
-                    f"{date}: RU Telegram teaser is not canonical reader format; "
-                    "render it from the published Daily with scripts/render_telegram_teaser.py",
-                )
-            if actual_en_teaser != expected_en_teaser:
-                fail(
-                    errors,
-                    f"{date}: EN Telegram teaser is not canonical reader format; "
-                    "render it from the published Daily with scripts/render_telegram_teaser.py",
-                )
 
-        for label, teaser in (("RU", actual_ru_teaser), ("EN", actual_en_teaser)):
-            if len(teaser) > 3500:
-                fail(errors, f"{date}: {label} Telegram teaser is too long ({len(teaser)} chars > 3500)")
-            lowered = teaser.casefold()
+        def verify_reader_teaser(label: str, teaser: str, header: str, takeaway_marker: str, full_marker: str, expected_url: str) -> None:
+            stripped = teaser.strip()
+            if not stripped.startswith(header):
+                fail(errors, f"{date}: {label} Telegram teaser has wrong header")
+
+            if takeaway_marker not in stripped:
+                fail(errors, f"{date}: {label} Telegram teaser missing {takeaway_marker}")
+            if full_marker not in stripped:
+                fail(errors, f"{date}: {label} Telegram teaser missing {full_marker}")
+            if expected_url not in stripped:
+                fail(errors, f"{date}: {label} Telegram teaser missing exact Daily URL")
+
+            if len(stripped) > 3500:
+                fail(errors, f"{date}: {label} Telegram teaser is too long ({len(stripped)} chars > 3500)")
+
+            lowered = stripped.casefold()
             forbidden = (
                 "неполного выпуска",
                 "шесть сигналов вместо",
@@ -415,10 +407,43 @@ def verify_date(date: str, errors: list[str]) -> None:
                 "watchdog",
                 "staging",
                 "recovery",
+                "research_pending",
+                "pipeline",
             )
             bad = [term for term in forbidden if term in lowered]
             if bad:
                 fail(errors, f"{date}: {label} Telegram teaser leaks internal process language: {', '.join(bad)}")
+
+            if takeaway_marker in stripped:
+                before_takeaway = stripped.split(takeaway_marker, 1)[0]
+                body = before_takeaway[len(header):].strip()
+                story_paragraphs = [p.strip() for p in re.split(r"\n\s*\n", body) if p.strip()]
+                if len(story_paragraphs) != 6:
+                    fail(errors, f"{date}: {label} Telegram teaser has {len(story_paragraphs)} story paragraphs; expected exactly 6")
+                for idx, paragraph in enumerate(story_paragraphs, start=1):
+                    if len(paragraph) < 70:
+                        fail(errors, f"{date}: {label} Telegram story paragraph {idx} is too short ({len(paragraph)} chars)")
+                    if len(paragraph) > 520:
+                        fail(errors, f"{date}: {label} Telegram story paragraph {idx} is too long ({len(paragraph)} chars)")
+                    if paragraph.count(";") >= 3:
+                        fail(errors, f"{date}: {label} Telegram story paragraph {idx} looks like a semicolon dump")
+
+        verify_reader_teaser(
+            "RU",
+            actual_ru_teaser,
+            f"Итоги дня за {front_matter_value(ru, 'report_date_display')}",
+            "Главный вывод:",
+            "Полный разбор:",
+            f"https://news.carni.ltd/daily/{date}/",
+        )
+        verify_reader_teaser(
+            "EN",
+            actual_en_teaser,
+            f"AI daily — {front_matter_value(en, 'report_date_display')}",
+            "Key takeaway:",
+            "Full analysis:",
+            f"https://news.carni.ltd/en/daily/{date}/",
+        )
 
     teaser_count = telegram_story_count(tg_path)
     if teaser_count and ru_h3 < teaser_count:
