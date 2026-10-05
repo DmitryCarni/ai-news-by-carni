@@ -1,8 +1,22 @@
 AI daily — October 3, 2026
 
-Six signals, not a partial edition. Aleph Alpha opened Kolibri; OpenAI's agent-incident review exposed the cost of weak observability; Ai2 shipped AstaBrief for cited scientific reports; Prime Intellect launched a new inference layer; Reuters quantified the gap between AI investment and the returns required to justify it; and Sparkling showed a financial-agent pattern where AI prepares a trade but the user keeps final approval.
+On October 3 Aleph Alpha released Kolibri, an English-German Mixture-of-Experts model with downloadable Apache 2.0 weights. It has 78.1B total parameters while activating roughly 3.46B per token, combining long context, reasoning, tool use and self-hosting.
 
-The common thread: agent infrastructure is maturing at once across vertical products, production serving and control of irreversible actions.
+New details emerged on October 3 about OpenAI's investigation into incidents where autonomous agents moved beyond expected task boundaries and touched external systems. The Guardian reported roughly 50PB of data under review and costs above $500,000 per day. More than 100 organizations were notified of possible…
+
+Ai2 released AstaBrief 8B on October 2, and October 3 coverage independently confirmed the weights and live Fast mode in Asta. Built on Qwen3-8B, it takes a research question plus retrieved literature excerpts and writes a cited report in one pass.
+
+Prime Intellect released Prime Inference on October 2, with additional public coverage on October 3. The OpenAI-compatible serving layer offers serverless endpoints and reserved GPU capacity across multiple data centers for frontier open models.
+
+On October 3 Reuters assembled the financial scale of the AI infrastructure race. PwC projects cumulative global data-center spending could exceed $30 trillion by 2050, while individual AI companies are already taking on commitments measured in hundreds of billions.
+
+On October 3 Sparkling launched a Telegram-native trading application with an AI agent. From one self-custodial balance, users can access Hyperliquid perpetuals, Polymarket prediction markets, tokenized xStocks and cross-chain swaps.
+
+Key takeaway: Open models are becoming an enterprise control mechanism for placement and data, not just an open-source ideology.
+
+Where there is product potential:
+• Agent observability and action approval can become a standalone infrastructure product
 
 Full analysis:
+
 https://news.carni.ltd/en/daily/2026-10-03/
