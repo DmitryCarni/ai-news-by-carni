@@ -18,7 +18,10 @@ CANONICAL_SECTIONS = (
 
 def front_matter_value(text: str, key: str) -> str | None:
     match = re.search(rf"(?m)^{re.escape(key)}:\s*(.+?)\s*$", text)
-    return match.group(1).strip().strip('"').strip("'") if match else None
+    if not match:
+        return None
+    value = match.group(1).strip().split("\\n", 1)[0].strip()
+    return value.strip('"').strip("'")
 
 
 def section_blocks(text: str) -> list[tuple[str, str, str]]:
@@ -26,7 +29,7 @@ def section_blocks(text: str) -> list[tuple[str, str, str]]:
     result: list[tuple[str, str, str]] = []
     for index, match in enumerate(matches):
         title = match.group(1).strip()
-        section_id = (match.group(2) or ("conclusions" if title in {"Итоги дня", "Day in review"} else "")).strip()
+        section_id = (match.group(2) or ("conclusions" if title in {"Итоги дня", "Day in review", "Conclusions"} else "")).strip()
         end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
         result.append((title, section_id, text[match.end():end].strip()))
     return result
@@ -70,25 +73,12 @@ def prose_paragraphs(block: str) -> list[str]:
     return result
 
 
-def clip_sentences(text: str, *, target: int = 260, hard: int = 330) -> str:
+def clip_text(text: str, *, hard: int = 320) -> str:
     text = clean_inline(text)
-    sentences = [s.strip() for s in re.split(r"(?<=[.!?])\s+", text) if s.strip()]
-    if not sentences:
-        return text[:hard].rstrip()
-    chosen: list[str] = []
-    for sentence in sentences:
-        candidate = " ".join(chosen + [sentence]).strip()
-        if chosen and len(candidate) > target:
-            break
-        chosen.append(sentence)
-        if len(candidate) >= 130:
-            break
-    result = " ".join(chosen).strip()
-    if len(result) <= hard:
-        return result
-    shortened = result[: hard - 1].rsplit(" ", 1)[0].rstrip(" ,;:-")
+    if len(text) <= hard:
+        return text
+    shortened = text[: hard - 1].rsplit(" ", 1)[0].rstrip(" ,;:-")
     return shortened + "…"
-
 
 def first_story(section_body: str) -> str:
     stories = h3_blocks(section_body)
@@ -98,16 +88,16 @@ def first_story(section_body: str) -> str:
     paras = prose_paragraphs(body)
     if not paras:
         raise ValueError("factual story has no prose")
-    return clip_sentences(paras[0])
+    return clip_text(paras[0], hard=320)
 
 
 def conclusion_text(section_body: str) -> str:
     numbered = re.search(r"(?m)^\s*1\.\s+(.+?)\s*$", section_body)
     if numbered:
-        return clip_sentences(numbered.group(1), target=300, hard=360)
+        return clip_text(numbered.group(1), hard=360)
     paras = prose_paragraphs(section_body)
     if paras:
-        return clip_sentences(paras[0], target=300, hard=360)
+        return clip_text(paras[0], hard=360)
     raise ValueError("conclusions section has no readable text")
 
 
