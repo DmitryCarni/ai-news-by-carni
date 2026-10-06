@@ -1,0 +1,22 @@
+AI daily — October 5, 2026
+
+Reflection AI unveiled Beam, an open-weight model with 501 billion total parameters and 23 billion active per task. The emphasis on lower inference compute pushes competition beyond benchmark quality toward the cost of operating useful models.
+
+OpenAI detailed textGrain and began a phased text-watermarking rollout: API customers can opt in now, while eligible ChatGPT and Codex text in the EU will follow over the coming weeks. OpenAI also warns that editing can weaken detection sharply, so the watermark is not proof of authorship.
+
+Cognizant launched Activate for fast-growing companies with $1–5 billion in annual revenue. Instead of a heavyweight enterprise program, it packages preconfigured AI, data, security, cloud and application solutions into a faster implementation model.
+
+Snowflake made Python code execution in Cortex Agents generally available. Agents can decide when code is needed, but it runs in an isolated sandbox — separating computational flexibility from unrestricted infrastructure access.
+
+Corgi Invest launched the MN ETF, which uses swaps to provide economic exposure to OpenAI and Anthropic alongside Meta, Nvidia, Alphabet and SpaceX. It is another example of financial products being engineered around the value of major private AI companies.
+
+UiPath added OAuth 2.0 Scope support across its Agent 2 Agent connector. Agent connections can now receive only the permissions an automation actually needs, making least privilege a native feature of agent infrastructure.
+
+Key takeaway: AI is gaining more autonomy, while the next commercial layer is about making that autonomy cheaper, permission-bounded and auditable.
+
+Where there is product potential:
+• Managed agent execution: connection registry, least-privilege OAuth scopes, code sandboxes, action logs and approval gates for irreversible operations.
+
+Full analysis:
+
+https://news.carni.ltd/en/daily/2026-10-05/
