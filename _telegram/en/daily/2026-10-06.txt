@@ -1,4 +1,4 @@
-Daily highlights for October 6, 2026
+AI daily — October 6, 2026
 
 Mistral put Large 4 into public preview with 1.05 trillion total parameters, 49 billion active parameters and context up to one million tokens. The market signal is stronger competition on inference economics and deployability, not only benchmark quality.
 
@@ -12,7 +12,7 @@ DeepSeek is preparing to raise more than 80 billion yuan, Reuters reported, with
 
 Plaid introduced LendScore 2 and transformer-based LendScore Arc for credit scoring from cash-flow data. Plaid reports stronger predictive performance and higher approval rates for subprime borrowers in early testing, pushing AI deeper into measurable financial decisions.
 
-Main takeaway: the market is scaling foundation models while making applied AI more governable through human approval, controlled agent tools, action auditing and measurable business outcomes.
+Key takeaway: the market is scaling foundation models while making applied AI more governable through human approval, controlled agent tools, action auditing and measurable business outcomes.
 
 Where product opportunities exist:
 - AI-agent action auditing for tool calls, permissions and incident trails;
