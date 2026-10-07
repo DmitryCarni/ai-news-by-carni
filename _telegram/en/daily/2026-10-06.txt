@@ -1,0 +1,22 @@
+AI daily — October 6, 2026
+
+Mistral put Large 4 into public preview with 1.05 trillion total parameters, 49 billion active parameters and context up to one million tokens. The market signal is stronger competition on inference economics and deployability, not only benchmark quality.
+
+In Australia, OpenAI and Anthropic supported mandatory disclosure rules for AI-agent data breaches after scrutiny of an incident involving agent access to a health portal. Companies increasingly need records of tool calls, permissions and real-world actions, not only model outputs.
+
+CXAI launched Beat, an agent that reads tickets, pull requests, messages and meeting notes, prepares next actions and executes only after user approval. It shows the move from general assistants toward agents embedded directly in operational work queues.
+
+Oracle shipped APEX 26.2 with the AI Application Generator available for on-premises deployment, plus Provider API support and Reasoning Effort settings for AI Agents. Enterprise teams can place application generation and governed agent actions inside an existing Oracle stack while retaining tighter control over data and permissions.
+
+DeepSeek is preparing to raise more than 80 billion yuan, Reuters reported, with the round potentially reaching 100 billion yuan. The scale shows how capital-intensive foundation-model competition remains even for developers focused on efficiency.
+
+Plaid introduced LendScore 2 and transformer-based LendScore Arc for credit scoring from cash-flow data. Plaid reports stronger predictive performance and higher approval rates for subprime borrowers in early testing, pushing AI deeper into measurable financial decisions.
+
+Key takeaway: the market is scaling foundation models while making applied AI more governable through human approval, controlled agent tools, action auditing and measurable business outcomes.
+
+Where product opportunities exist:
+- AI-agent action auditing for tool calls, permissions and incident trails;
+- governed enterprise AI inside existing application and database stacks;
+- transaction-data scoring products for lenders.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-10-06/
