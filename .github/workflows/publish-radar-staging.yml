@@ -85,6 +85,10 @@ jobs:
           git add -- "${expected[@]}"
           git commit -m "Publish ${kind} ${token} from verified Radar staging"
           git push origin HEAD:main
+          # Record the EXACT just-pushed publication identity for OIDC handoff.
+          public_commit="$(git rev-parse HEAD)"
+          [[ "${public_commit}" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          echo "PUBLIC_COMMIT=${public_commit}" >> "${GITHUB_ENV}"
 
           echo "PUBLISHED=true" >> "${GITHUB_ENV}"
           echo "PUBLISHED_KIND=${kind}" >> "${GITHUB_ENV}"
@@ -105,3 +109,19 @@ jobs:
           else
             gh workflow run verify-weekly-completeness.yml --ref main
           fi
+
+      - name: Signal Daily to Supabase after confirmed public push
+        # Independent of Telegram/IndexNow success: a failed distribution dispatch
+        # must never erase the already verified business publication event.
+        if: ${{ always() && env.PUBLISHED == 'true' && env.PUBLISHED_KIND == 'Daily' }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          [[ "${PUBLISHED_TOKEN}" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || exit 2
+          [[ "${PUBLIC_COMMIT}" =~ ^[0-9a-f]{40}$ ]] || exit 2
+          gh workflow run daily-published-wake.yml --ref main \
+            -f "report_date=${PUBLISHED_TOKEN}" \
+            -f "public_commit=${PUBLIC_COMMIT}" \
+            -f "mode=enqueue"
