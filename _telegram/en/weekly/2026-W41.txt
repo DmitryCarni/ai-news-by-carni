@@ -1,0 +1,22 @@
+AI Week in Review
+October 2–8, 2026
+
+AI is moving beyond the chat window. Google introduced a workplace agent designed to carry context across devices, run long tasks and even operate with its own team identity. That makes permissions, accountability and cost controls part of the product—not an afterthought.
+
+The model market is getting cheaper and more competitive. Anthropic launched Haiku 5.5, while Mistral and Reflection announced major new models. One crucial distinction: their promised downloadable weights were not yet broadly available by the end of the week. A preview is not the same as self-hosting.
+
+Security exposed another gap. OpenAI outlined invisible text watermarking and its detection limits. Anthropic launched a free opt-in scanner for open-source projects and a critical-infrastructure defense initiative. Discovering issues is accelerating; validating and safely fixing them remains hard.
+
+The execution stack is evolving too. Supabase plans to acquire Turso for lightweight per-agent databases, Snowflake made isolated code execution generally available for Cortex Agents, and Upscale AI unveiled a network platform intended to connect mixed accelerator fleets.
+
+Capital and customers are moving at different speeds. Supabase announced $150 million in funding, while an ECB survey found that 72% of euro-area firms planning AI investment expect to use internal funds. Plaid's new credit-risk models are also shifting attention from account snapshots to transaction sequences.
+
+Where products could emerge:
+• Cross-platform agent controls: permissions, approvals, audit trails and spending limits.
+• Verified software fixes as a service, rather than another stream of automated security alerts.
+• Small, outcome-based AI deployments with measurable savings and clear stop conditions.
+
+Bottom line: the winner is not necessarily the team with the flashiest model, but the one that turns AI into dependable, governable and economically justified work.
+
+Full analysis:
+https://news.carni.ltd/en/weekly/2026-W41/
