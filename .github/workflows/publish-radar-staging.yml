@@ -6,6 +6,16 @@ on:
       - Verify Radar staging transaction
     types:
       - completed
+  workflow_dispatch:
+    inputs:
+      staging_branch:
+        description: Exact staging branch that passed the verifier
+        required: true
+        type: string
+      verified_sha:
+        description: Exact verified 40-character staging commit
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -21,7 +31,10 @@ jobs:
       github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.head_repository.full_name == github.repository &&
       (startsWith(github.event.workflow_run.head_branch, 'radar/daily-') ||
-       startsWith(github.event.workflow_run.head_branch, 'radar/weekly-'))
+       startsWith(github.event.workflow_run.head_branch, 'radar/weekly-')) ||
+      (github.event_name == 'workflow_dispatch' &&
+       (startsWith(inputs.staging_branch, 'radar/daily-') ||
+        startsWith(inputs.staging_branch, 'radar/weekly-')))
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -36,11 +49,29 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Require successful exact-head staging verification on explicit dispatch
+        if: github.event_name == 'workflow_dispatch'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STAGING_BRANCH: ${{ inputs.staging_branch }}
+          VERIFIED_SHA: ${{ inputs.verified_sha }}
+        run: |
+          set -euo pipefail
+          [[ "${VERIFIED_SHA}" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          [[ "${STAGING_BRANCH}" == radar/daily-* || "${STAGING_BRANCH}" == radar/weekly-* ]] || exit 1
+          verified="$(gh api "repos/$GITHUB_REPOSITORY/commits/$VERIFIED_SHA/check-runs" --jq '[.check_runs[] | select(.name == "verify" and .conclusion == "success")] | length')"
+          if [ "$verified" -lt 1 ]; then
+            echo "::error::Cannot publish without successful exact-SHA Radar verifier"
+            exit 1
+          fi
+          echo "EXACT STAGING SHA VERIFIED: $STAGING_BRANCH $VERIFIED_SHA"
+
       - name: Apply exact verified bundle to current main
         shell: bash
         env:
-          STAGING_BRANCH: ${{ github.event.workflow_run.head_branch }}
-          VERIFIED_SHA: ${{ github.event.workflow_run.head_sha }}
+          STAGING_BRANCH: ${{ github.event_name == 'workflow_dispatch' && inputs.staging_branch || github.event.workflow_run.head_branch }}
+          VERIFIED_SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.verified_sha || github.event.workflow_run.head_sha }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
