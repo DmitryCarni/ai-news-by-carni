@@ -1,0 +1,102 @@
+name: Check Weekly publication end-to-end
+
+on:
+  schedule:
+    # Friday 14:00 and 19:00 Asia/Aqtobe (UTC+5).
+    - cron: '0 9,14 * * 5'
+  workflow_dispatch:
+    inputs:
+      week_id:
+        description: Optional ISO week to check; read-only
+        required: false
+        type: string
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/check-weekly-publication.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/check-weekly-publication.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Check exact 4/4 Weekly, verified content and Telegram receipts
+        shell: bash
+        env:
+          EVENT_TYPE: ${{ github.event_name }}
+          REQUESTED_WEEK: ${{ inputs.week_id || '' }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import datetime as dt
+          import hashlib
+          import json
+          import os
+          import pathlib
+          import re
+          import subprocess
+
+          today=dt.datetime.now(dt.timezone.utc).date()
+          event=os.environ['EVENT_TYPE']
+          requested=os.environ.get('REQUESTED_WEEK','')
+          if event in ('pull_request','push') and not requested:
+              # On workflow code change, validate against the immutable
+              # previously published W41 fixture, not a future due date.
+              requested='2026-W41'
+          if requested:
+              if not re.fullmatch(r'20\d\d-W(0[1-9]|[1-4]\d|5[0-3])',requested):
+                  raise SystemExit('Invalid explicit ISO week')
+              iso_year,number=int(requested[:4]),int(requested[-2:])
+              thursday=dt.date.fromisocalendar(iso_year,number,4)
+              token=requested
+          else:
+              if today.weekday()!=4:
+                  raise SystemExit('Weekly schedule invoked on non-Friday')
+              thursday=today-dt.timedelta(days=1)
+              iso=thursday.isocalendar()
+              token=f'{iso.year}-W{iso.week:02d}'
+          expected=[
+              f'weekly/{token}.md',
+              f'en/weekly/{token}.md',
+              f'_telegram/weekly/{token}.txt',
+              f'_telegram/en/weekly/{token}.txt'
+          ]
+          for item in expected:
+              if not pathlib.Path(item).is_file():
+                  raise SystemExit('P0 Weekly missing publication artifact: '+item)
+          for item in expected[:2]:
+              text=pathlib.Path(item).read_text(encoding='utf-8')
+              if (f'report_date: {thursday.isoformat()}' not in text
+                  or 'id="conclusions"' not in text):
+                  raise SystemExit('Weekly article metadata mismatch: '+item)
+          subprocess.run(['git','fetch','--no-tags','origin',
+              'refs/heads/telegram-state'],check=True,
+              stdout=subprocess.DEVNULL)
+          for source,state in [
+              (expected[2],f'_telegram/.state/weekly/{token}.json'),
+              (expected[3],f'_telegram/.state/en/weekly/{token}.json')
+          ]:
+              receipt=json.loads(subprocess.check_output(['git','show',
+                  f'FETCH_HEAD:{state}'],text=True))
+              if (receipt.get('source_file')!=source
+                  or not isinstance(receipt.get('message_id'),int)
+                  or receipt['message_id']<=0
+                  or receipt.get('content_sha256')!=hashlib.sha256(
+                       pathlib.Path(source).read_bytes()).hexdigest()):
+                  raise SystemExit('P0 Telegram Weekly receipt missing/mismatch: '+source)
+          print('WEEKLY PUBLICATION 4/4 + TELEGRAM RECEIPTS: PASS '+token)
+          PY
+      - name: Verify published Weekly editorial contract
+        run: python scripts/verify_weekly_completeness.py
