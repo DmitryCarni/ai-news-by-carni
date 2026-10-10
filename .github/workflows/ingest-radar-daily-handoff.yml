@@ -26,10 +26,15 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           source=Path('.github/workflows/ingest-radar-daily-handoff.yml').read_text()
+          import re, textwrap
+          blocks=re.findall(r"(?ms)^          python - <<'PY'\n(.*?)^          PY$",source)
+          assert len(blocks)==2, f"Expected 2 Python scripts, got {len(blocks)}"
+          for index,block in enumerate(blocks,1):
+              compile(textwrap.dedent(block),f"handoff-script-{index}","exec")
           assert 'repository_dispatch:' in source
           assert 'verify_daily_completeness.py' in source
           assert 'workflow run verify-radar-staging.yml' in source
-          print('RADAR DAILY HANDOFF WORKFLOW: PASS')
+          print('RADAR DAILY HANDOFF SCRIPT COMPILE: PASS')
           PY
 
   ingest:
@@ -55,7 +60,7 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import base64, gzip, hashlib, json, os, pathlib, re, sys
+          import base64, gzip, hashlib, io, json, os, pathlib, re
 
           date=os.environ['RADAR_DATE']
           if not re.fullmatch(r'20\d\d-\d\d-\d\d', date):
@@ -67,14 +72,18 @@ jobs:
           checksum=os.environ['RADAR_SHA256']
           if not re.fullmatch(r'[0-9a-f]{64}', checksum):
               raise SystemExit('invalid archive checksum')
-          if not archive_b64 or len(archive_b64)>125000:
+          if not archive_b64 or len(archive_b64)>60000:
               raise SystemExit('oversized/empty archive')
           compressed=base64.b64decode(archive_b64,validate=True)
           if hashlib.sha256(compressed).hexdigest()!=checksum:
               raise SystemExit('archive checksum mismatch')
-          if len(compressed)>96000:
+          if len(compressed)>45000:
               raise SystemExit('archive size limit')
-          payload=json.loads(gzip.decompress(compressed))
+          with gzip.GzipFile(fileobj=io.BytesIO(compressed)) as stream:
+              raw=stream.read(350001)
+          if len(raw)>350000:
+              raise SystemExit('expanded archive exceeds 350 KB')
+          payload=json.loads(raw)
           if payload.get('schema')!=1 or payload.get('report_date')!=date:
               raise SystemExit('bundle version/date mismatch')
           entries=payload.get('files')
