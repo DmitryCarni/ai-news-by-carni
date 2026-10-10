@@ -1,0 +1,171 @@
+name: Ingest verified Radar Daily handoff
+
+on:
+  repository_dispatch:
+    types: [radar-daily-handoff]
+  pull_request:
+    paths:
+      - '.github/workflows/ingest-radar-daily-handoff.yml'
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: radar-daily-handoff
+  cancel-in-progress: false
+
+jobs:
+  syntax:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate workflow YAML and receiver Python
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          source=Path('.github/workflows/ingest-radar-daily-handoff.yml').read_text()
+          import re, textwrap
+          blocks=re.findall(r"(?ms)^          python - <<'PY'\n(.*?)^          PY$",source)
+          assert len(blocks)==2, f"Expected 2 Python scripts, got {len(blocks)}"
+          for index,block in enumerate(blocks,1):
+              compile(textwrap.dedent(block),f"handoff-script-{index}","exec")
+          assert 'repository_dispatch:' in source
+          assert 'verify_daily_completeness.py' in source
+          assert 'workflow run verify-radar-staging.yml' in source
+          print('RADAR DAILY HANDOFF SCRIPT COMPILE: PASS')
+          PY
+
+  ingest:
+    if: github.event_name == 'repository_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate exact sealed 4-file package
+        env:
+          RADAR_DATE: ${{ github.event.client_payload.report_date }}
+          RADAR_ARCHIVE_B64: ${{ github.event.client_payload.archive_b64 }}
+          RADAR_SHA256: ${{ github.event.client_payload.sha256 }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64, gzip, hashlib, io, json, os, pathlib, re
+
+          date=os.environ['RADAR_DATE']
+          if not re.fullmatch(r'20\d\d-\d\d-\d\d', date):
+              raise SystemExit('invalid report_date')
+          from datetime import date as date_type
+          if date_type.fromisoformat(date).isoformat()!=date:
+              raise SystemExit('invalid calendar date')
+          archive_b64=os.environ['RADAR_ARCHIVE_B64']
+          checksum=os.environ['RADAR_SHA256']
+          if not re.fullmatch(r'[0-9a-f]{64}', checksum):
+              raise SystemExit('invalid archive checksum')
+          if not archive_b64 or len(archive_b64)>60000:
+              raise SystemExit('oversized/empty archive')
+          compressed=base64.b64decode(archive_b64,validate=True)
+          if hashlib.sha256(compressed).hexdigest()!=checksum:
+              raise SystemExit('archive checksum mismatch')
+          if len(compressed)>45000:
+              raise SystemExit('archive size limit')
+          with gzip.GzipFile(fileobj=io.BytesIO(compressed)) as stream:
+              raw=stream.read(350001)
+          if len(raw)>350000:
+              raise SystemExit('expanded archive exceeds 350 KB')
+          payload=json.loads(raw)
+          if payload.get('schema')!=1 or payload.get('report_date')!=date:
+              raise SystemExit('bundle version/date mismatch')
+          entries=payload.get('files')
+          expected={
+              f'daily/{date}.md', f'en/daily/{date}.md',
+              f'_telegram/daily/{date}.txt', f'_telegram/en/daily/{date}.txt'
+          }
+          if not isinstance(entries,list) or len(entries)!=4 or {
+              x.get('path') for x in entries if isinstance(x,dict)
+          }!=expected:
+              raise SystemExit('bundle is not exactly expected 4 paths')
+          for entry in entries:
+              path=entry['path']
+              content=entry.get('content')
+              digest=entry.get('content_sha256')
+              if not isinstance(content,str) or not 300<=len(content.encode('utf-8'))<=140000:
+                  raise SystemExit('invalid size for '+path)
+              if hashlib.sha256(content.encode('utf-8')).hexdigest()!=digest:
+                  raise SystemExit('file checksum mismatch '+path)
+              target=pathlib.Path(path)
+              if target.is_file():
+                  raise SystemExit('Daily already exists in public main: '+path)
+              target.parent.mkdir(parents=True,exist_ok=True)
+              target.write_bytes(content.encode('utf-8'))
+          pathlib.Path('/tmp/radar-report-date').write_text(date)
+          print('DAILY HANDOFF EXACT FOUR: PASS '+date)
+          PY
+
+      - name: Validate editorial content with existing production verifier
+        run: python scripts/verify_daily_completeness.py
+
+      - name: Stage exact package and dispatch existing verifier
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          date="$(cat /tmp/radar-report-date)"
+          branch="radar/daily-$date"
+          paths=(
+            "daily/$date.md" "en/daily/$date.md"
+            "_telegram/daily/$date.txt" "_telegram/en/daily/$date.txt"
+          )
+          expected="$(printf '%s\n' "${paths[@]}" | LC_ALL=C sort)"
+          # A previous staging push may have succeeded even if dispatch failed.
+          # Refuse conflicting payloads; recover an EXACT matching staging ref.
+          if git ls-remote --exit-code --heads origin "refs/heads/$branch" >/dev/null; then
+            git fetch --no-tags origin "refs/heads/$branch"
+            remote_sha="$(git rev-parse FETCH_HEAD)"
+            remote_paths="$(git diff --name-only origin/main "$remote_sha" | LC_ALL=C sort)"
+            if [ "$remote_paths" != "$expected" ]; then
+              echo "::error::Existing branch contains an unexpected diff"
+              exit 1
+            fi
+            for file in "${paths[@]}"; do
+              local_blob="$(git hash-object "$file")"
+              remote_blob="$(git rev-parse "$remote_sha:$file")"
+              if [ "$local_blob" != "$remote_blob" ]; then
+                echo "::error::Existing branch differs from requested package: $file"
+                exit 1
+              fi
+            done
+            gh workflow run verify-radar-staging.yml --ref "$branch"
+            echo "DAILY EXACT BRANCH RECOVERED: $branch $remote_sha"
+            exit 0
+          else
+            ls_status=$?
+            if [ "$ls_status" != "2" ]; then
+              echo "::error::Unable to inspect remote staging branch"
+              exit 1
+            fi
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "$branch"
+          git add -- "${paths[@]}"
+          actual="$(git diff --cached --name-only | LC_ALL=C sort)"
+          if [ "$actual" != "$expected" ]; then
+            echo "::error::Staging diff is not the exact four Daily artifacts"
+            exit 1
+          fi
+          git commit -m "Stage Radar Daily $date via independent handoff"
+          git push origin "HEAD:refs/heads/$branch"
+          gh workflow run verify-radar-staging.yml --ref "$branch"
+          echo "DAILY HANDOFF STAGED: $branch $(git rev-parse HEAD)"
