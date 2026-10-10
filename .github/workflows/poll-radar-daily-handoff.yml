@@ -14,6 +14,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
   id-token: write
 
 concurrency:
@@ -159,9 +160,27 @@ jobs:
               | jq -e '.ok == true'
             echo "RADAR DAILY PUBLIC 4/4 CONFIRMED AND ACKNOWLEDGED"
           elif [ "$action" = "dispatch" ]; then
+            report_date="$(jq -er '.report_date' /tmp/radar-daily-poll.json)"
+            branch="radar/daily-$report_date"
+            if remote_ref="$(git ls-remote --heads origin "refs/heads/$branch")"; then
+              if [ -n "$remote_ref" ]; then
+                sha="$(printf '%s\n' "$remote_ref" | awk '{print $1}')"
+                [[ "$sha" =~ ^[0-9a-f]{40}$ ]] || exit 1
+                verified="$(gh api "repos/$GITHUB_REPOSITORY/commits/$sha/check-runs" --jq '[.check_runs[] | select(.name == "verify" and .conclusion == "success")] | length')"
+                if [ "$verified" -ge 1 ]; then
+                  gh workflow run publish-radar-staging.yml --ref main \
+                    -f "staging_branch=$branch" -f "verified_sha=$sha"
+                  echo "RADAR DAILY EXACT-VERIFIED PUBLISH DISPATCHED: $branch $sha"
+                  exit 0
+                fi
+              fi
+            else
+              echo "::error::Unable to inspect the public staging reference"
+              exit 1
+            fi
             gh api --method POST "repos/$GITHUB_REPOSITORY/dispatches" \
               --input /tmp/radar-daily-dispatch.json
-            echo "RADAR DAILY DISPATCH TRIGGERED IN PUBLIC REPOSITORY"
+            echo "RADAR DAILY STAGING/VERIFICATION DISPATCHED IN PUBLIC REPOSITORY"
           else
             echo "::error::Unknown sealed Daily action"
             exit 1
