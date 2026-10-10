@@ -1,0 +1,22 @@
+AI daily — October 7, 2026
+
+Anthropic released Claude Haiku 5.5 for high-volume work and says average running costs are about 75% below Haiku 4.5. The commercial contest is shifting from headline model quality toward the cost of a successfully completed task.
+
+At Singapore forums on October 7, speakers warned about autonomous-agent control, biological misuse and overheated AI investment. Enterprises need action-level safeguards while investors need evidence of returns beyond optimistic forecasts.
+
+Reuters detailed Biohub's effort to build cellular datasets for predictive AI biology, with $1.8 billion in total investment cited for the initiative. The immediate obstacle is reliable experimental data, not a lack of bold promises about future cures.
+
+Liquid AI open-sourced the d1-3B and d1-omni-600M decision models on October 7. The company reports millisecond-scale latency on specific accelerators, creating edge opportunities that still require independent reliability and hardware testing.
+
+AI-assisted specialty insurer Ledgebrook raised $200 million from a group co-led by Allianz X and Rockefeller Capital Management. Its Blackbird platform speeds document intake and technical pricing while human underwriters retain final decisions.
+
+Perplexity announced pplx-embed-v2-late models for retrieval across text, images and rendered PDF pages without mandatory OCR. Finance and legal teams may gain better archive search, provided they validate accuracy and document permissions.
+
+Key takeaway: Fast models are getting cheaper and AI is moving into laboratories and specialist financial decisions, while safe operations require bounded actions and measurable returns.
+
+Where product opportunities exist:
+- quality-controlled routing between model tiers;
+- permission-aware search across reports and images;
+- professional risk-intake automation with human sign-off.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-10-07/
