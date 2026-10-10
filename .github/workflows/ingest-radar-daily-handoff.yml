@@ -123,19 +123,43 @@ jobs:
           set -euo pipefail
           date="$(cat /tmp/radar-report-date)"
           branch="radar/daily-$date"
-          if git ls-remote --exit-code --heads origin "refs/heads/$branch" > /dev/null; then
-            echo "::error::Staging branch already exists: $branch"
-            exit 1
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git switch -c "$branch"
           paths=(
             "daily/$date.md" "en/daily/$date.md"
             "_telegram/daily/$date.txt" "_telegram/en/daily/$date.txt"
           )
-          git add -- "${paths[@]}"
           expected="$(printf '%s\n' "${paths[@]}" | LC_ALL=C sort)"
+          # A previous staging push may have succeeded even if dispatch failed.
+          # Refuse conflicting payloads; recover an EXACT matching staging ref.
+          if git ls-remote --exit-code --heads origin "refs/heads/$branch" >/dev/null; then
+            git fetch --no-tags origin "refs/heads/$branch"
+            remote_sha="$(git rev-parse FETCH_HEAD)"
+            remote_paths="$(git diff --name-only origin/main "$remote_sha" | LC_ALL=C sort)"
+            if [ "$remote_paths" != "$expected" ]; then
+              echo "::error::Existing branch contains an unexpected diff"
+              exit 1
+            fi
+            for file in "${paths[@]}"; do
+              local_blob="$(git hash-object "$file")"
+              remote_blob="$(git rev-parse "$remote_sha:$file")"
+              if [ "$local_blob" != "$remote_blob" ]; then
+                echo "::error::Existing branch differs from requested package: $file"
+                exit 1
+              fi
+            done
+            gh workflow run verify-radar-staging.yml --ref "$branch"
+            echo "DAILY EXACT BRANCH RECOVERED: $branch $remote_sha"
+            exit 0
+          else
+            ls_status=$?
+            if [ "$ls_status" != "2" ]; then
+              echo "::error::Unable to inspect remote staging branch"
+              exit 1
+            fi
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "$branch"
+          git add -- "${paths[@]}"
           actual="$(git diff --cached --name-only | LC_ALL=C sort)"
           if [ "$actual" != "$expected" ]; then
             echo "::error::Staging diff is not the exact four Daily artifacts"
