@@ -1,0 +1,187 @@
+name: Poll sealed Radar Weekly queue
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/poll-radar-weekly-handoff.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/poll-radar-weekly-handoff.yml'
+
+permissions:
+  contents: write
+  actions: write
+  id-token: write
+
+concurrency:
+  group: radar-weekly-public-poller
+  cancel-in-progress: false
+
+jobs:
+  syntax:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile sealed-package preflight
+        shell: bash
+        run: |
+          python - <<'PY'
+          import pathlib, re, textwrap
+          source=pathlib.Path('.github/workflows/poll-radar-weekly-handoff.yml').read_text()
+          blocks=re.findall(r"(?ms)^          python - <<'PY'\n(.*?)^          PY$",source)
+          assert len(blocks)==2, f"Expected 2 Python blocks: {len(blocks)}"
+          for i, block in enumerate(blocks,1):
+              compile(textwrap.dedent(block),f"radar-public-poller-{i}","exec")
+          assert 'repository_dispatch' in source
+          assert 'mark_published' in source
+          print('RADAR PUBLIC POLLER PREFLIGHT: PASS')
+          PY
+
+  poll:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Poll signed queue, verify package, dispatch in PUBLIC repo
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RADAR_EDGE_URL: https://qbsovyjwnxmryokekypf.supabase.co/functions/v1/radar-weekly-handoff
+        run: |
+          set -euo pipefail
+          if [ -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ] || [ -z "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ]; then
+            echo "::error::GitHub Actions OIDC credentials absent"
+            exit 1
+          fi
+          jwt="$(curl --fail --silent --show-error --max-time 15 \
+            -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=carni-radar-weekly-poller" | jq -er '.value')"
+          curl --fail --silent --show-error --max-time 20 \
+            -H "Authorization: Bearer $jwt" \
+            -H "Content-Type: application/json" \
+            --data '{"action":"poll"}' "$RADAR_EDGE_URL" > /tmp/radar-weekly-poll.json
+
+          python - <<'PY'
+          import base64, datetime, gzip, hashlib, io, json, pathlib, re
+
+          response=json.loads(pathlib.Path('/tmp/radar-weekly-poll.json').read_text())
+          if response.get('ok') is not True:
+              raise SystemExit('Weekly queue poll unsuccessful: '+str(response.get('error','unknown')))
+          if response.get('status')=='empty':
+              pathlib.Path('/tmp/radar-weekly-action').write_text('empty')
+              print('RADAR WEEKLY QUEUE EMPTY')
+              raise SystemExit(0)
+          if response.get('status')!='package':
+              raise SystemExit('Unexpected Weekly queue status')
+
+          date=response.get('week_id')
+          sha=response.get('sha256')
+          base64_archive=response.get('archive_b64')
+          if not isinstance(date,str) or not re.fullmatch(r'20\d\d-W(?:0[1-9]|[1-4]\d|5[0-3])',date) or (
+              datetime.date.fromisocalendar(int(date[:4]),int(date[-2:]),4).year!=int(date[:4])
+          ):
+              raise SystemExit('Invalid Weekly report date')
+          if not isinstance(sha,str) or not re.fullmatch(r'[a-f0-9]{64}',sha):
+              raise SystemExit('Invalid Weekly checksum')
+          if not isinstance(base64_archive,str) or not 30<len(base64_archive)<=60000:
+              raise SystemExit('Weekly archive size invalid')
+          encoded=base64.b64decode(base64_archive,validate=True)
+          if len(encoded)>45000 or hashlib.sha256(encoded).hexdigest()!=sha:
+              raise SystemExit('Weekly archive digest mismatch')
+          with gzip.GzipFile(fileobj=io.BytesIO(encoded)) as stream:
+              unpacked=stream.read(350001)
+          if len(unpacked)>350000:
+              raise SystemExit('Expanded Weekly archive too large')
+          payload=json.loads(unpacked)
+          if payload.get('schema')!=1 or payload.get('week_id')!=date:
+              raise SystemExit('Weekly package metadata mismatch')
+
+          expected={
+              f'weekly/{date}.md',
+              f'en/weekly/{date}.md',
+              f'_telegram/weekly/{date}.txt',
+              f'_telegram/en/weekly/{date}.txt'
+          }
+          files=payload.get('files')
+          if not isinstance(files,list) or len(files)!=4 or {
+              x.get('path') for x in files if isinstance(x,dict)
+          }!=expected:
+              raise SystemExit('Weekly does not contain exact 4 allowlisted paths')
+          existing=0
+          for entry in files:
+              path=entry['path']
+              data=entry.get('content')
+              if not isinstance(data,str) or not 300<=len(data.encode())<=140000:
+                  raise SystemExit('Invalid Weekly file size '+path)
+              if hashlib.sha256(data.encode()).hexdigest()!=entry.get('content_sha256'):
+                  raise SystemExit('Weekly file digest mismatch '+path)
+              target=pathlib.Path(path)
+              if target.exists():
+                  existing+=1
+                  if target.read_bytes()!=data.encode():
+                      raise SystemExit('Existing public Weekly conflicts with sealed package: '+path)
+
+          if existing not in (0,4):
+              raise SystemExit(f'Partial public Weekly detected: {existing}/4')
+          ack={'action':'mark_published','week_id':date,'sha256':sha}
+          pathlib.Path('/tmp/radar-weekly-ack.json').write_text(json.dumps(ack))
+          dispatch={'event_type':'radar-weekly-handoff',
+              'client_payload':{
+                  'week_id':date,'sha256':sha,'archive_b64':base64_archive
+              }}
+          pathlib.Path('/tmp/radar-weekly-dispatch.json').write_text(json.dumps(dispatch))
+          if existing==4:
+              pathlib.Path('/tmp/radar-weekly-action').write_text('published')
+              print('WEEKLY EXACT 4/4 ALREADY PUBLISHED '+date)
+          else:
+              pathlib.Path('/tmp/radar-weekly-action').write_text('dispatch')
+              print('WEEKLY SEALED 4/4 VERIFIED; DISPATCH '+date)
+          PY
+
+          action="$(cat /tmp/radar-weekly-action)"
+          if [ "$action" = "empty" ]; then
+            exit 0
+          elif [ "$action" = "published" ]; then
+            curl --fail --silent --show-error --max-time 20 \
+              -H "Authorization: Bearer $jwt" \
+              -H "Content-Type: application/json" \
+              --data-binary @/tmp/radar-weekly-ack.json "$RADAR_EDGE_URL" \
+              | jq -e '.ok == true'
+            echo "RADAR WEEKLY PUBLIC 4/4 CONFIRMED AND ACKNOWLEDGED"
+          elif [ "$action" = "dispatch" ]; then
+            week_id="$(jq -er '.week_id' /tmp/radar-weekly-poll.json)"
+            branch="radar/weekly-$week_id"
+            if remote_ref="$(git ls-remote --heads origin "refs/heads/$branch")"; then
+              if [ -n "$remote_ref" ]; then
+                sha="$(printf '%s\n' "$remote_ref" | awk '{print $1}')"
+                [[ "$sha" =~ ^[0-9a-f]{40}$ ]] || exit 1
+                verified="$(gh api "repos/$GITHUB_REPOSITORY/commits/$sha/check-runs" --jq '[.check_runs[] | select(.name == "verify" and .conclusion == "success")] | length')"
+                if [ "$verified" -ge 1 ]; then
+                  gh workflow run publish-radar-staging.yml --ref main \
+                    -f "staging_branch=$branch" -f "verified_sha=$sha"
+                  echo "RADAR WEEKLY EXACT-VERIFIED PUBLISH DISPATCHED: $branch $sha"
+                  exit 0
+                fi
+              fi
+            else
+              echo "::error::Unable to inspect the public staging reference"
+              exit 1
+            fi
+            gh api --method POST "repos/$GITHUB_REPOSITORY/dispatches" \
+              --input /tmp/radar-weekly-dispatch.json
+            echo "RADAR WEEKLY STAGING/VERIFICATION DISPATCHED IN PUBLIC REPOSITORY"
+          else
+            echo "::error::Unknown sealed Weekly action"
+            exit 1
+          fi
