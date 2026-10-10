@@ -1,0 +1,22 @@
+AI daily — October 8, 2026
+
+Google Cloud announced a universal Gemini workplace agent spanning mail, documents, spreadsheets and calendars. Its real test will be safe permissions and measurable work completed, not the number of connected apps.
+
+India plans an AI regulation consultation covering deepfakes and agent safety. No new AI law was enacted by this announcement; companies should prepare process inventories, provenance checks and access controls instead of guessing future restrictions.
+
+Google Cloud and sportswear brand On reported migrating 24 core services using AI agents. They say per-service migration time fell from three months to two weeks; the practical test is downtime, incident rates and full operating cost.
+
+OpenAI added an Ultrafast serving tier for GPT-6.1 Sol in the Responses API, targeting shorter gaps between output tokens. It may improve interactive experiences, but full agent latency and cost still need to be benchmarked.
+
+Arena announced a $200 million Series B at a $3.1 billion valuation and an agent alignment index based on 90,000 sessions. The deal highlights a growing market for measuring whether AI tools respect human intent while performing real actions.
+
+Anthropic introduced Claude Dashboards and Claude Motion in beta. Dashboards connects to data platforms and CRM systems, while Motion creates animated explainers; finance users still need to verify source metrics and permissions.
+
+Key takeaway: AI is moving from answering questions toward business actions. Speed, safety and cost should be tested on specific workflows rather than inferred from demos.
+
+Where product opportunities exist:
+- narrowly permissioned agents for company operations;
+- reversible, measurable cloud migrations;
+- governed finance dashboards with traceable figures.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-10-08/
