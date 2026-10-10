@@ -4,6 +4,10 @@ on:
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/poll-radar-daily-handoff.yml'
   pull_request:
     paths:
       - '.github/workflows/poll-radar-daily-handoff.yml'
