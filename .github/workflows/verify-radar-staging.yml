@@ -88,3 +88,27 @@ jobs:
           subprocess.run(verifier, check=True)
           print("RADAR STAGING TRANSACTION: SUCCESS")
           PY
+
+  dispatch_verified_publish:
+    needs: verify
+    if: ${{ startsWith(github.ref, 'refs/heads/radar/daily-') || startsWith(github.ref, 'refs/heads/radar/weekly-') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Dispatch existing publisher for exact verified staging SHA
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERIFIED_BRANCH: ${{ github.ref_name }}
+          VERIFIED_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          [[ "${VERIFIED_BRANCH}" =~ ^radar/(daily-[0-9]{4}-[0-9]{2}-[0-9]{2}|weekly-[0-9]{4}-W[0-9]{2})$ ]] || exit 1
+          [[ "${VERIFIED_SHA}" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          gh workflow run publish-radar-staging.yml --ref main \
+            -f "staging_branch=${VERIFIED_BRANCH}" \
+            -f "verified_sha=${VERIFIED_SHA}"
+          echo "RADAR EXACT-VERIFIED PUBLISH DISPATCHED: ${VERIFIED_BRANCH} ${VERIFIED_SHA}"
