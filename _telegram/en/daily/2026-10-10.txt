@@ -1,0 +1,22 @@
+AI daily — October 10, 2026
+
+🔬 US awards $159 million for scientific AI. The Department of Energy announced funding for 12 Phase II Genesis Mission projects covering fusion energy, biology, advanced materials and research equipment. AI will support simulations and experimental planning. These are research investments, not confirmed scientific breakthroughs.
+
+🛡️ UK expands scrutiny of AI agents. The ICO reported data protection improvements or commitments from ten leading AI developers and launched a review of autonomous agents. Its focus includes security, transparency and accountability for external tool access. Agent autonomy does not remove an organization's legal responsibilities.
+
+🏢 Oracle turns days of work into minutes. Oracle reports 130,000 active ChatGPT users and more than 95,000 Codex users. Recruitment research that previously required two to four days now takes approximately 15–20 minutes. AI also supports SQL reporting and IT incident investigation. These performance figures are company-reported.
+
+⚙️ NVIDIA demonstrates the value of architecture. Its KGMON team finished second in KDD Cup 2026 Data Agents using a small, fixed model. The team consolidated structured data in SQLite, restricted available tools and analyzed execution errors. The result shows how a well-designed agent environment can improve performance without increasing model size.
+
+💰 Vesta raises $30 million for mortgage AI. The company says automated workflows handle approximately 40% of tasks on its platform, while customer Pennymac reports a 25% back-office efficiency improvement. Agents assist with applications and document reviews. Lenders remain responsible for credit decisions, and performance claims require deployment-specific validation.
+
+🔧 GitHub strengthens Copilot for JetBrains. Organizations can configure a default model, while developers can disable automatic MCP server startup. A new Fix action streamlines AI-assisted diagnostic repairs. These controls help separate integration configuration, tool activation and permission to perform specific operations.
+
+Key takeaway: AI is moving beyond demonstrations toward specialized systems delivering measurable value. Reliable data, controlled permissions, verifiable results and operational savings matter more than model size alone.
+
+Business ideas:
+• A read-only AI analyst for sales, inventory and financial reports.
+• An MCP gateway with permission checks and auditable tool calls.
+• A financial document verification assistant without autonomous credit approvals.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-10-10/
