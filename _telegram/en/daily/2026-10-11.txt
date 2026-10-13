@@ -1,0 +1,22 @@
+AI daily — October 11, 2026
+
+🔬 Tsinghua University has formed an alliance of eight mathematics institutions representing more than a thousand researchers. They plan specialized models, conjecture discovery and formal proof verification. This is the start of a research program, not a finished product launch.
+
+🛡️ The European Commission convened 60 independent experts to examine loss-of-control incidents involving advanced AI. The panel prepared questions for developers and is assessing technical risks. No new penalty was announced at the meeting.
+
+🏥 Nextech announced partnerships with Assort Health and EliseAI for round-the-clock patient access at specialty clinics. The assistants will connect with existing schedules and intake workflows. Independent productivity figures have not yet been published.
+
+⚙️ Cloudflare released Clef-omni, a decision model that evaluates text, images, audio and video in one request. It also lowered Clef-flash pricing while reducing its hosted context window. Customers need to evaluate classification errors as well as speed.
+
+💰 SoftBank is reportedly discussing a fund of up to $100 billion with Gulf investors, according to the Financial Times. The proposed strategy would acquire companies and improve their operations using AI. These are reported talks, not completed fundraising.
+
+🔧 Databricks added request-tag checks and OpenJev-based evaluation to Unity Gateway. Both features are in beta. They can help govern tool requests, but do not replace authenticated access rights or safe failure handling.
+
+Key takeaway: AI is becoming embedded in scientific, healthcare and enterprise workflows. Verifiable outcomes, reliable integration and controlled authority matter more than investment promises.
+
+Business opportunities:
+• A reproducible workspace for mathematical research and proof checking.
+• A patient scheduling assistant with human escalation.
+• An AI-request governance gateway for financial documents.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-10-11/
