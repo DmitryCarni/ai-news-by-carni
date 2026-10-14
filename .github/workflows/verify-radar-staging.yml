@@ -108,7 +108,7 @@ jobs:
           set -euo pipefail
           [[ "${VERIFIED_BRANCH}" =~ ^radar/(daily-[0-9]{4}-[0-9]{2}-[0-9]{2}|weekly-[0-9]{4}-W[0-9]{2})$ ]] || exit 1
           [[ "${VERIFIED_SHA}" =~ ^[0-9a-f]{40}$ ]] || exit 1
-          gh workflow run publish-radar-staging.yml --ref main \
+          gh workflow run publish-radar-staging.yml --repo "$GITHUB_REPOSITORY" --ref main \
             -f "staging_branch=${VERIFIED_BRANCH}" \
             -f "verified_sha=${VERIFIED_SHA}"
           echo "RADAR EXACT-VERIFIED PUBLISH DISPATCHED: ${VERIFIED_BRANCH} ${VERIFIED_SHA}"
