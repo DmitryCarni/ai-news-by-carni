@@ -1,0 +1,22 @@
+AI daily — October 13, 2026
+
+🧠 Google expanded global access to Gemini 4 Argon. The model targets complex professional tasks, software development and multistep workflows. Google describes native multimodal capabilities and a context window of up to one million tokens. Strong benchmark results are company-reported and require evaluation on real workloads.
+
+🛡️ The UK and Canada renewed their AI security partnership. National institutes will exchange frontier model evaluation methods and findings, coordinate work on compatible standards and share information about emerging threats. The agreement does not introduce universal mandatory international requirements.
+
+🎬 Higgsfield reported creating instructional videos longer than ten minutes using GPT-6 Astra. The company previously focused on clips of around one minute. AI supports connected scenes and technical production tasks, but this is not a claim that a finished long film can be generated from one prompt. The results are company-reported.
+
+⚙️ NVIDIA open-sourced its Run:ai platform. The software coordinates GPU allocation among teams and workloads, supports Kubernetes scheduling and enables compatible jobs to share accelerator capacity. Open-source availability does not eliminate hardware, deployment or operational costs.
+
+💰 Runpod announced annual recurring revenue above $325 million, compared with $120 million in January. The company reports more than 1.2 million developers using its platform. Growth highlights demand for specialized AI computing, but ARR must not be confused with annual profit or revenue recognized over the preceding twelve months.
+
+🔧 GitHub strengthened enterprise Copilot governance. A new setting enables mandatory verification of current managed policies when supported clients start. If the required configuration cannot be confirmed, the client must not proceed under unverified settings. Certain security capabilities also require updated client versions.
+
+Key takeaway: the AI industry is advancing model capabilities, digital content production and computing infrastructure simultaneously. Sustainable expansion also requires enforceable security policies, efficient resource allocation and sound business economics.
+
+Business opportunities:
+• Producing and updating longer instructional videos with AI assistance.
+• Optimizing GPU infrastructure utilization with open-source Run:ai.
+• Auditing and implementing enterprise AI-agent governance settings.
+
+Full analysis: [https://news.carni.ltd/en/daily/2026-10-13/](https://news.carni.ltd/en/daily/2026-10-13/)
