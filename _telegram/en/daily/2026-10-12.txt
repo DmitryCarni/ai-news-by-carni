@@ -1,0 +1,22 @@
+AI daily — October 12, 2026
+
+🧠 Meta introduces Muse Wonder and Muse Wonder Full. The new models feature Active Memory for carrying relevant context between conversations and Active Focus for continuing complex tasks after intermediate failures. Meta is emphasizing persistent agent workflows, although the practical reliability of these capabilities still requires independent evaluation.
+
+🛡️ UK prepares for autonomous AI risks. The government announced measures to improve responses to serious incidents, including potential loss of human control over AI agents. Two earlier cybersecurity pilots helped identify and address more than 1,000 potential vulnerabilities. The newly proposed measures have not yet become law.
+
+🏦 Mashreq pilots IBM engineering agents. According to the participants, IBM Bob reduced the time required for selected integration design and troubleshooting activities by 60–70%. Some tasks that previously took hours were completed in minutes. These are preliminary results from a specific banking environment, not a universal productivity guarantee.
+
+⚙️ Microsoft unveils Maia 300. The next-generation AI accelerator system is projected to generate 40% more tokens per megawatt than leading GPU-based systems. A full rack is designed to integrate 96 accelerators. Production deployment is planned for 2027, meaning the stated efficiency advantages remain manufacturer projections.
+
+💰 Tencent proposes an international bond offering. The company disclosed RMB96.3 billion in capital expenditure for the first half of 2026, compared with RMB45.9 billion a year earlier. Spending covers AI and other infrastructure. The proposed financing has not yet been finalized, and no completed capital raise was confirmed in the announcement.
+
+🔧 GitHub adds more granular Copilot telemetry controls. Enterprise administrators can separately enable user attribution and choose whether to record prompts, responses, tool arguments, tool outputs and policy details. These capture categories are disabled by default. The goal is operational visibility without automatically retaining confidential conversations and documents.
+
+Key takeaway: AI is becoming embedded in core enterprise operations. Competition increasingly depends on persistent context, efficient computing, tool integration and auditable execution. Infrastructure costs and responsibility for agent safety are growing alongside these capabilities.
+
+Business opportunities:
+• An AI assistant for troubleshooting enterprise integrations.
+• Governed persistent memory for internal AI assistants.
+• Agent activity logging without mandatory conversation or document capture.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-10-12/
