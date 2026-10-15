@@ -1,5 +1,11 @@
 name: Poll sealed Radar Daily queue
 
+# 2026-10-15 recovery: a sealed 14.10 package entered the queue two minutes
+# after the previous poll; a subsequent scheduled poll had not executed.
+# Merging this comment-only change wakes the EXISTING main-branch push trigger.
+# This is a one-time assisted recovery, not evidence of autonomous scheduling.
+# No queue payload, editorial turn, package SHA or publication gate is changed.
+
 on:
   schedule:
     - cron: '2-59/5 * * * *'
