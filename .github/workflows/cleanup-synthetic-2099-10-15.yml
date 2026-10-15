@@ -1,0 +1,117 @@
+name: Cleanup synthetic 2099-10-15 Telegram posts
+
+# One owner-authorized cleanup. Exact commit marker prevents future re-execution.
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/cleanup-synthetic-2099-10-15.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  delete-exact-messages:
+    if: contains(github.event.head_commit.message, '[cleanup-2099-10-15]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: telegram-publish-state
+      cancel-in-progress: false
+    env:
+      BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      RU_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      EN_CHAT_ID: '-1004292228334'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Verify four exact synthetic source files are absent
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in \
+            daily/2099-10-15.md \
+            en/daily/2099-10-15.md \
+            _telegram/daily/2099-10-15.txt \
+            _telegram/en/daily/2099-10-15.txt; do
+            if [[ -e "$f" ]]; then
+              echo "::error::Cleanup refused: synthetic source remains: $f"
+              exit 1
+            fi
+          done
+          for f in daily/2026-10-14.md en/daily/2026-10-14.md; do
+            if [[ ! -f "$f" ]]; then
+              echo "::error::Cleanup refused: original archive missing: $f"
+              exit 1
+            fi
+          done
+          echo 'Verified: four synthetic sources absent, archival Daily preserved.'
+      - name: Delete only two exact Telegram messages, clean their state records
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ -n "${BOT_TOKEN}" && -n "${RU_CHAT_ID}" ]] || {
+            echo "::error::Telegram credentials absent; no messages deleted."
+            exit 1
+          }
+          git fetch --quiet origin 'refs/heads/telegram-state:refs/remotes/origin/telegram-state'
+          STATE_DIR="${RUNNER_TEMP}/synthetic-2099-telegram-state"
+          git worktree add --detach "$STATE_DIR" 'origin/telegram-state'
+          git -C "$STATE_DIR" config user.name 'github-actions[bot]'
+          git -C "$STATE_DIR" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          delete_one() {
+            local edition="$1" state="$2" source="$3" id="$4" expected_sha="$5" chat="$6"
+            if [[ ! -f "$STATE_DIR/$state" ]]; then
+              echo "Already cleared state for ${edition} synthetic test."
+              return 0
+            fi
+            local actual
+            actual="$(jq -er --arg source "$source" --arg edition "$edition" \
+              --argjson id "$id" --arg sha "$expected_sha" \
+              'if .source_file==$source and .edition==$edition and .message_id==$id and .content_sha256==$sha then "exact" else empty end' \
+              "$STATE_DIR/$state")" || {
+                 echo "::error::Telegram state identity mismatch: $edition; STOP"
+                 exit 1
+              }
+            [[ "$actual" == exact ]]
+            local response ok reason
+            response="$(curl --silent --show-error --max-time 15 \
+              -X POST "https://api.telegram.org/bot${BOT_TOKEN}/deleteMessage" \
+              --data-urlencode "chat_id=${chat}" --data-urlencode "message_id=${id}")" || {
+                echo "::error::Telegram transport uncertain for $edition; no blind new message"
+                exit 1
+              }
+            ok="$(jq -r '.ok // false' <<<"$response")"
+            if [[ "$ok" != true ]]; then
+              reason="$(jq -r '.description // ""' <<<"$response")"
+              if [[ "$reason" == *"message to delete not found"* ]]; then
+                echo "Telegram $edition synthetic message already absent; reconciling state."
+              else
+                echo "::error::Telegram deletion refused for $edition: ${reason}"
+                exit 1
+              fi
+            else
+              [[ "$(jq -r '.result // false' <<<"$response")" == true ]] || {
+                echo "::error::Telegram deleteMessage had no confirmed result for $edition"
+                exit 1
+              }
+              echo "Telegram $edition synthetic message #$id deleted."
+            fi
+            git -C "$STATE_DIR" rm -- "$state"
+            git -C "$STATE_DIR" commit -m "Remove synthetic 2099-10-15 Telegram $edition state"
+            git -C "$STATE_DIR" push origin HEAD:refs/heads/telegram-state
+            echo "Telegram $edition state removed from telegram-state branch."
+          }
+
+          delete_one RU '_telegram/.state/daily/2099-10-15.json' \
+            '_telegram/daily/2099-10-15.txt' 82 \
+            '643fb3df0b57f77e3cfd86b0e54cdb2f8f3d32e42bc1c45ddab4789fe6046712' \
+            "$RU_CHAT_ID"
+          delete_one EN '_telegram/.state/en/daily/2099-10-15.json' \
+            '_telegram/en/daily/2099-10-15.txt' 60 \
+            '1418042a333298e333d5904c269fc52be111646a9f3750da0e0c18117a669b54' \
+            "$EN_CHAT_ID"
+          echo 'Both synthetic Telegram message IDs and their state entries reconciled.'
