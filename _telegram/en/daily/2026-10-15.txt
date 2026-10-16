@@ -1,0 +1,22 @@
+AI daily — October 15, 2026
+
+📈 Mistral introduced Timestral, a family of four AI models for forecasting demand, electricity consumption, operational workloads and other time series. The largest model has 209 million parameters, and all four can run inference on CPUs. They produce probabilistic predictions rather than only a single expected value, enabling better assessment of uncertainty.
+
+🛡️ Anthropic gave six researchers from independent nonprofit METR expanded access to internal AI safety evaluation systems. The reviewers may publish their own findings, subject to defined confidentiality restrictions. This represents a new experiment in deeper external scrutiny rather than a government-mandated inspection or proof that all risks have been eliminated.
+
+🏢 Workday is turning its HR and finance platform into an AI-driven task interface. The new Workday Home is available, while Sana Concierge remains in early access. The company also announced agents for HR, finance and IT processes. Consequential operations must remain subject to corporate policies, permissions and approval procedures.
+
+🚀 NVIDIA introduced Nemotron 3.5 Super VL, a multimodal model with 120 billion total parameters and approximately 12 billion activated per token. The company reports up to five times higher throughput in selected agentic benchmarks. The model targets workflows involving documents, images, code and external tools, with deployment benefits requiring validation.
+
+💰 Investors GTCR and Elliott agreed to acquire CCC Intelligent Solutions in a transaction valuing the business at approximately $6.1 billion. CCC operates AI-enabled software for automotive insurance and repairs. The agreement is signed but has not closed. Required approvals are still pending, and the company is expected to become privately held if the acquisition completes.
+
+🔧 GitHub launched Agentic Autofix for supported enterprise customers. The AI agent investigates security alerts, prepares code changes, reruns CodeQL and opens draft pull requests. Up to 25 alerts can be included in one assignment. Execution consumes AI Credits and GitHub Actions minutes, while developers remain responsible for reviewing changes.
+
+Key takeaway: AI is moving from generating answers toward completing practical work. Forecasting, enterprise operations, software security and industry-specific platforms are developing into distinct markets. As automation expands, independent oversight, permission controls and measurable economic outcomes become increasingly important.
+
+Business opportunities:
+• Local demand and inventory forecasting using compact pretrained models.
+• Enterprise AI agent integration with permission enforcement and outcome measurement.
+• Managed review and remediation of software security vulnerabilities.
+
+Full analysis: [https://news.carni.ltd/en/daily/2026-10-15/](https://news.carni.ltd/en/daily/2026-10-15/)
