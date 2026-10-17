@@ -1,4 +1,6 @@
 name: Poll sealed Radar Weekly queue
+# 2026-10-17 owner-approved W42 backfill: this file push wakes the existing
+# signed Weekly queue poller; production checks and normal schedule unchanged.
 
 on:
   schedule:
