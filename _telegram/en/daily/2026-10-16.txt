@@ -1,0 +1,22 @@
+AI daily — October 16, 2026
+
+Meta released Muse Spark Open weights: 816 billion parameters, a one-million-token context window and local execution on two Mac Studios. Developers gain flexibility, although hardware requirements and licensing still matter.
+
+China proposed export controls for 23 AI technologies and immediately introduced temporary registration for cross-border transfers. This is not a blanket ban on Chinese models, but international licensing and technology deals now require closer review.
+
+Amazon introduced Bee Frontier and Bee Eclipse, devices that turn conversations into tasks, reminders and plans. Frontier is on sale now and Eclipse is coming later; accuracy and privacy will decide whether users adopt them.
+
+NVIDIA expanded RTX Spark for local AI development with CUDA support on Windows on Arm, additional libraries and agent-focused models. Its performance claims come from specific vendor tests, so real-world results will vary.
+
+Ramp raised $1.85 billion at a $60 billion valuation. Its financial platform is expanding into AI model usage accounting, making token spending a normal corporate budgeting concern.
+
+Intuit agreed to acquire Sequence to automate calculations from contract terms through invoicing and revenue recognition. The deal has not closed, so the planned QuickBooks integration is not available yet.
+
+Key takeaway: AI is moving closer to users while becoming more deeply embedded in finance and cross-border technology operations. Verifiable costs, authority and outcomes will matter most.
+
+Where products could emerge:
+• A registry of model licenses and cross-border usage restrictions.
+• Reconciliation of AI costs with customer pricing, invoices and accounting.
+
+Full analysis:
+https://news.carni.ltd/en/daily/2026-10-16/
