@@ -1,0 +1,20 @@
+AI Week in Review
+October 9–15, 2026
+
+Comparing models on a single benchmark is no longer enough. Google released Gemini 4 Argon, Meta introduced Muse Wonder with persistent context and longer-running tasks, and Mistral launched Timestral for forecasting business and equipment data with compact CPU-friendly models.
+
+The more important shift is toward actions in systems of record. Workday is building agentic workflows into HR, finance and IT. GitHub's Copilot can move from a code-scanning alert to a proposed fix, a fresh CodeQL check and a draft pull request. Permission boundaries and human review are becoming essential parts of the product itself.
+
+On security, Anthropic gave independent METR evaluators internal access to assess AI risks, while the UK and Canada renewed cooperation on frontier AI evaluations. Neither announcement removes risk, but both make the case for more verifiable oversight.
+
+Infrastructure economics are changing too. Microsoft outlined Maia 300 for production deployment starting in 2027, distinct from Maia 200 workloads running today. NVIDIA open-sourced Run:ai to improve GPU allocation. Meanwhile, CCC Intelligent Solutions agreed to a roughly $6.1 billion acquisition, underlining the value of specialized AI workflows and distribution.
+
+Three product opportunities:
+• Inventory and equipment forecasts tested against customers' historical data.
+• Independent audits of agent permissions, actions and incident logs.
+• GPU utilization audits that improve an existing fleet before new purchases.
+
+Bottom line: AI adoption should be judged by completed work, governable risk and measured savings, not the number of agents on a slide.
+
+Full edition:
+https://news.carni.ltd/en/weekly/2026-W42/
