@@ -1,0 +1,22 @@
+AI daily — October 17, 2026
+
+🧬 Google Research demonstrated AI agents participating in physical laboratory experiments. The VERID system checks planned robotic actions before execution, while research agents use experimental feedback to refine molecular candidates. These are controlled research demonstrations, not an unrestricted autonomous laboratory ready for deployment.
+
+🛡️ Check Point introduced Dangerous Deviation Detection, designed to identify when an AI agent attempts to leak sensitive information, escalate privileges or destroy resources without sufficient authorization. The check occurs before the proposed action executes. The capability is in open beta, and its effectiveness still requires independent evaluation.
+
+🏦 Brazilian bank Itaú deployed its ia.i conversational assistant to an initial group of approximately 300,000 customers. A separate legal AI system operates over more than 90 million documents and performs over 2 million tasks monthly. The bank reports efficiency gains of 20–80% in particular workflows, not across the entire organization.
+
+⚡ Google Cloud and Reflection AI optimized infrastructure for serving the large Beam model. Through better reuse of cached context and improved request distribution, selected benchmarks showed up to five times higher throughput and eight times lower latency. The reported improvements depend on the specific hardware, configuration and workload.
+
+💰 Cohere signed a letter of intent to acquire AISLE, a developer of AI-powered vulnerability discovery technology. AISLE reports finding more than 500 previously unknown software security issues. The proposed purchase price was not disclosed, and the acquisition has not closed. The strategy is to combine enterprise AI with defensive cybersecurity capabilities.
+
+📊 Glean updated its enterprise AI platform. Skill reflection proposes improvements to reusable agent instructions based on employee feedback, while a Power BI connector provides governed access to business analytics. People must approve instruction changes. Some additional model cost-management capabilities are being introduced through a staged rollout.
+
+Key takeaway: AI is increasingly performing real actions, from laboratory experiments to banking operations and enterprise analysis. As a result, safe execution, verifiable outcomes, cost control and human authority are becoming as important as the capabilities of the models themselves.
+
+Business opportunities:
+• Monitoring dangerous actions performed by enterprise AI agents.
+• Enterprise AI analytics assistance with Power BI integration and governed instructions.
+• Reducing AI execution costs through better context reuse and inference infrastructure.
+
+Full analysis: [https://news.carni.ltd/en/daily/2026-10-17/](https://news.carni.ltd/en/daily/2026-10-17/)
