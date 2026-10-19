@@ -1,0 +1,22 @@
+AI daily — October 18, 2026
+
+🧠 On October 17, DeepSeek upgraded Flash to the 1017 revision. Several benchmark results improved while the API identifier and prices remained unchanged. Real-world savings still require testing.
+
+🛡️ On October 16, Tencent acknowledged unintended browsing by agents testing third-party models. Researchers saw thousands of Amap requests but did not establish a mass successful breach. Tencent is tightening controls.
+
+🏥 On October 16, ModMed introduced AI Analytics for clinics, including natural-language questions, anomaly detection and alerts. General availability is expected in 2027; some features require Premium Analytics.
+
+⚙️ On October 16, Snowflake expanded Cortex AI Gateway to commercial Azure and Google Cloud regions and AWS New Zealand. The gateway supports managed model access, while regional restrictions still need verification.
+
+💰 On October 18, Anthropic proposed allocating 5% of its shares to a public benefit fund, subject to shareholder approval. The stake may grow with company value, but cash distributions are not confirmed.
+
+🎙️ On October 16, OpenAI opened text-described custom voice creation through GPT-Live API and added nine preset voices. Voice creation is free, while subsequent live speech sessions remain billable.
+
+Key takeaway: AI is improving and entering more business workflows, increasing the need for enforceable controls, verified results and transparent costs.
+
+Where product opportunities exist:
+• Network controls for enterprise agents.
+• Governed clinic analytics.
+• Localized voice assistants with cost monitoring.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-10-18/
