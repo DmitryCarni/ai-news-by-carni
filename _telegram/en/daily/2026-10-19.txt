@@ -1,0 +1,22 @@
+AI daily — October 19, 2026
+
+💻 OpenAI published research on AI programming capabilities in legacy languages. In a COBOL migration benchmark, GPT-6.1 Sol reached 86.6% accuracy compared with 5.4% for GPT-5.6 Sol under the reported conditions. This suggests progress for enterprise modernization, but production systems still require extensive testing and expert validation.
+
+🚨 NorForge researchers exposed a large cyberattack campaign involving autonomous AI agents. According to the investigation, one operator targeted more than 1,200 websites, with over 100 sites compromised. These findings do not establish that sensitive data was stolen from every target, but they illustrate how AI can increase the scale of malicious operations.
+
+🏢 IBM reported deploying approximately 6,000 AI agents across more than 150 workflows. In one cybersecurity example, initial threat analysis fell from 45 minutes to two minutes, followed by roughly ten minutes of human review. The company emphasizes measuring the performance of complete workflows rather than individual AI responses.
+
+⚙️ Amazon introduced TorchNeuron, designed to make it easier to run existing PyTorch programs on specialized Trainium accelerators. It supports Trainium2 and Trainium3, with an open beta scheduled for October 20. The technology could broaden infrastructure choices, although compatibility and cost advantages remain workload-dependent.
+
+💰 AI hardware developer Tenstorrent raised $1.5 billion at a $6.2 billion post-money valuation. The company plans to expand Galaxy server deployments and develop its processor technologies. The financing strengthens investment in alternative AI computing platforms, but does not itself demonstrate superiority over NVIDIA.
+
+🧾 Financial software company BILL announced additional AI capabilities for supplier invoice checks, document processing and oversight of automated financial operations. New MCP integrations will support connections with external AI assistants. Availability varies by feature, and the expanded Chat with BILL interface remains in beta.
+
+Key takeaway: artificial intelligence is increasingly changing established business operations rather than merely creating new applications. Legacy software modernization, financial automation, autonomous agents and alternative computing hardware offer important opportunities. At the same time, organizations must validate results, restrict consequential actions and measure the real economic impact of automation.
+
+Business opportunities:
+• Verified modernization of legacy COBOL and other enterprise software.
+• AI-assisted supplier invoice verification before payment.
+• Independent evaluation of moving AI workloads to alternative accelerators.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-10-19/
