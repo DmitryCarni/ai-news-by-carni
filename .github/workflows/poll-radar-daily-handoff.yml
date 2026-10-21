@@ -44,6 +44,8 @@ jobs:
           for i, block in enumerate(blocks,1):
               compile(textwrap.dedent(block),f"radar-public-poller-{i}","exec")
           assert 'repository_dispatch' in source
+          assert "'handoff_mode':'oidc-fetch'" in source
+          assert "'archive_b64':base64_archive" not in source
           assert 'mark_published' in source
           print('RADAR PUBLIC POLLER PREFLIGHT: PASS')
           PY
@@ -100,10 +102,10 @@ jobs:
               raise SystemExit('Invalid Daily report date')
           if not isinstance(sha,str) or not re.fullmatch(r'[a-f0-9]{64}',sha):
               raise SystemExit('Invalid Daily checksum')
-          if not isinstance(base64_archive,str) or not 30<len(base64_archive)<=60000:
+          if not isinstance(base64_archive,str) or not 30<len(base64_archive)<=160000:
               raise SystemExit('Daily archive size invalid')
           encoded=base64.b64decode(base64_archive,validate=True)
-          if len(encoded)>45000 or hashlib.sha256(encoded).hexdigest()!=sha:
+          if len(encoded)>120000 or hashlib.sha256(encoded).hexdigest()!=sha:
               raise SystemExit('Daily archive digest mismatch')
           with gzip.GzipFile(fileobj=io.BytesIO(encoded)) as stream:
               unpacked=stream.read(350001)
@@ -144,7 +146,7 @@ jobs:
           pathlib.Path('/tmp/radar-daily-ack.json').write_text(json.dumps(ack))
           dispatch={'event_type':'radar-daily-handoff',
               'client_payload':{
-                  'report_date':date,'sha256':sha,'archive_b64':base64_archive
+                  'report_date':date,'sha256':sha,'handoff_mode':'oidc-fetch'
               }}
           pathlib.Path('/tmp/radar-daily-dispatch.json').write_text(json.dumps(dispatch))
           if existing==4:
