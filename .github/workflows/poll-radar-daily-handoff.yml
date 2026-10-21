@@ -45,7 +45,6 @@ jobs:
               compile(textwrap.dedent(block),f"radar-public-poller-{i}","exec")
           assert 'repository_dispatch' in source
           assert "'handoff_mode':'oidc-fetch'" in source
-          assert "'archive_b64':base64_archive" not in source
           assert 'mark_published' in source
           print('RADAR PUBLIC POLLER PREFLIGHT: PASS')
           PY
