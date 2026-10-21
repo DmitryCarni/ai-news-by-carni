@@ -1,0 +1,22 @@
+AI daily — October 20, 2026
+
+🧬 Anthropic used Claude to design proteins targeting scorpion neurotoxins. Seventeen of 211 laboratory-tested candidates met the study's binding criteria. This is a meaningful result for AI-assisted molecular research, but not a working antivenom: toxin neutralization and clinical effectiveness have not been demonstrated.
+
+🔒 The US disclosed an order excluding DeepSeek-related technology from federal civilian information systems, including certain third-party implementations. The original order dates to July 24, with public disclosure taking place in October. It does not impose a universal prohibition on DeepSeek for private businesses or individual users.
+
+🏥 Avenda Health introduced Surgery Mode for Unfold AI. Surgeons can now consult patient-specific three-dimensional maps of estimated prostate cancer extent during procedures. The system helps clinicians evaluate tumor boundaries and surrounding anatomical risks, but it does not autonomously perform surgery or replace medical judgment.
+
+⚙️ IBM and Red Hat introduced llm-d 1.0, an open infrastructure platform for distributed AI inference. In one benchmark, the system served up to 3,000 concurrent coding agents. The release strengthens request prioritization, context reuse and operational resilience. Benchmark results do not guarantee identical savings for every organization.
+
+💰 Otter.ai secured $320 million in financing from General Catalyst without issuing new equity. The company intends to expand enterprise sales of its AI meeting and knowledge management tools. Importantly, the funding must be repaid with interest. It is neither a nonrepayable grant nor the company's valuation.
+
+💳 Visa, BILL and Billtrust launched a live pilot allowing trusted AI agents to complete real business payments. Agents execute previously approved invoice payments rather than independently deciding which transactions to authorize. The deployment is currently a limited pilot, not a universally available autonomous payment service.
+
+Key takeaway: AI is moving beyond text generation into molecular design, surgical decision support, large-scale agent infrastructure and actual financial transactions. As software gains the ability to influence consequential activities, independently verified outcomes, transparent technology supply chains and strict authorization boundaries become increasingly important.
+
+Business opportunities:
+• Auditing enterprise AI model provenance and technology dependencies.
+• Optimizing inference costs and infrastructure for autonomous agents.
+• Automating previously approved supplier payments under controlled permissions.
+
+Full analysis: [https://news.carni.ltd/en/daily/2026-10-20/](https://news.carni.ltd/en/daily/2026-10-20/)
