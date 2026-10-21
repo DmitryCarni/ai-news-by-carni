@@ -10,6 +10,7 @@ on:
 permissions:
   contents: write
   actions: write
+  id-token: write
 
 concurrency:
   group: radar-daily-handoff
@@ -32,6 +33,7 @@ jobs:
           for index,block in enumerate(blocks,1):
               compile(textwrap.dedent(block),f"handoff-script-{index}","exec")
           assert 'repository_dispatch:' in source
+          assert 'carni-radar-daily-ingest' in source
           assert 'verify_daily_completeness.py' in source
           assert 'workflow run verify-radar-staging.yml' in source
           print('RADAR DAILY HANDOFF SCRIPT COMPILE: PASS')
@@ -51,10 +53,46 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Fetch sealed archive using public ingest OIDC
+        env:
+          RADAR_DATE: ${{ github.event.client_payload.report_date }}
+          RADAR_SHA256: ${{ github.event.client_payload.sha256 }}
+          RADAR_HANDOFF_MODE: ${{ github.event.client_payload.handoff_mode }}
+          RADAR_ARCHIVE_B64: ${{ github.event.client_payload.archive_b64 }}
+          RADAR_EDGE_URL: https://qbsovyjwnxmryokekypf.supabase.co/functions/v1/radar-daily-handoff
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$RADAR_HANDOFF_MODE" = "oidc-fetch" ]; then
+            if [ -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ] || [ -z "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ]; then
+              echo "::error::Public ingest OIDC credentials absent"
+              exit 1
+            fi
+            jwt="$(curl --fail --silent --show-error --max-time 15 \
+              -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+              "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=carni-radar-daily-ingest" | jq -er '.value')"
+            jq -n --arg date "$RADAR_DATE" --arg sha "$RADAR_SHA256" \
+              '{action:"fetch",report_date:$date,sha256:$sha}' \
+              > /tmp/radar-daily-fetch-request.json
+            curl --fail --silent --show-error --max-time 25 \
+              -H "Authorization: Bearer $jwt" \
+              -H "Content-Type: application/json" \
+              --data-binary @/tmp/radar-daily-fetch-request.json "$RADAR_EDGE_URL" \
+              > /tmp/radar-daily-fetched.json
+            jq -e --arg date "$RADAR_DATE" --arg sha "$RADAR_SHA256" \
+              '.ok == true and .status == "package" and .report_date == $date and .sha256 == $sha' \
+              /tmp/radar-daily-fetched.json >/dev/null
+            jq -er '.archive_b64' /tmp/radar-daily-fetched.json > /tmp/radar-daily-sealed-archive-b64
+          elif [ -n "$RADAR_ARCHIVE_B64" ]; then
+            printf '%s' "$RADAR_ARCHIVE_B64" > /tmp/radar-daily-sealed-archive-b64
+          else
+            echo "::error::Missing sealed Daily archive identity"
+            exit 1
+          fi
+
       - name: Validate exact sealed 4-file package
         env:
           RADAR_DATE: ${{ github.event.client_payload.report_date }}
-          RADAR_ARCHIVE_B64: ${{ github.event.client_payload.archive_b64 }}
           RADAR_SHA256: ${{ github.event.client_payload.sha256 }}
         shell: bash
         run: |
@@ -68,16 +106,16 @@ jobs:
           from datetime import date as date_type
           if date_type.fromisoformat(date).isoformat()!=date:
               raise SystemExit('invalid calendar date')
-          archive_b64=os.environ['RADAR_ARCHIVE_B64']
+          archive_b64=pathlib.Path('/tmp/radar-daily-sealed-archive-b64').read_text().strip()
           checksum=os.environ['RADAR_SHA256']
           if not re.fullmatch(r'[0-9a-f]{64}', checksum):
               raise SystemExit('invalid archive checksum')
-          if not archive_b64 or len(archive_b64)>60000:
+          if not archive_b64 or len(archive_b64)>160000:
               raise SystemExit('oversized/empty archive')
           compressed=base64.b64decode(archive_b64,validate=True)
           if hashlib.sha256(compressed).hexdigest()!=checksum:
               raise SystemExit('archive checksum mismatch')
-          if len(compressed)>45000:
+          if len(compressed)>120000:
               raise SystemExit('archive size limit')
           with gzip.GzipFile(fileobj=io.BytesIO(compressed)) as stream:
               raw=stream.read(350001)
