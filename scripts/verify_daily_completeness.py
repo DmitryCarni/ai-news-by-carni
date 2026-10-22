@@ -202,6 +202,21 @@ RU_AVOIDABLE_ENGLISH_PATTERNS = (
 )
 
 
+def is_official_ossi_coding_agent(prose: str, match: re.Match[str]) -> bool:
+    """Allow the M42 Ossi agent's official name, not generic English."""
+    if match.group(0) != "Coding Agent":
+        return False
+    # M42's 21 Oct 2026 announcement names its component Coding Agent
+    # alongside Clinical Q&A Agent. Generic English still fails validation.
+    # Source: mediaoffice.abudhabi/en/health/m42-launches-ossi-an-ai-platform-transforming-clinician-patient-connections/
+    nearby = prose[max(0, match.start() - 1800):match.end() + 1000]
+    return all(re.search(pattern, nearby, flags=re.I) for pattern in (
+        r"\bM42\b",
+        r"\bOssi\b",
+        r"\bClinical Q&A Agent\b",
+    ))
+
+
 def verify_ru_readability(date: str, text: str, errors: list[str]) -> None:
     if date < RU_LANGUAGE_GUARD_START_DATE:
         return
@@ -211,13 +226,15 @@ def verify_ru_readability(date: str, text: str, errors: list[str]) -> None:
     prose = re.sub(r"`[^`]+`", " ", prose)
 
     for pattern, russian_hint in RU_AVOIDABLE_ENGLISH_PATTERNS:
-        match = re.search(pattern, prose, flags=re.I)
-        if match:
+        for match in re.finditer(pattern, prose, flags=re.I):
+            if pattern == r"\bcoding agents?\b" and is_official_ossi_coding_agent(prose, match):
+                continue
             fail(
                 errors,
                 f"{date}: RU Daily contains avoidable English '{match.group(0)}'; "
                 f"use natural Russian such as '{russian_hint}' unless it is an exact official identifier",
             )
+            break
 
 
 def verify_content_blocks(date: str, label: str, text: str, errors: list[str]) -> None:
