@@ -19,4 +19,4 @@ Business opportunities:
 • Optimizing inference costs and infrastructure for autonomous agents.
 • Automating previously approved supplier payments under controlled permissions.
 
-Full analysis: [https://news.carni.ltd/en/daily/2026-10-20/](https://news.carni.ltd/en/daily/2026-10-20/)
+Full analysis: https://news.carni.ltd/en/daily/2026-10-20/
