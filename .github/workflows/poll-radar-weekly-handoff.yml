@@ -1,6 +1,8 @@
 name: Poll sealed Radar Weekly queue
 # W43 recovery 2026-10-23: a single owner-approved main push wakes this
 # existing signed, idempotent queue consumer; no extra scheduler is created.
+# Post-publication W43 receipt recovery: one main push invokes the exact 4/4
+# already-published check and marks the sealed Supabase queue entry published.
 
 on:
   schedule:
