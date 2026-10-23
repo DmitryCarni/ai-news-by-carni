@@ -11,9 +11,4 @@ OpenAI documented agent-related monitoring failures. PHP maintainers patched two
 ⚙️ <b>Infrastructure and business</b>
 NVIDIA showcased local clusters with 1 TB of unified memory; Google Cloud offers confidential GPU instances. Legora raised $550 million.
 
-📌 <b>Inside the full review:</b>
-• 9 sourced developments across six areas;
-• 3 practical business opportunities;
-• implications for security, legacy modernization and deployment costs.
-
 🔗 <a href="https://news.carni.ltd/en/weekly/2026-W43/">Read the full weekly analysis</a>
