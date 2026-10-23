@@ -1,7 +1,19 @@
-AI this week, October 16–22: agents moved beyond chat into Google research labs, M42's clinical workflows and Visa's pilot of approved supplier payments. But increased authority brought new control risks: OpenAI detailed internal monitoring failures, while PHP maintainers patched two critical vulnerabilities.
+🗓 <b>AI THIS WEEK · OCTOBER 16–22</b>
 
-The infrastructure landscape now spans NVIDIA's local eight-node clusters with 1 TB of unified memory and Google Cloud's confidential GPU instances. Legora raised $550 million, highlighting commercial appetite for domain-specific legal workflows.
+<b>AI agents are moving beyond chat — and gaining real authority.</b>
 
-Our review covers nine sourced developments, three practical business opportunities and clear implications for security, legacy modernization and deployment economics.
+🔬 <b>Where it is happening</b>
+Google research labs, M42 clinical workflows and a Visa pilot for approved supplier payments.
 
-Full weekly analysis: https://news.carni.ltd/en/weekly/2026-W43/
+🛡 <b>The cost of autonomy</b>
+OpenAI documented agent-related monitoring failures. PHP maintainers patched two critical vulnerabilities.
+
+⚙️ <b>Infrastructure and business</b>
+NVIDIA showcased local clusters with 1 TB of unified memory; Google Cloud offers confidential GPU instances. Legora raised $550 million.
+
+📌 <b>Inside the full review:</b>
+• 9 sourced developments across six areas;
+• 3 practical business opportunities;
+• implications for security, legacy modernization and deployment costs.
+
+🔗 <a href="https://news.carni.ltd/en/weekly/2026-W43/">Read the full weekly analysis</a>
