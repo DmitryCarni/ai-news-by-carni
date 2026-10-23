@@ -43,6 +43,50 @@ def visible_text_len(text: str) -> int:
     text = re.sub(r"\s+", " ", text).strip()
     return len(text)
 
+def verify_weekly_teaser(week: str, label: str, text: str, errors: list[str]) -> None:
+    """W44+ public acceptance mirror of private Weekly Telegram contract."""
+    lang = "en" if label == "EN" else "ru"
+    text = text.strip()
+    if len(text) < 1700:
+        fail(errors, f"{week}: {label} teaser too short (<1700 characters)")
+    if len(text) > 3500:
+        fail(errors, f"{week}: {label} teaser too long (>3500 characters)")
+    if re.search(r"В полном обзоре\s*:|In the full (?:report|analysis)\s*:", text, re.I):
+        fail(errors, f"{week}: {label} teaser contains prohibited meta-inventory")
+    if re.search(r"\[[^\]]+\]\(https?://[^)]+\)", text):
+        fail(errors, f"{week}: {label} teaser contains raw Markdown link")
+    url = f"https://news.carni.ltd{'/en' if lang == 'en' else ''}/weekly/{week}/"
+    matches = list(re.finditer(r'<a href="([^"]+)">([^<>]+)</a>', text))
+    label_expected = "Read the full weekly analysis" if lang == "en" else "Читать недельный разбор"
+    if (len(matches) != 1 or matches[0].group(1) != url
+            or matches[0].group(2) != label_expected or text.count(url) != 1):
+        fail(errors, f"{week}: {label} teaser must have exactly one labeled HTML CTA")
+    if not matches or not text.endswith(matches[0].group(0)):
+        fail(errors, f"{week}: {label} teaser CTA must be last")
+    tags = re.findall(r"<[^>]*>", text)
+    expected_anchor = f'<a href="{url}">'
+    depth = 0
+    bold = 0
+    invalid_tag = False
+    for tag in tags:
+        if tag == "<b>":
+            depth += 1
+            bold += 1
+        elif tag == "</b>":
+            depth -= 1
+            if depth < 0:
+                invalid_tag = True
+        elif tag not in (expected_anchor, "</a>"):
+            invalid_tag = True
+    if invalid_tag or depth != 0 or bold < 7:
+        fail(errors, f"{week}: {label} teaser invalid HTML or insufficient sections")
+    plain = re.sub(r"<[^>]*>", "", text)
+    if (re.search(r"[<>]", plain) or re.search(r"https?://\S+", plain, re.I)
+            or re.search(r"&(?!amp;|lt;|gt;|quot;|#\d+;|#x[0-9a-f]+;)", plain, re.I)):
+        fail(errors, f"{week}: {label} teaser contains raw URL or invalid HTML characters")
+    if len(re.findall(r"(?m)^\s*•\s+\S", text)) < 3:
+        fail(errors, f"{week}: {label} teaser missing three concrete business points")
+
 def verify_week(week: str, errors: list[str]) -> None:
     ru_path = ROOT / "weekly" / f"{week}.md"
     en_path = ROOT / "en" / "weekly" / f"{week}.md"
@@ -123,7 +167,10 @@ def verify_week(week: str, errors: list[str]) -> None:
         fail(errors, f"{week}: RU teaser missing exact Weekly URL")
     if en_url not in en_t:
         fail(errors, f"{week}: EN teaser missing exact Weekly URL")
-    if len(ru_t) < 300 or len(en_t) < 300:
+    if week >= "2026-W44":
+        verify_weekly_teaser(week, "RU", ru_t, errors)
+        verify_weekly_teaser(week, "EN", en_t, errors)
+    elif len(ru_t) < 300 or len(en_t) < 300:
         fail(errors, f"{week}: Weekly teaser is suspiciously short")
 
 def main() -> int:
