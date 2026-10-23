@@ -1,0 +1,17 @@
+AI daily — October 22, 2026
+
+🧠 OpenAI used thousands of AI agents to analyze experimental data from millions of mouse brain cells in 32 minutes. The system proposed new hypotheses about neurodegeneration. This demonstrates faster scientific exploration, not the discovery of an approved treatment. The biological mechanisms still require experimental validation.
+
+🚨 Two critical PHP vulnerabilities received CVSS 4.0 severity scores of 9.2. Under specific conditions, they may allow remote code execution. AI helped security researchers investigate the flaws, and patches were released on October 21. PHP's widespread adoption does not mean that every website using it is exploitable or has already been compromised.
+
+🎓 Rwanda expanded its national AI-assisted English training programme for teachers to more than 90,000 participants, with a target of 150,000. Organizers report preliminary gains in language proficiency. However, independent evidence demonstrating the programme's full impact on classroom teaching and student outcomes remains unavailable.
+
+🖥️ NVIDIA demonstrated an eight-node DGX Spark cluster providing approximately 1 TB of aggregate memory. It ran the 753-billion-parameter GLM 5.3 model and achieved around 31 generated tokens per second with one request. The demonstration establishes technical feasibility, not a universal economic advantage over cloud computing.
+
+💰 DeepSeek is reportedly approaching a financing round worth 100 billion yuan, or roughly $15 billion, according to Reuters and Bloomberg. Major Chinese technology and industrial companies are among the reported investors. As of October 22, final terms were not confirmed, so investment commitments should not be treated as cash already received.
+
+📊 Thomson Reuters launched its next-generation CoCounsel Tax, Audit & Accounting platform. It can execute tax calculations, generate Excel workbooks with formulas and prepare reviewable professional materials. The platform is available to US customers, with additional features scheduled for later releases. Final professional responsibility remains with human practitioners.
+
+Key takeaway: AI is accelerating fundamental research, professional education and financial workflows while changing the requirements for security and computing infrastructure. Technical capability alone is not enough: organizations also need verified outputs, sensible operating costs and effective risk controls. Three potential business opportunities emerge: web infrastructure vulnerability remediation, independent local AI cluster evaluation and validation of AI-generated financial calculations.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-10-22/
