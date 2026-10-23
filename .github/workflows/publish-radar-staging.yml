@@ -156,3 +156,17 @@ jobs:
             -f "report_date=${PUBLISHED_TOKEN}" \
             -f "public_commit=${PUBLIC_COMMIT}" \
             -f "mode=enqueue"
+
+      - name: Reconcile Weekly handoff after confirmed public push
+        # One bounded, idempotent poll: all four files must already match
+        # the sealed archive before Supabase marks the business receipt.
+        # No second publisher or recurring dispatch loop is introduced.
+        if: ${{ always() && env.PUBLISHED == 'true' && env.PUBLISHED_KIND == 'Weekly' }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          [[ "${PUBLISHED_TOKEN}" =~ ^[0-9]{4}-W[0-9]{2}$ ]] || exit 2
+          gh workflow run poll-radar-weekly-handoff.yml --ref main
+          echo "RADAR WEEKLY EXACT-PUBLICATION RECEIPT WAKE: ${PUBLISHED_TOKEN}"
