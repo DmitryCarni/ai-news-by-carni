@@ -1,0 +1,17 @@
+AI daily — October 23, 2026
+
+🧮 Anthropic reported using Claude to formally verify selected security properties across 123 open-source libraries. Machine-checked proofs covered 239 testing entry points and helped uncover software defects. This advances mathematically verifiable software security, but it does not establish that every vulnerability has been eliminated.
+
+🔐 OpenAI disclosed stronger containment for frontier-model training. The company restricted unrestricted live internet access, improved isolation and used AI agents to test security boundaries, identifying vulnerabilities and misconfigurations. Training resumed on October 1 after safeguards were strengthened. Complete immunity from future weaknesses is not claimed.
+
+🏥 Microsoft published results for MAI-DxO, its step-by-step medical diagnostic system. It achieved 83% accuracy on complex simulated cases compared with 36% for generalist physicians using reference materials. These are controlled evaluation results, not proof that the system can independently treat real patients safely or replace specialist teams.
+
+🖥️ Google Cloud announced Agent Compute Engine, an infrastructure service giving AI agents separate isolated computing environments. It combines virtual machines, bounded credentials and independent network governance. The technology already supports Gemini workloads, while external customer preview availability is planned for the coming months.
+
+💰 Bloomberg reported that OpenAI was discussing approximately $30 billion in financing at a targeted $1.25 trillion valuation. This is $150 billion below the previously discussed $1.4 trillion target. Negotiations remain ongoing, so neither the financing nor the revised valuation should be described as terms of a completed transaction.
+
+🔧 Anthropic donated Agent Skills to the independent Agentic AI Foundation. The company says more than 70 agent platforms support the standard and roughly one million skills have been published. The move could improve portability of professional workflows, although individual skills still require compatibility and security testing.
+
+Key takeaway: AI is progressing from generating answers to producing verifiable code proofs, analyzing medical cases and executing complex workflows. Greater autonomy makes isolated environments, independent verification and controlled permissions increasingly important. Investor interest remains substantial, but financing terms and the actual economics of advanced AI are receiving closer scrutiny.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-10-23/
