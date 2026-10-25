@@ -1,0 +1,68 @@
+name: Dispatch pending Radar staging
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/radar-staging-dispatcher.yml'
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: radar-staging-dispatcher
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Dispatch exact-head verification for pending Daily/Weekly staging
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          collect_refs() {
+            local prefix="$1"
+            gh api -H 'Accept: application/vnd.github+json'               "repos/${GITHUB_REPOSITORY}/git/matching-refs/heads/${prefix}"               --jq '.[] | [.ref, .object.sha] | @tsv'
+          }
+
+          {
+            collect_refs 'radar/daily-'
+            collect_refs 'radar/weekly-'
+          } | sort -r | head -n 14 > "${RUNNER_TEMP}/radar-refs.tsv"
+
+          while IFS=$'\t' read -r ref sha; do
+            [[ -n "${ref}" && -n "${sha}" ]] || continue
+            branch="${ref#refs/heads/}"
+            echo "Checking ${branch} @ ${sha}"
+
+            encoded_branch="$(B="${branch}" python -c 'import os, urllib.parse; print(urllib.parse.quote(os.environ["B"], safe=""))')"
+            runs="$(gh api -H 'Accept: application/vnd.github+json'               "repos/${GITHUB_REPOSITORY}/actions/workflows/verify-radar-staging.yml/runs?branch=${encoded_branch}&per_page=20")"
+
+            status="$(jq -r --arg sha "${sha}" '[.workflow_runs[] | select(.head_sha == $sha)] | sort_by(.created_at) | reverse | .[0].status // empty' <<<"${runs}")"
+            conclusion="$(jq -r --arg sha "${sha}" '[.workflow_runs[] | select(.head_sha == $sha)] | sort_by(.created_at) | reverse | .[0].conclusion // empty' <<<"${runs}")"
+
+            if [[ "${status}" == "queued" || "${status}" == "in_progress" ]]; then
+              echo "Exact-head verification already ${status}; skip."
+              continue
+            fi
+            if [[ "${status}" == "completed" && "${conclusion}" == "success" ]]; then
+              echo "Exact-head verification already successful; skip."
+              continue
+            fi
+            if [[ "${status}" == "completed" ]]; then
+              echo "Exact-head verification already failed (${conclusion}); wait for a new staging SHA."
+              continue
+            fi
+
+            echo "Dispatching verification for ${branch}."
+            gh workflow run verify-radar-staging.yml --ref "${branch}"
+          done < "${RUNNER_TEMP}/radar-refs.tsv"
