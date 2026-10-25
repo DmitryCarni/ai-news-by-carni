@@ -1,0 +1,73 @@
+name: Promote Telegram teaser fix
+
+on:
+  push:
+    branches:
+      - fix/telegram-teaser-editorial-quality-2026-10-04
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: promote-telegram-teaser-fix
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact fix head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify fix branch
+        run: python scripts/verify_daily_completeness.py
+      - name: Promote only verified fix files to fresh main
+        shell: bash
+        env:
+          FIX_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          FILES=(
+            "scripts/render_telegram_teaser.py"
+            "scripts/verify_daily_completeness.py"
+            "_telegram/daily/2026-10-03.txt"
+            "_telegram/en/daily/2026-10-03.txt"
+          )
+          git fetch --no-tags origin main
+          git checkout -B promote-main origin/main
+          git checkout "${FIX_SHA}" -- "${FILES[@]}"
+          python scripts/verify_daily_completeness.py
+          git add -- "${FILES[@]}"
+          if git diff --cached --quiet; then
+            echo "Fix already present on main."
+            echo "PUBLISHED=false" >> "${GITHUB_ENV}"
+            exit 0
+          fi
+          changed="$(git diff --cached --name-only | sort)"
+          expected="$(printf '%s\n' "${FILES[@]}" | sort)"
+          if [[ "${changed}" != "${expected}" ]]; then
+            echo "Unexpected staged diff." >&2
+            printf 'changed:\n%s\nexpected:\n%s\n' "${changed}" "${expected}" >&2
+            exit 1
+          fi
+          git commit -m "Fix Telegram Daily teaser reader format"
+          git push origin HEAD:main
+          echo "PUBLISHED=true" >> "${GITHUB_ENV}"
+      - name: Edit existing Telegram messages and reverify
+        if: env.PUBLISHED == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run telegram.yml --ref main
+          gh workflow run verify-daily-completeness.yml --ref main
