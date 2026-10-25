@@ -1,0 +1,17 @@
+AI daily — October 24, 2026
+
+🧬 Hugging Face released Carbon-X, an open 14.8-billion-parameter model that can process DNA sequences and answer questions about them. Its developers reported a 66.7% average across five benchmarks, although performance varied significantly by task. It is a research tool, not a clinically validated diagnostic system.
+
+🚨 LiteLLM published details of its software supply-chain compromise. An unrevoked key allowed attackers to obtain additional tokens and distribute a malicious AI gateway release. The payload could steal credentials when Python started. Compromised releases were withdrawn, but affected environments require investigation and rotation of exposed secrets.
+
+🚕 inDrive, Pony.ai and NVIDIA agreed to explore robotaxi services in Kazakhstan, beginning with Astana. Testing is tentatively planned for the first half of 2027. This remains a cooperation agreement rather than an operating service. Regulatory approvals, winter conditions and safe autonomous driving will be critical to any future launch.
+
+⚡ NVIDIA detailed Global Performance Tuner for TensorRT 11.1. Automated build optimization delivered reported speedups of 1.14 to 1.63 times across ten tested workloads. The system checks numerical accuracy before choosing faster configurations. Vendor benchmarks do not guarantee equivalent improvements for every model or deployment.
+
+💰 London Stock Exchange Group agreed to buy financial intelligence provider Octus for $3.535 billion. The acquisition would expand LSEG's access to specialized credit data that can support professional AI workflows. The deal has not closed and remains subject to regulatory approvals, with completion expected in the first half of 2027.
+
+📊 Dext introduced an MCP connector linking bookkeeping data to ChatGPT, Claude and Microsoft Copilot. Professionals can ask about clients, missing documents and workflow progress. The connection is read-only and cannot approve transactions or change accounting records. Information retrieved for an answer is handled by the selected AI provider.
+
+Key takeaway: AI is becoming more specialized and more closely connected to business operations, from DNA research to financial intelligence and future autonomous transport. Yet the LiteLLM incident highlights the importance of credential security and controlled access. Three potential business opportunities are software release security audits, independent inference optimization and secure read-only accounting integrations through MCP.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-10-24/
