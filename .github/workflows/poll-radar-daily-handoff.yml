@@ -7,13 +7,7 @@ name: Poll sealed Radar Daily queue
 # No queue payload, editorial turn, package SHA or publication gate is changed.
 
 on:
-  schedule:
-    - cron: '2-59/5 * * * *'
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/poll-radar-daily-handoff.yml'
   pull_request:
     paths:
       - '.github/workflows/poll-radar-daily-handoff.yml'
