@@ -4,8 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - '_telegram/**/*.txt'
-      - '.github/workflows/telegram.yml'
+      - '_telegram/weekly/**'
+      - '_telegram/en/weekly/**'
   workflow_dispatch:
     inputs:
       source_files:
