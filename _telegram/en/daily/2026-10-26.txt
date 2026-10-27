@@ -1,0 +1,17 @@
+AI daily — October 26, 2026
+
+🧮 OpenAI says its research AI produced a proof disproving the Exponential Time Hypothesis. The company published a Lean-formalized version and materials for scientific review. Independent mathematicians still need to examine the result. The announcement does not resolve P versus NP or establish immediate practical algorithms.
+
+🚨 Sublime Security uncovered fraudulent emails containing invoices for approximately $88,000 and nearly invisible instructions targeting email AI agents. Attackers tried to make automated assistants forward documents. The investigation did not confirm successful payments or execution of the hidden instructions by enterprise agents.
+
+🤖 GXO and Agility Robotics are expanding their Digit humanoid robot partnership to two additional US warehouses. At an existing facility, the robots have reportedly handled more than 100,000 totes. Deployment at the new locations is expected in 2027, so the expansion should not be presented as already completed.
+
+🖥️ NVIDIA launched Mission Control 2.5 for Kubernetes AI clusters. The platform identifies unhealthy resources and helps recover or relocate computing workloads following failures. These capabilities address costly interruptions in AI training. However, universal reductions in downtime have not been independently established.
+
+💰 Meta announced a financing plan totaling up to $95 billion for AI infrastructure. Approximately $35 billion relates to current equity-related offerings, while another $60 billion concerns a possible future share-sale programme. The total is not money already collected, and the ultimate proceeds remain uncertain.
+
+📊 Oracle introduced 25 agentic applications for enterprise software. They support accounting reconciliation, procurement analysis and detection of financial discrepancies. AI is moving from answering questions toward executing connected ERP workflows, but consequential actions still require appropriate permissions and approval controls.
+
+Key takeaway: AI is becoming more capable in scientific research, enterprise finance and physical operations. At the same time, hidden instructions, automation errors and infrastructure costs create new challenges. Sustainable adoption increasingly depends on independently verified outcomes, restricted agent permissions and measurable business value.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-10-26/
