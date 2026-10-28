@@ -1,0 +1,17 @@
+AI daily — October 27, 2026
+
+🌍 Google DeepMind unveiled Genie 4, an AI model that creates interactive worlds with characters, sound and simulated physical interactions. Users can influence events while a scene is running. Access is currently restricted to selected research testers, and the technology should not be treated as a fully accurate physical simulator ready for industrial robotics.
+
+🔐 Cloudflare disclosed a cross-customer data exposure in Workers AI: 155 GLM 5.3 responses contained information from other requests. The cause was a combination of incorrect memory allocation and a cache-handling defect. The problem was fixed on September 9, with the detailed investigation published on October 26. Cloudflare found no evidence of deliberate exploitation.
+
+🏥 Carta Healthcare reported results from AI-assisted surgical registry audits across 11 hospitals. Average accuracy reached 99.36%, compared with 99.32% for manual abstraction. The 0.04-percentage-point difference does not establish superior accuracy. The more significant operational finding is the ability to review all fields while keeping clinical specialists responsible for corrections.
+
+🖥️ Google and Oracle announced plans to bring TPU accelerators to Oracle Cloud Infrastructure beginning in 2027. OCI customers may eventually be able to choose between GPUs and TPUs, but this remains a future deployment. Pricing, initial capacity and measured production performance have not been disclosed.
+
+💰 General Compute raised $100 million to develop an AI cloud using alternative chips from Cerebras, SambaNova and Positron AI. TechCrunch reported an $800 million valuation. A separate credit facility provides access to up to $400 million for hardware. Major new deployments are planned for 2027, and the company has not established the profitability of its proposed infrastructure model.
+
+📊 Intuit introduced Agentic Books Close, an AI capability for month-end accounting workflows governed by approved procedures. The agent is designed to preserve an audit trail and refer exceptions and final approval to accountants. It remains in a limited pilot; broader platform productivity claims should not be treated as independently verified results for this new feature.
+
+Key takeaway: AI systems are becoming more interactive and capable of carrying out substantial business workflows, but reliability remains essential. Three practical opportunities stand out: independent tenant-isolation testing for AI services, supervised quality assurance for medical registries, and procedure-governed month-end accounting automation. Each requires measurable pilots and meaningful human oversight.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-10-27/
