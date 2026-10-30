@@ -1,0 +1,19 @@
+AI daily — October 28, 2026
+
+🧠 Google Research introduced a sleep-inspired approach to continual AI learning. Researchers tested knowledge retention with contexts of up to 10 million tokens. The work addresses catastrophic forgetting, but it does not prove that language models can now learn indefinitely without losing earlier capabilities.
+
+🛡️ Cisco open-sourced Project Quarry to identify dangerous sequences of AI agent actions. Individual tool calls may appear legitimate while their combination creates a risk of sensitive data exposure. The system evaluates action histories, although deployment-specific effectiveness still requires testing.
+
+🚛 Kodiak AI signed an agreement with DTL Transport to equip 75 trucks with its autonomous driving technology. DTL will pay for the service based on autonomous miles driven. The agreement is a commercial commitment, not confirmation that all 75 trucks are already operating without human drivers.
+
+☁️ Akamai introduced Akamai Inference and Agent Sandbox in beta, combining AI model serving with isolated agent execution. The announcement includes 12 models and Blackwell Ultra GPU infrastructure. These are beta offerings, not evidence that every capability is already generally available.
+
+💰 Fragment announced its public launch and $56 million in total funding from seed and Series A rounds. Its technology targets procurement workflows and supplier payment exceptions. The company did not disclose its valuation, the separate size of each round or independently verified customer savings.
+
+📊 Charles Schwab expanded its financial advisor AI offering with authorized Claude access to relevant client accounts, holdings and history. It also introduced tax and estate planning tools. The integrations support advisors' work but do not transfer responsibility for investment or planning recommendations to AI.
+
+Key takeaway: AI is advancing toward longer-lasting knowledge and more consequential operational actions. As agents become involved in transportation, financial workflows and enterprise information systems, independently enforced permissions, monitoring and human review become increasingly important.
+
+Business opportunities: independent AI agent security monitoring, procurement exception automation and secure AI workflows for financial advisory firms. All three remain hypotheses requiring practical validation rather than established products.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-10-28/
