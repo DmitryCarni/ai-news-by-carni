@@ -1,0 +1,33 @@
+🗓 <b>AI THIS WEEK · OCTOBER 23–29</b>
+
+<b>Open models are growing more capable, but trustworthy business use depends on infrastructure, security and accountability.</b>
+
+🧠 <b>A trillion-parameter model is downloadable.</b>
+Mistral released Large 4 weights. More organizations can explore self-hosted deployment, but licensing, computing cost and operational responsibility do not disappear.
+
+🔬 <b>Software claims meet machine-checkable proofs.</b>
+Anthropic explored formal verification for 123 libraries, generating a very large body of proof material. The value lies in stated properties checked independently of the model's confidence.
+
+🛡 <b>AI gateways need independent controls.</b>
+The LiteLLM compromise exposed software-supply-chain and credential risks. Cloudflare disclosed cross-tenant cache exposure in 155 responses. A model can behave correctly while its surrounding system fails.
+
+🚕 <b>Kazakhstan enters autonomous mobility trials.</b>
+inDrive and Pony.ai announced plans to explore robotaxi services starting in Astana. This is a proposed pilot, not an already operating citywide service.
+
+🚛 <b>Autonomous freight moves toward service contracts.</b>
+Kodiak reached an agreement covering 75 trucks for DTL. Actual route performance, downtime, and safe exception handling will matter more than headline fleet size.
+
+💤 <b>Long-term memory and agent density advance.</b>
+Google researched sleep-like knowledge consolidation. AWS and Berkeley presented Infinity for dense, long-lived agent workflows. Production reliability still requires separate proof.
+
+💼 <b>Specialist data and embedded work matter.</b>
+LSEG agreed to buy Octus for $3.535 billion, while Oracle announced 25 AI applications inside business processes. Buyers want trusted domain information and measurable outcomes.
+
+💡 <b>Practical business opportunities</b>
+• Auditing release provenance, credentials and tenant isolation in AI gateways.
+• Tracking safety events, fleet conditions and interventions in autonomous transport.
+• Read-only AI exception analysis for accounting operations, with human approval for changes.
+
+<b>Bottom line:</b> Greater model freedom demands stronger evidence. The strongest products will demonstrate real operational value while keeping actions under independent control.
+
+🔗 <a href="https://news.carni.ltd/en/weekly/2026-W44/">Read the full weekly analysis</a>
