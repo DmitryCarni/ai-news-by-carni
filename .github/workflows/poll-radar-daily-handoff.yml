@@ -52,7 +52,7 @@ jobs:
           PY
 
   poll:
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[daily29-poll-only]'))
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (contains(github.event.head_commit.message, '[daily29-poll-only]') || contains(github.event.head_commit.message, '[daily30-poll-only]')))
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -94,13 +94,23 @@ jobs:
           if response.get('status')!='package':
               raise SystemExit('Unexpected Daily queue status')
 
-          # The one-off push trigger must NEVER pick an unrelated day.
+          # One-time push markers are bound to exactly one sealed archive each.
           # Ordinary workflow_dispatch remains unchanged.
-          if __import__('os').environ.get('GITHUB_EVENT_NAME')=='push' and (
-              response.get('report_date')!='2026-10-29' or
-              response.get('sha256')!='43435e54d41aa046ba2ec01cc8921e7eb30e2655612a6ebe8d4fa938379f2d61'
-          ):
-              raise SystemExit('Sealed Daily29-only poll refused wrong queue head')
+          if __import__('os').environ.get('GITHUB_EVENT_NAME')=='push':
+              event=json.loads(pathlib.Path(__import__('os').environ['GITHUB_EVENT_PATH']).read_text())
+              message=str((event.get('head_commit') or {}).get('message') or '')
+              is29='[daily29-poll-only]' in message
+              is30='[daily30-poll-only]' in message
+              if is29 == is30:
+                  raise SystemExit('Daily-only poll requires exactly one date marker')
+              expected_date='2026-10-29' if is29 else '2026-10-30'
+              expected_sha=(
+                  '43435e54d41aa046ba2ec01cc8921e7eb30e2655612a6ebe8d4fa938379f2d61'
+                  if is29 else
+                  '30b85a0b27982bd638dcc273b04ea3fb26e3f011d917fed23157de4a51cba92a'
+              )
+              if response.get('report_date')!=expected_date or response.get('sha256')!=expected_sha:
+                  raise SystemExit('Exact sealed date-specific poll refused wrong queue head')
           date=response.get('report_date')
           sha=response.get('sha256')
           base64_archive=response.get('archive_b64')
