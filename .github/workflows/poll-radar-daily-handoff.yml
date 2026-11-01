@@ -8,6 +8,10 @@ name: Poll sealed Radar Daily queue
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/poll-radar-daily-handoff.yml'
   pull_request:
     paths:
       - '.github/workflows/poll-radar-daily-handoff.yml'
@@ -46,7 +50,7 @@ jobs:
           PY
 
   poll:
-    if: github.event_name != 'pull_request'
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[daily29-poll-only]'))
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -88,6 +92,13 @@ jobs:
           if response.get('status')!='package':
               raise SystemExit('Unexpected Daily queue status')
 
+          # The one-off push trigger must NEVER pick an unrelated day.
+          # Ordinary workflow_dispatch remains unchanged.
+          if __import__('os').environ.get('GITHUB_EVENT_NAME')=='push' and (
+              response.get('report_date')!='2026-10-29' or
+              response.get('sha256')!='43435e54d41aa046ba2ec01cc8921e7eb30e2655612a6ebe8d4fa938379f2d61'
+          ):
+              raise SystemExit('Sealed Daily29-only poll refused wrong queue head')
           date=response.get('report_date')
           sha=response.get('sha256')
           base64_archive=response.get('archive_b64')
