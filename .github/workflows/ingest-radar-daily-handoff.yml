@@ -6,6 +6,7 @@ on:
   pull_request:
     paths:
       - '.github/workflows/ingest-radar-daily-handoff.yml'
+      - 'scripts/daily29_manual_editorial_correction_once.py'
 
 permissions:
   contents: write
@@ -36,6 +37,7 @@ jobs:
           assert 'carni-radar-daily-ingest' in source
           assert 'verify_daily_completeness.py' in source
           assert 'workflow run verify-radar-staging.yml' in source
+          compile(Path('scripts/daily29_manual_editorial_correction_once.py').read_text(), 'manual-daily29-correction', 'exec')
           print('RADAR DAILY HANDOFF SCRIPT COMPILE: PASS')
           PY
 
@@ -149,6 +151,16 @@ jobs:
           pathlib.Path('/tmp/radar-report-date').write_text(date)
           print('DAILY HANDOFF EXACT FOUR: PASS '+date)
           PY
+
+      # This one-time, human-requested editorial correction is applied only
+      # AFTER sealed archive SHA + per-file SHA are verified. The original
+      # signed bytes stay immutable in the Edge queue. The public poller
+      # independently reproduces the exact delta before marking 4/4.
+      - name: Apply independently reviewable Daily29 editorial correction
+        if: ${{ github.event.client_payload.report_date == '2026-10-29' }}
+        env:
+          RADAR_SHA256: ${{ github.event.client_payload.sha256 }}
+        run: python scripts/daily29_manual_editorial_correction_once.py --date 2026-10-29 --archive-sha "$RADAR_SHA256"
 
       - name: Validate editorial content with existing production verifier
         run: python scripts/verify_daily_completeness.py
