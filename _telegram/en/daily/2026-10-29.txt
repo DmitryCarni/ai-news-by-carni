@@ -1,0 +1,19 @@
+AI daily — October 29, 2026
+
+🧠 Mistral released open weights for Large 4, a multimodal model with roughly one trillion parameters. Self-hosting options have expanded, though computing needs remain significant.
+
+🛡️ Cursor disclosed a malicious Claude Code extension distributed through its marketplace. The code attempted persistent SSH access. Cursor removed the package and released remediation guidance.
+
+👓 Meta and CNIB launched a partnership to improve AI-glasses accessibility for blind and low-vision Canadians, combining training with community feedback.
+
+🌐 LangChain launched Managed Deep Agents v0.10 with a sandboxed browser and asynchronous subagents. The public beta still requires independent verification of real actions.
+
+💰 Serval raised $150 million at a $3 billion valuation for enterprise automation and announced plans to hire over 500 people. Planned hiring is not completed hiring.
+
+📄 Gemini introduced in-chat file creation and editing for PDFs, spreadsheets, slides and code. Figures, citations and access rights still need checking.
+
+Key takeaway: AI is moving closer to consequential work, making permission boundaries, software provenance and external outcome receipts increasingly important.
+
+Business opportunities: AI extension security audits, controlled browser automation and internal ticket routing.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-10-29/
