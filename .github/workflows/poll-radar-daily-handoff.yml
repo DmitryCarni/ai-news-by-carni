@@ -16,6 +16,7 @@ on:
     paths:
       - '.github/workflows/poll-radar-daily-handoff.yml'
       - 'scripts/daily29_manual_editorial_correction_once.py'
+      - 'scripts/daily30_manual_editorial_correction_once.py'
 
 permissions:
   contents: write
@@ -46,6 +47,7 @@ jobs:
           assert "'handoff_mode':'oidc-fetch'" in source
           assert 'mark_published' in source
           compile(pathlib.Path('scripts/daily29_manual_editorial_correction_once.py').read_text(), 'daily29-correction', 'exec')
+          compile(pathlib.Path('scripts/daily30_manual_editorial_correction_once.py').read_text(), 'daily30-correction', 'exec')
           print('RADAR PUBLIC POLLER PREFLIGHT: PASS')
           PY
 
@@ -151,6 +153,14 @@ jobs:
                       if sha!=SEALED_ARCHIVE_SHA256:
                           raise SystemExit('Daily29 corrected publication must match exact sealed archive')
                       expected_bytes=corrected_content(path,data).encode()
+                  if date=='2026-10-30':
+                      from scripts.daily30_manual_editorial_correction_once import (
+                          SEALED_ARCHIVE_SHA256 as DAILY30_ARCHIVE_SHA256,
+                          corrected_content as daily30_corrected_content
+                      )
+                      if sha!=DAILY30_ARCHIVE_SHA256:
+                          raise SystemExit('Daily30 corrected publication must match exact sealed archive')
+                      expected_bytes=daily30_corrected_content(path,data).encode()
                   if target.read_bytes()!=expected_bytes:
                       raise SystemExit('Existing public Daily conflicts with independently verified sealed/corrected package: '+path)
 

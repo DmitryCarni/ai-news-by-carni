@@ -7,6 +7,7 @@ on:
     paths:
       - '.github/workflows/ingest-radar-daily-handoff.yml'
       - 'scripts/daily29_manual_editorial_correction_once.py'
+      - 'scripts/daily30_manual_editorial_correction_once.py'
 
 permissions:
   contents: write
@@ -38,6 +39,7 @@ jobs:
           assert 'verify_daily_completeness.py' in source
           assert 'workflow run verify-radar-staging.yml' in source
           compile(Path('scripts/daily29_manual_editorial_correction_once.py').read_text(), 'manual-daily29-correction', 'exec')
+          compile(Path('scripts/daily30_manual_editorial_correction_once.py').read_text(), 'manual-daily30-correction', 'exec')
           print('RADAR DAILY HANDOFF SCRIPT COMPILE: PASS')
           PY
 
@@ -161,6 +163,14 @@ jobs:
         env:
           RADAR_SHA256: ${{ github.event.client_payload.sha256 }}
         run: python scripts/daily29_manual_editorial_correction_once.py --date 2026-10-29 --archive-sha "$RADAR_SHA256"
+
+      # Exact one-off 2026-10-30 metadata and business-depth repair.
+      # Source archive and each file digest have already been verified above.
+      - name: Apply independently reviewable Daily30 editorial correction
+        if: ${{ github.event.client_payload.report_date == '2026-10-30' }}
+        env:
+          RADAR_SHA256: ${{ github.event.client_payload.sha256 }}
+        run: python scripts/daily30_manual_editorial_correction_once.py --date 2026-10-30 --archive-sha "$RADAR_SHA256"
 
       - name: Validate editorial content with existing production verifier
         run: python scripts/verify_daily_completeness.py
