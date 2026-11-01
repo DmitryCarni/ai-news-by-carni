@@ -1,0 +1,19 @@
+AI daily — October 30, 2026
+
+🧬 OpenAI introduced GPT-6 Rosalind Research for approved life-sciences researchers, not ordinary ChatGPT users.
+
+🛡️ OpenAI announced tighter violence safeguards and additional protections for teens, with public safety reports planned.
+
+🛰️ Google received a Gemma 4 response from an orbital TPU. A commercial space data center remains experimental.
+
+🌐 OpenAI backed a shared robots.txt AI-training preference signal, with implementation still ahead.
+
+📉 Growing AI infrastructure spending renewed investor scrutiny of Nasdaq 100 valuations and returns.
+
+📊 Microsoft expanded Copilot's finance skills and partner plugins, while human review remains essential.
+
+Key takeaway: AI progress depends on verifiable results, data governance and deployment economics, not just better models.
+
+Business opportunities: finance workflow audits, AI crawler governance and ROI reviews.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-10-30/
