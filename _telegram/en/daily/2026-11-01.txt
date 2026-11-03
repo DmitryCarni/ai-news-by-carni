@@ -1,4 +1,4 @@
-Daily AI digest for November 1, 2026
+AI daily — November 1, 2026
 
 🐈 Meituan introduced LongCat-2.5, a new multimodal model for long-horizon agents; deployment claims still need independent testing.
 
