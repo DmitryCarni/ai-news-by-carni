@@ -6,6 +6,9 @@ on:
     paths:
       - '_telegram/weekly/**'
       - '_telegram/en/weekly/**'
+      # One-use recovery: publish only the verified 2026-10-31 Daily teasers on merge.
+      - '_telegram/daily/2026-10-31.txt'
+      - '_telegram/en/daily/2026-10-31.txt'
   workflow_dispatch:
     inputs:
       source_files:
