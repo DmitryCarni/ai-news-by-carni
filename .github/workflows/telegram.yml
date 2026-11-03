@@ -9,6 +9,9 @@ on:
       # One-use recovery: publish only the verified 2026-10-31 Daily teasers on merge.
       - '_telegram/daily/2026-10-31.txt'
       - '_telegram/en/daily/2026-10-31.txt'
+      # One-use recovery: publish verified 2026-11-01 Daily teasers.
+      - '_telegram/daily/2026-11-01.txt'
+      - '_telegram/en/daily/2026-11-01.txt'
   workflow_dispatch:
     inputs:
       source_files:
