@@ -1,0 +1,19 @@
+AI daily — November 1, 2026
+
+🐈 Meituan introduced LongCat-2.5, a new multimodal model for long-horizon agents; deployment claims still need independent testing.
+
+🛡️ Anthropic will retire Claude Opus 4.8 fast mode on November 30; dependent integrations need migration planning.
+
+🏢 Context Labs launched AI Distillery to package enterprise data with traceable provenance and governance.
+
+🎙️ StepFun expanded StepAudio 3 voice APIs and published new payment terms; assess cost per completed customer call.
+
+💵 Anthropic's Claude Ultra subscription costs $200 monthly and increases weekly limits without providing unlimited usage.
+
+🧰 Kiro introduced November 1 trial and prorated billing rules; switching subscription levels changes unit economics.
+
+Key takeaway: judge AI by traceability, real task quality, migration dates and total cost, not headline benchmarks.
+
+Business opportunities: enterprise-data provenance audits, voice-agent cost pilots and fast-mode migration.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-11-01/
