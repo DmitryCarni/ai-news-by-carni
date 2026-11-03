@@ -1,0 +1,19 @@
+AI daily — October 31, 2026
+
+🧾 ModelBest and OpenBMB introduced MiniCPM-OCR with a separate quality-checking model.
+
+🛡️ Chainalysis reported an incident involving agentic attack techniques and exposure of some user metadata.
+
+🖥️ Google moved Computer Use to general availability in the Gemini API.
+
+🧱 Moonshot added Kimi K3.1 Pro and K3 to batch inference, offering a lower-cost path for non-urgent workloads.
+
+💵 MiniMax's M Plan pricing highlights the gap between promotional and recurring charges.
+
+📊 Legacy OpenAI Evals became read-only ahead of its scheduled November shutdown.
+
+Key takeaway: lower AI costs must go hand in hand with independently verified outcomes, security and spending control.
+
+Business opportunities: document QA audits, governed screen automation and evaluation-suite migration.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-10-31/
