@@ -1,0 +1,19 @@
+AI daily — November 2, 2026
+
+🧩 OpenAI unveiled Git-compatible Pando, built to handle thousands of parallel coding-agent operations and faster repository access.
+
+🛡️ OpenAI raised security bounty rewards: exceptional critical vulnerabilities may earn roughly $172,000 with bonuses.
+
+🏭 Catalyx launched OpenLine, connecting AI-driven visual inspection with live manufacturing and operator decisions.
+
+⚡ Envision reported a commercial 800V DC power installation delivering electricity to live AI computing racks.
+
+🏦 Hong Kong's monetary authority launched Project SAGE to explore verified identity and authority for financial AI agents.
+
+💳 Sunrate introduced programmable virtual business cards for policy-bound AI payments with spending limits.
+
+Key takeaway: agent-led work now demands scalable infrastructure, independently tested security and verifiable payment authority.
+
+Business opportunities: agent-scale Git audits, manufacturing vision pilots and authorization testing for financial AI.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-11-02/

@@ -12,6 +12,9 @@ on:
       # One-use recovery: publish verified 2026-11-01 Daily teasers.
       - '_telegram/daily/2026-11-01.txt'
       - '_telegram/en/daily/2026-11-01.txt'
+      # One-use recovery: publish verified 2026-11-02 Daily teasers.
+      - '_telegram/daily/2026-11-02.txt'
+      - '_telegram/en/daily/2026-11-02.txt'
   workflow_dispatch:
     inputs:
       source_files:
