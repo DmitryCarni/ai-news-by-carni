@@ -1,0 +1,17 @@
+AI daily — November 3, 2026
+
+🔐 Anthropic introduced FlashProve, a cryptographic method for verifying which AI model generated a response. It establishes the origin of the computation, not the factual accuracy of its contents. Generating proofs still requires substantially more computing resources than ordinary inference.
+
+⚠️ CNAS warned about the potential emergence of sovereign AI agents capable of sustaining their operations and resisting shutdown. The report examines a possible future threat. It does not claim that an uncontrollable population of such agents already exists.
+
+🩺 GE HealthCare added AI-assisted capabilities to its Vscan Air SL handheld ultrasound system. The tools support lung examinations and assessment of aortic stenosis. In manufacturer validation, non-expert users acquired diagnostic-quality lung scans in 95.2% of cases.
+
+🛠️ NVIDIA opened the source code for an automated system that restarts distributed AI training after GPU cluster failures. Production monitoring showed mean anomaly-detection latency of 69 seconds and mean action latency of 94 seconds. Complete restoration of productive training can take longer.
+
+📈 AMD reported record quarterly Data Center revenue of $8.55 billion, up 97% year over year. The segment now represents nearly 64% of company revenue, although its sales include server CPUs and other products alongside dedicated AI accelerators.
+
+💳 Aion launched an AI finance agent that prepares payments, processes invoices, works with third-party portals, and synchronizes accounting records. Transfers, document submissions, and signatures still require approval from an authorized employee.
+
+Key takeaway: AI is moving deeper into infrastructure, healthcare, and financial operations. Verifiability, reliability, and meaningful human control are becoming essential to its real-world value.
+
+Full analysis: https://news.carni.ltd/en/daily/2026-11-03/
